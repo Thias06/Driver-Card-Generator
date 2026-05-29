@@ -144,7 +144,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
         </g></svg>
       <h1>THE RING<small>CARD&nbsp;GENERATOR</small></h1>
     </div>
-    <p class="tagline">Crée la carte officielle d'un pilote de <b style="color:#fff">The Pro League</b>. Les stats viennent de la télémétrie : Vitesse, Précision, Régularité, Réactivité.</p>
+    <p class="tagline">Crée la carte officielle d'un pilote de <b style="color:#fff">The Pro League</b>. 3 stats issues de la télémétrie : Speed, Accuracy, Reactivity.</p>
 
     <div class="field"><label>Prénom</label><input id="i_first" type="text" value="Léa"></div>
     <div class="field"><label>Nom</label><input id="i_last" type="text" value="Martin"></div>
@@ -153,10 +153,9 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <div class="field"><label>N°</label><input id="i_num" type="text" value="7"></div>
     </div>
 
-    <div class="field"><label>Vitesse <b id="v_speed">88</b></label><input id="r_speed" type="range" min="0" max="99" value="88"></div>
-    <div class="field"><label>Précision <b id="v_prec">82</b></label><input id="r_prec" type="range" min="0" max="99" value="82"></div>
-    <div class="field"><label>Régularité <b id="v_reg">76</b></label><input id="r_reg" type="range" min="0" max="99" value="76"></div>
-    <div class="field"><label>Réactivité <b id="v_react">70</b></label><input id="r_react" type="range" min="0" max="99" value="70"></div>
+    <div class="field"><label>Speed <b id="v_speed">84</b></label><input id="r_speed" type="range" min="0" max="99" value="84"></div>
+    <div class="field"><label>Accuracy <b id="v_acc">80</b></label><input id="r_acc" type="range" min="0" max="99" value="80"></div>
+    <div class="field"><label>Reactivity <b id="v_react">74</b></label><input id="r_react" type="range" min="0" max="99" value="74"></div>
 
     <div class="field" style="margin-top:18px">
       <label>Photo du pilote</label>
@@ -225,8 +224,8 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
 
 <script>
 const $=id=>document.getElementById(id);
-const STAT=[['speed','VITESSE'],['prec','PRÉCISION'],['reg','RÉGULARITÉ'],['react','RÉACTIVITÉ']];
-const W={speed:.40,prec:.25,reg:.25,react:.10};
+const STAT=[['speed','SPEED'],['acc','ACCURACY'],['react','REACTIVITY']];
+const W={speed:.50,acc:.30,react:.20};
 
 function tierOf(o){
   if(o>=85) return {n:'ELITE', a:'#e22ed0', b:'#ff2ebe'};
