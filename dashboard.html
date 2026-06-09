@@ -37,6 +37,11 @@ a{color:var(--cyan);text-decoration:none}
 .fill.achat{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
 .fill.loc{background:linear-gradient(90deg,#7a33f0,#e22ed0)}
 .fill.photo{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.langBox{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.pie{--fr:0deg;--en:0deg;width:138px;height:138px;border-radius:50%;background:conic-gradient(#34b8ff 0 var(--fr),#e22ed0 var(--fr) calc(var(--fr) + var(--en)),#242532 calc(var(--fr) + var(--en)) 360deg);position:relative;box-shadow:0 12px 30px rgba(0,0,0,.28),inset 0 0 0 1px rgba(255,255,255,.06)}
+.pie:after{content:"";position:absolute;inset:28px;background:#0c0d13;border-radius:50%;border:1px solid var(--line)}
+.pieCenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:2;font-family:var(--ft);font-size:9px;letter-spacing:1px;color:var(--muted)}
+.pieCenter b{font-family:var(--fd);font-style:italic;font-size:24px;color:#fff;line-height:1}.legend{flex:1;min-width:180px}.legend .line{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid #15161d;padding:9px 0;font-size:13px}.legend .line:first-child{border-top:none}.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px}.dot.fr{background:#34b8ff}.dot.en{background:#e22ed0}.dot.u{background:#242532}.muted{color:var(--muted)}
 .cities .row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
 .cities .nm{width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cities .tr{flex:1;height:9px;background:#070809;border-radius:5px;overflow:hidden}
@@ -72,9 +77,12 @@ a{color:var(--cyan);text-decoration:none}
   <div class="kpis" id="kpis"></div>
   <div class="grid2">
     <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
-    <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
+    <div class="card"><h2>LANGUE CHOISIE — FR / EN</h2><div id="languages"></div></div>
   </div>
-  <div class="card" style="margin-bottom:18px"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  <div class="grid2">
+    <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
+    <div class="card"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  </div>
   <div class="card recent"><h2>DERNIÈRES INSCRIPTIONS</h2><div id="recent"></div></div>
 </div>
 
@@ -102,7 +110,7 @@ function render(rows){
   const yest0=today0-864e5;
   const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
 
-  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0;
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0, fr=0, en=0, unknownLang=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
     const t=r.created_at?new Date(r.created_at).getTime():0;
@@ -112,6 +120,8 @@ function render(rows){
     if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
     if(r.photo_url)withPhoto++;
     if(r.hidden)hidden++;
+    const lg=String(r.language||'').toLowerCase();
+    if(lg==='en') en++; else if(lg==='fr') fr++; else unknownLang++;
     const c=(r.city||'').trim(); if(c){const k=c.toLowerCase();cityMap[k]=cityMap[k]||{n:0,label:c};cityMap[k].n++;}
     if(t){const k=dayKey(new Date(t));dayMap[k]=(dayMap[k]||0)+1;}
   });
@@ -136,6 +146,23 @@ function render(rows){
     <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
     <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
     <div class="split" style="margin-top:16px"><div class="row"><span>Avec photo</span><b>${withPhoto}/${total} (${total?Math.round(withPhoto/total*100):0}%)</b></div><div class="track"><div class="fill photo" style="width:${total?Math.round(withPhoto/total*100):0}%"></div></div></div>`;
+
+  // Langues FR / EN
+  const langKnown=fr+en;
+  const frPct=langKnown?Math.round(fr/langKnown*100):0;
+  const enPct=langKnown?Math.round(en/langKnown*100):0;
+  const frDeg=langKnown?(fr/langKnown*360):0;
+  const enDeg=langKnown?(en/langKnown*360):0;
+  $('languages').innerHTML=`
+    <div class="langBox">
+      <div class="pie" style="--fr:${frDeg}deg;--en:${enDeg}deg"><div class="pieCenter"><span>FR / EN</span><b>${frPct}%</b><span>FRANCE</span></div></div>
+      <div class="legend">
+        <div class="line"><span><i class="dot fr"></i>Français</span><b>${fr} · ${frPct}%</b></div>
+        <div class="line"><span><i class="dot en"></i>English</span><b>${en} · ${enPct}%</b></div>
+        ${unknownLang?`<div class="line muted"><span><i class="dot u"></i>Non renseigné</span><b>${unknownLang}</b></div>`:''}
+        <div class="line muted"><span>Total analysé</span><b>${langKnown}${unknownLang?` / ${total}`:''}</b></div>
+      </div>
+    </div>`;
 
   // Top villes
   const cities=Object.values(cityMap).sort((a,b)=>b.n-a.n).slice(0,6);

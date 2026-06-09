@@ -75,17 +75,18 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 .flagGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:470px;margin:0 auto}
 .flagBtn{position:relative;border:1px solid rgba(255,255,255,.12);background:#070809;color:#fff;border-radius:18px;padding:18px 12px 16px;cursor:pointer;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
 .flagBtn:hover{transform:translateY(-2px);border-color:#7a33f0;box-shadow:0 16px 40px rgba(122,51,240,.24)}
-.flagBtn .flag{display:block;font-size:44px;margin-bottom:8px;animation:flagFloat 2.6s ease-in-out infinite}
-.flagIcon{display:block;width:64px;height:42px;margin:0 auto 10px;border-radius:6px;box-shadow:0 0 0 1px rgba(255,255,255,.22),0 10px 24px rgba(0,0,0,.35);animation:flagFloat 2.6s ease-in-out infinite;position:relative;overflow:hidden}
-.flagIcon.fr{background:linear-gradient(90deg,#0055a4 0 33.33%,#fff 33.33% 66.66%,#ef4135 66.66% 100%)}
-.flagIcon.gb{background:#012169}
-.flagIcon.gb:before{content:"";position:absolute;inset:0;background:linear-gradient(33deg,transparent 0 42%,#fff 42% 48%,#c8102e 48% 52%,#fff 52% 58%,transparent 58%),linear-gradient(147deg,transparent 0 42%,#fff 42% 48%,#c8102e 48% 52%,#fff 52% 58%,transparent 58%)}
-.flagIcon.gb:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 39%,#fff 39% 45%,#c8102e 45% 55%,#fff 55% 61%,transparent 61%),linear-gradient(0deg,transparent 0 34%,#fff 34% 42%,#c8102e 42% 58%,#fff 58% 66%,transparent 66%)}
-
+.flagBtn .flag{display:block}
 .flagBtn:nth-child(2) .flag{animation-delay:.25s}
 .flagBtn b{display:block;font-family:var(--ft);font-size:12px;letter-spacing:2px;text-transform:uppercase}
 .flagBtn span{display:block;color:#8d90a3;font-size:11px;margin-top:5px}
 .splashFoot{margin-top:20px;color:#6f7183;font-size:11px;line-height:1.45}
+
+.flag{display:block;width:72px;height:48px;margin:0 auto 11px!important;border-radius:7px;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 10px 24px rgba(0,0,0,.35);animation:flagFloat 2.6s ease-in-out infinite;background-size:cover;background-position:center;position:relative;overflow:hidden}
+.flag-fr{background:linear-gradient(90deg,#0055a4 0 33.33%,#fff 33.33% 66.66%,#ef4135 66.66%)}
+.flag-gb{background:#012169}
+.flag-gb:before{content:"";position:absolute;inset:0;background:linear-gradient(27deg,transparent 0 42%,#fff 42% 48%,#c8102e 48% 52%,#fff 52% 58%,transparent 58%),linear-gradient(153deg,transparent 0 42%,#fff 42% 48%,#c8102e 48% 52%,#fff 52% 58%,transparent 58%)}
+.flag-gb:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 39%,#fff 39% 45%,#c8102e 45% 55%,#fff 55% 61%,transparent 61%),linear-gradient(0deg,transparent 0 34%,#fff 34% 43%,#c8102e 43% 57%,#fff 57% 66%,transparent 66%)}
+
 @keyframes flagFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-6px) rotate(1deg)}}
 @keyframes trackMove{from{transform:translateX(-60px)}to{transform:translateX(60px)}}
 @media(max-width:520px){.flagGrid{grid-template-columns:1fr}.splashCard{padding:26px 18px}.splashLogo{width:120px}.soundToggle{right:54px}.langToggle{right:12px}}
@@ -99,17 +100,17 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
     <div class="splashTitle">Choose<br>your line</div>
     <p class="splashSub">Sélectionne ta langue avant de créer ta Driver Card officielle.<br>Choose your language before creating your official Driver Card.</p>
     <div class="flagGrid">
-      <button type="button" class="flagBtn" id="chooseFr"><span class="flagIcon fr"></span><b>Français</b><span>Continuer en français</span></button>
-      <button type="button" class="flagBtn" id="chooseEn"><span class="flagIcon gb"></span><b>English</b><span>Continue in English</span></button>
+      <button type="button" class="flagBtn" id="chooseFr"><span class="flag flag-fr" aria-hidden="true"></span><b>Français</b><span>Continuer en français</span></button>
+      <button type="button" class="flagBtn" id="chooseEn"><span class="flag flag-gb" aria-hidden="true"></span><b>English</b><span>Continue in English</span></button>
     </div>
-    <div class="splashFoot">Audio discret disponible après ton clic · Low racing ambient sound available after your click</div>
+    <div class="splashFoot">Clique sur FR/EN puis active le son 🔊 si besoin · Click FR/EN then enable sound 🔊 if needed</div>
   </div>
 </div>
 
 <div class="app">
   <div class="controls">
     <button type="button" id="soundToggle" class="soundToggle" title="Sound">🔇</button>
-    <button type="button" id="langToggle" class="langToggle" title="Language">EN</button>
+    <button type="button" id="langToggle" class="langToggle" title="Language">🇬🇧</button>
     <div class="bh"><img src="/ttr-logo.png" alt="The Ring"><h1>DEVIENS PILOTE OFFICIEL<small>THE RING LEAGUE · SEASON 0</small></h1></div>
     <p class="intro">Rejoins la première ligue officielle The Ring. <b>Obtiens ta Driver Card</b> et entre dans le classement.</p>
     <div class="row2">
@@ -159,7 +160,7 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 const $=id=>document.getElementById(id);
 let photoData='';
 let lang=localStorage.getItem('ttr_lang')||'';
-let audioCtx=null,audioGain=null,audioOn=false;
+let audioCtx=null,audioGain=null,audioOn=false,audioNodes=[],audioPulse=null;
 const TR={
   fr:{
     title:'The Ring · Deviens pilote officiel — Season 0',toggle:'EN',soundOn:'🔊',soundOff:'🔇',
@@ -214,18 +215,74 @@ function chooseLang(nextLang){lang=nextLang;applyLang();startAmbient();}
 $('chooseFr').addEventListener('click',()=>chooseLang('fr'));
 $('chooseEn').addEventListener('click',()=>chooseLang('en'));
 $('langToggle').addEventListener('click',()=>{lang=(lang==='en')?'fr':'en';applyLang();});
-function startAmbient(){
+function buildAmbient(){
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC) return false;
+  audioCtx=new AC();
+  const master=audioCtx.createGain();
+  master.gain.value=0.065;
+  master.connect(audioCtx.destination);
+  audioGain=master;
+
+  const filter=audioCtx.createBiquadFilter();
+  filter.type='lowpass';
+  filter.frequency.value=520;
+  filter.Q.value=.7;
+  filter.connect(master);
+
+  [55,82.41,110,164.81].forEach((freq,i)=>{
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    o.type=i===0?'sine':(i===3?'sawtooth':'triangle');
+    o.frequency.value=freq;
+    g.gain.value=i===0?.42:(i===3?.045:.13);
+    o.connect(g); g.connect(filter); o.start();
+    audioNodes.push(o,g);
+  });
+
+  const lfo=audioCtx.createOscillator();
+  const lfoGain=audioCtx.createGain();
+  lfo.frequency.value=.11;
+  lfoGain.gain.value=90;
+  lfo.connect(lfoGain); lfoGain.connect(filter.frequency); lfo.start();
+  audioNodes.push(lfo,lfoGain,filter,master);
+  return true;
+}
+function playStartFx(){
+  if(!audioCtx || !audioGain) return;
+  const o=audioCtx.createOscillator();
+  const g=audioCtx.createGain();
+  o.type='triangle';
+  o.frequency.setValueAtTime(196,audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(392,audioCtx.currentTime+.28);
+  g.gain.setValueAtTime(0.0001,audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.13,audioCtx.currentTime+.04);
+  g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.42);
+  o.connect(g); g.connect(audioGain); o.start(); o.stop(audioCtx.currentTime+.45);
+}
+async function startAmbient(){
   try{
     if(!audioCtx){
-      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
-      audioGain=audioCtx.createGain(); audioGain.gain.value=.018; audioGain.connect(audioCtx.destination);
-      [55,82.41,110].forEach((freq,i)=>{const o=audioCtx.createOscillator();const g=audioCtx.createGain();o.type=i===0?'sine':'triangle';o.frequency.value=freq;g.gain.value=i===0?.52:.18;o.connect(g);g.connect(audioGain);o.start();});
-      const lfo=audioCtx.createOscillator();const lfoGain=audioCtx.createGain();lfo.frequency.value=.08;lfoGain.gain.value=.006;lfo.connect(lfoGain);lfoGain.connect(audioGain.gain);lfo.start();
+      if(!buildAmbient()) return;
     }
-    audioCtx.resume(); audioOn=true; $('soundToggle').textContent=T('soundOn');
+    await audioCtx.resume();
+    audioOn=true;
+    localStorage.setItem('ttr_sound','on');
+    $('soundToggle').textContent=T('soundOn');
+    playStartFx();
+  }catch(e){
+    audioOn=false;
+    $('soundToggle').textContent=T('soundOff');
+  }
+}
+async function stopAmbient(){
+  try{
+    if(audioCtx) await audioCtx.suspend();
+    audioOn=false;
+    localStorage.setItem('ttr_sound','off');
+    $('soundToggle').textContent=T('soundOff');
   }catch(e){}
 }
-function stopAmbient(){try{if(audioCtx) audioCtx.suspend();audioOn=false;$('soundToggle').textContent=T('soundOff');}catch(e){}}
 $('soundToggle').addEventListener('click',()=>{if(audioOn)stopAmbient();else startAmbient();});
 
 function render(){mountPostCard($('card'),data(),photoData);fit();}
