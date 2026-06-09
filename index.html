@@ -1,12 +1,46 @@
 <!doctype html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Ring · Deviens pilote officiel — Season 0</title>
+<title>The Ring · Season 0</title>
 <link rel="stylesheet" href="/card.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.14),transparent 60%),var(--bg);color:var(--txt);font-family:var(--fb);min-height:100vh;padding:26px 18px 60px}
-.app{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:34px;align-items:start}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);min-height:100vh}
+body.locked{overflow:hidden}
+
+/* ===== SPLASH (choix de langue) ===== */
+#splash{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;padding:30px;
+  background:radial-gradient(1000px 700px at 80% -10%,rgba(122,51,240,.30),transparent 60%),radial-gradient(900px 700px at -10% 110%,rgba(46,84,255,.26),transparent 60%),#040406;
+  transition:opacity .6s ease}
+#splash.hide{opacity:0;pointer-events:none}
+#splash::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:46px 46px;mask:radial-gradient(circle at 50% 40%,#000,transparent 75%);-webkit-mask:radial-gradient(circle at 50% 40%,#000,transparent 75%);animation:grid 24s linear infinite}
+@keyframes grid{from{background-position:0 0,0 0}to{background-position:46px 460px,460px 0}}
+.sp-logo{width:180px;max-width:55vw;filter:drop-shadow(0 10px 40px rgba(122,51,240,.5));z-index:2}
+.sp-tag{z-index:2;text-align:center}
+.sp-tag .l1{font-family:var(--ft);font-size:13px;letter-spacing:4px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sp-tag .l2{color:var(--muted);font-size:12px;letter-spacing:2px;margin-top:8px}
+.flags{z-index:2;display:flex;gap:26px;flex-wrap:wrap;justify-content:center}
+.flagbtn{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px}
+.flagwrap{width:124px;height:82px;border-radius:12px;overflow:hidden;box-shadow:0 14px 38px rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.10);transition:transform .2s,border-color .2s;transform-style:preserve-3d}
+.flagbtn:hover .flagwrap{transform:translateY(-4px) scale(1.04);border-color:var(--violet)}
+.flagwrap svg{display:block;width:100%;height:100%;animation:wave 3.2s ease-in-out infinite;transform-origin:left center}
+.flagbtn:nth-child(2) .flagwrap svg{animation-delay:.5s}
+@keyframes wave{0%,100%{transform:perspective(260px) rotateY(-7deg) skewY(1.1deg)}50%{transform:perspective(260px) rotateY(7deg) skewY(-1.1deg)}}
+.flaglbl{font-family:var(--ft);font-size:12px;letter-spacing:3px;color:#fff}
+.flagsub{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:-6px}
+.sp-music{z-index:2;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:7px}
+
+/* ===== CONTRÔLES FLOTTANTS (langue + musique) ===== */
+#topctl{position:fixed;top:14px;right:14px;z-index:90;display:flex;gap:8px;align-items:center;background:rgba(10,11,16,.82);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:11px;padding:6px}
+#topctl.hidden{display:none}
+.lang2{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.lang2 button{background:#0c0d13;border:none;color:var(--muted);font-family:var(--ft);font-size:10px;letter-spacing:1px;padding:7px 10px;cursor:pointer}
+.lang2 button.on{background:var(--brand);color:#fff}
+.musicbtn{background:#0c0d13;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:14px;width:34px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.musicbtn.on{color:#fff;border-color:var(--violet);box-shadow:0 0 0 2px rgba(122,51,240,.25)}
+
+/* ===== APP ===== */
+.app{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:34px;align-items:start;padding:26px 18px 60px}
 @media(max-width:920px){.app{grid-template-columns:1fr;gap:24px}}
 .controls{background:linear-gradient(180deg,#0e0f15,#090a0e);border:1px solid var(--line);border-radius:18px;padding:22px 20px;position:sticky;top:18px}
 @media(max-width:920px){.controls{position:static}}
@@ -17,9 +51,14 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 .field{margin-bottom:13px}
 .field label{display:block;font-family:var(--ft);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
 .req{color:#ff4d4d;margin-left:3px}
-.field input,.field select{width:100%;background:#070809;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-family:var(--fb);font-size:14px;font-weight:600}
-.field select{appearance:auto;cursor:pointer}
-.field input:focus,.field select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(122,51,240,.18)}
+.field input{width:100%;background:#070809;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-family:var(--fb);font-size:14px;font-weight:600}
+.field input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(122,51,240,.18)}
+.field.invalid input,.field.invalid select{border-color:#ff4d4d;box-shadow:0 0 0 3px rgba(255,77,77,.16)}
+.hint-err{display:block;color:#ff8a8a;font-size:10.5px;line-height:1.35;margin-top:5px;font-weight:600}
+.hint-err:empty{display:none}
+.field select{width:100%;background:#070809 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path fill='%239092a4' d='M0 0h12L6 8z'/></svg>") no-repeat right 12px center;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 30px 10px 12px;font-family:var(--fb);font-size:14px;font-weight:600;-webkit-appearance:none;appearance:none;cursor:pointer}
+.field select:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(122,51,240,.18)}
+.field select option{background:#0e0f15;color:var(--txt)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .photobtn{display:block;text-align:center;background:#070809;border:1px dashed #2c2d3a;color:var(--muted);border-radius:9px;padding:11px;font-size:12px;cursor:pointer;font-family:var(--ft);letter-spacing:1px}
 .photobtn:hover{border-color:var(--violet);color:var(--txt)}
@@ -51,58 +90,71 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 .afterReg .linkbox{display:flex;gap:8px;background:#070809;border:1px solid var(--violet);border-radius:12px;padding:13px 12px;align-items:center}
 .afterReg .linkbox input{flex:1;background:transparent;border:none;color:#fff;font-size:14px;font-weight:600}
 .afterReg .linkbox button{background:var(--brand);border:none;color:#fff;border-radius:9px;padding:10px 15px;font-size:11px;font-family:var(--ft);letter-spacing:1px;cursor:pointer}
+.afterReg .err{color:#ff8a8a;background:#1a0d10;border:1px solid #5a2330;border-radius:11px;padding:13px;font-size:13px;line-height:1.45;font-weight:600}
 .stage{display:flex;justify-content:center}
 .previewWrap{width:100%;max-width:480px;display:flex;justify-content:center}
-.hp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
-.field.error input,.field.error select{border-color:#ff4d4d!important;box-shadow:0 0 0 3px rgba(255,77,77,.16)!important}
-.field .err{display:none;margin-top:6px;color:#ff5c5c;font-size:11px;line-height:1.35;font-weight:700}
-.field.error .err{display:block}
-.equip.error{border:1px solid rgba(255,77,77,.8);border-radius:12px;padding:8px}
-.equipErr{display:none;margin-top:7px;color:#ff5c5c;font-size:11px;line-height:1.35;font-weight:700}
-.equip.error+.equipErr{display:block}
 </style></head>
-<body>
+<body class="locked">
+
+<!-- ============ SPLASH ============ -->
+<div id="splash">
+  <img class="sp-logo" src="/ttr-logo.png" alt="The Ring">
+  <div class="sp-tag"><div class="l1">THE RING LEAGUE · SEASON 0</div><div class="l2">Choisis ta langue · Choose your language</div></div>
+  <div class="flags">
+    <button class="flagbtn" data-lang="fr">
+      <span class="flagwrap"><svg viewBox="0 0 90 60"><rect width="30" height="60" x="0" fill="#0b2ea0"/><rect width="30" height="60" x="30" fill="#fff"/><rect width="30" height="60" x="60" fill="#e1000f"/></svg></span>
+      <span class="flaglbl">FRANÇAIS</span><span class="flagsub">FR</span>
+    </button>
+    <button class="flagbtn" data-lang="en">
+      <span class="flagwrap"><svg viewBox="0 0 90 60"><clipPath id="uk"><rect width="90" height="60"/></clipPath><g clip-path="url(#uk)"><rect width="90" height="60" fill="#012169"/><path d="M0,0 90,60 M90,0 0,60" stroke="#fff" stroke-width="12"/><path d="M0,0 90,60 M90,0 0,60" stroke="#C8102E" stroke-width="6"/><rect x="37" width="16" height="60" fill="#fff"/><rect y="22" width="90" height="16" fill="#fff"/><rect x="40" width="10" height="60" fill="#C8102E"/><rect y="25" width="90" height="10" fill="#C8102E"/></g></svg></span>
+      <span class="flaglbl">ENGLISH</span><span class="flagsub">EN</span>
+    </button>
+  </div>
+  <div class="sp-music">♪ <span id="spMusic">Une musique d'ambiance démarrera · Ambient music will start</span></div>
+</div>
+
+<!-- ============ CONTRÔLES ============ -->
+<div id="topctl" class="hidden">
+  <div class="lang2"><button data-setlang="fr">FR</button><button data-setlang="en">EN</button></div>
+  <button class="musicbtn" id="musicBtn" title="Musique">♪</button>
+</div>
+
+<!-- ============ FORMULAIRE ============ -->
 <div class="app">
   <div class="controls">
-    <div class="bh"><img src="/ttr-logo.png" alt="The Ring"><h1>DEVIENS PILOTE OFFICIEL<small>THE RING LEAGUE · SEASON 0</small></h1></div>
-    <p class="intro">Rejoins la première ligue officielle The Ring. <b>Obtiens ta Driver Card</b> et entre dans le classement.</p>
+    <div class="bh"><img src="/ttr-logo.png" alt="The Ring"><h1><span data-i18n="h1">DEVIENS PILOTE OFFICIEL</span><small>THE RING LEAGUE · SEASON 0</small></h1></div>
+    <p class="intro" data-i18n="intro"></p>
     <div class="row2">
-      <div class="field"><label>Prénom<span class="req">*</span></label><input id="i_first" placeholder="Prénom" maxlength="30" autocomplete="given-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"><div class="err" id="e_first"></div></div>
-      <div class="field"><label>Nom<span class="req">*</span></label><input id="i_last" placeholder="Nom" maxlength="30" autocomplete="family-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"><div class="err" id="e_last"></div></div>
+      <div class="field"><label><span data-i18n="l_first"></span><span class="req">*</span></label><input id="i_first" maxlength="40" data-ph="ph_first"></div>
+      <div class="field"><label><span data-i18n="l_last"></span><span class="req">*</span></label><input id="i_last" maxlength="40" data-ph="ph_last"></div>
     </div>
-    <div class="field"><label>Pseudo<span class="req">*</span></label><input id="i_alias" placeholder="Ton pseudo de pilote" maxlength="10" pattern="[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,10}"><div class="err" id="e_alias"></div></div>
+    <div class="field"><label><span data-i18n="l_alias"></span><span class="req">*</span></label><input id="i_alias" maxlength="20" data-ph="ph_alias"></div>
     <div class="row2">
-      <div class="field"><label>Âge<span class="req">*</span></label><input id="i_age" type="number" inputmode="numeric" min="16" max="99" placeholder="16-99"><div class="err" id="e_age"></div></div>
-      <div class="field"><label>Pays<span class="req">*</span></label><select id="i_nat">
-          <option selected>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option><option>Monaco</option>
-          <option>Canada</option><option>Royaume-Uni</option><option>Italie</option><option>Espagne</option><option>Allemagne</option><option>Etats-Unis</option><option>E.A.U</option><option>Arabie Saoudite</option><option>Australie</option><option>Bahrein</option><option>Qatar</option><option>Autre</option>
-        </select><div class="err" id="e_nat"></div></div>
+      <div class="field"><label><span data-i18n="l_age"></span><span class="req">*</span></label><input id="i_age" inputmode="numeric" maxlength="2" data-ph="ph_age"></div>
+      <div class="field"><label><span data-i18n="l_country"></span><span class="req">*</span></label><select id="i_nat"></select></div>
     </div>
-    <div class="field"><label>Ville<span class="req">*</span></label><input id="i_city" placeholder="Ta ville" maxlength="45" autocomplete="address-level2" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,45}"><div class="err" id="e_city"></div></div>
-    <div class="field"><label>Email<span class="req">*</span></label><input id="i_email" type="email" maxlength="120" autocomplete="email" placeholder="ton@email.com"><div class="err" id="e_email"></div></div>
-    <div class="field"><label>Style de conduite</label><input id="i_style" maxlength="60" placeholder="Chacun son style ! (optionnel)"><div class="err" id="e_style"></div></div>
-    <div class="hp" aria-hidden="true"><label>Site web</label><input id="i_website" tabindex="-1" autocomplete="off"></div>
+    <div class="field"><label><span data-i18n="l_city"></span><span class="req">*</span></label><input id="i_city" maxlength="60" data-ph="ph_city"></div>
+    <div class="field"><label><span data-i18n="l_email"></span><span class="req">*</span></label><input id="i_email" type="email" maxlength="80" data-ph="ph_email"></div>
+    <div class="field"><label data-i18n="l_style"></label><input id="i_style" maxlength="90" data-ph="ph_style"></div>
 
-    <div class="field"><label>Formule<span class="req">*</span></label>
-      <p class="hintinfo">PUREMENT INFORMATIF, sans engagement : ça permet juste à The Ring de te recontacter au sujet de ton futur équipement.</p>
+    <div class="field"><label><span data-i18n="l_formule"></span><span class="req">*</span></label>
+      <p class="hintinfo" data-i18n="hint_formule"></p>
       <div class="equip" id="equip">
         <label class="opt"><input type="radio" name="equip" value="achat">
-          <span class="t">J'achète mon équipement The Ring</span>
-          <span class="d">Ma voiture, mes options, mes réglages.</span></label>
+          <span class="t" data-i18n="opt_achat_t"></span><span class="d" data-i18n="opt_achat_d"></span></label>
         <label class="opt"><input type="radio" name="equip" value="location">
-          <span class="t">Je loue l'équipement The Ring (pré-équipé)</span>
-          <span class="d">Véhicule RC prêt à rouler fourni. Idéal pour débuter et découvrir l'immersion intense The Ring.</span></label>
-      </div><div class="equipErr" id="e_equip"></div>
+          <span class="t" data-i18n="opt_loc_t"></span><span class="d" data-i18n="opt_loc_d"></span></label>
+      </div>
     </div>
 
-    <div class="field" style="margin-top:4px"><label>Photo du pilote (optionnel)</label>
-      <label class="photobtn" for="i_photo">⇪ IMPORTER UNE PHOTO</label>
+    <div class="field" style="margin-top:4px"><label data-i18n="l_photo"></label>
+      <label class="photobtn" for="i_photo" data-i18n="btn_photo"></label>
       <input id="i_photo" type="file" accept="image/*" style="display:none"></div>
     <div class="fixed">
-      <div><span>OVERALL</span><b>50</b></div><div class="r"><span>NIVEAU</span><b>ROOKIE</b></div><div><span>SAISON</span><b style="font-size:15px">S - 0</b></div>
+      <div><span data-i18n="f_overall">OVERALL</span><b>50</b></div><div class="r"><span data-i18n="f_level">NIVEAU</span><b>ROOKIE</b></div><div><span data-i18n="f_season">SAISON</span><b style="font-size:15px">S0</b></div>
     </div>
-    <label class="consent"><input type="checkbox" id="i_consent"><span>J'ai 16 ans ou plus et j'accepte que ma Driver Card (photo + infos) soit publiée par The Ring et qu'un lien public soit créé.</span></label>
-    <button class="dlbtn" id="inscription" disabled>S'INSCRIRE</button>
+    <label class="consent"><input type="checkbox" id="i_consent"><span data-i18n="consent"></span></label>
+    <button class="dlbtn" id="inscription" disabled data-i18n="btn_submit"></button>
     <div id="afterReg" class="afterReg"></div>
   </div>
   <div class="stage"><div class="previewWrap"><div class="cardPost" id="card"></div></div></div>
@@ -111,103 +163,102 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 <script src="/card.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-let photoData='';
+let photoData='', LANG='fr';
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* ===== Pays (valeur stockée = libellé FR ; affichage localisé) ===== */
+const COUNTRIES=[
+ {v:'France',fr:'France',en:'France'},{v:'Belgique',fr:'Belgique',en:'Belgium'},
+ {v:'Suisse',fr:'Suisse',en:'Switzerland'},{v:'Luxembourg',fr:'Luxembourg',en:'Luxembourg'},
+ {v:'Monaco',fr:'Monaco',en:'Monaco'},{v:'Canada',fr:'Canada',en:'Canada'},
+ {v:'Espagne',fr:'Espagne',en:'Spain'},{v:'Italie',fr:'Italie',en:'Italy'},
+ {v:'Portugal',fr:'Portugal',en:'Portugal'},{v:'Allemagne',fr:'Allemagne',en:'Germany'},
+ {v:'Royaume-Uni',fr:'Royaume-Uni',en:'United Kingdom'},{v:'Maroc',fr:'Maroc',en:'Morocco'},
+ {v:'Algérie',fr:'Algérie',en:'Algeria'},{v:'Tunisie',fr:'Tunisie',en:'Tunisia'},
+ {v:'Autre',fr:'Autre',en:'Other'}
+];
+
+/* ===== Traductions ===== */
+const I18N={
+ fr:{
+  h1:'DEVIENS PILOTE OFFICIEL',
+  intro:'Rejoins la première ligue officielle The Ring. Obtiens ta Driver Card et entre dans le classement.',
+  l_first:'Prénom',l_last:'Nom',l_alias:'Pseudo',l_age:'Âge',l_country:'Pays',l_city:'Ville',l_email:'Email',l_style:'Style de conduite',
+  ph_first:'Prénom',ph_last:'Nom',ph_alias:'Ton pseudo de pilote',ph_age:'16 à 99',ph_city:'Ta ville',ph_email:'ton@email.com',ph_style:'Définis-toi en quelques mots (optionnel)',
+  l_formule:'Formule',hint_formule:"Purement informatif, sans engagement : ça permet juste à The Ring de te recontacter au sujet de ton futur équipement.",
+  opt_achat_t:"J'achète mon équipement",opt_achat_d:"Mon véhicule RC haut de gamme à moi. L'équipement de téléopération (caméra + système de communication) est monté puis démonté sur place à chaque venue.",
+  opt_loc_t:'Je loue (pré-équipé)',opt_loc_d:'Véhicule prêt à rouler fourni par The Ring. Idéal pour débuter et découvrir.',
+  l_photo:'Photo du pilote (optionnel)',btn_photo:'⇪ IMPORTER UNE PHOTO',f_overall:'OVERALL',f_level:'NIVEAU',f_season:'SAISON',
+  consent:"J'ai 16 ans ou plus et j'accepte que ma Driver Card (photo + infos) soit publiée par The Ring et qu'un lien public soit créé.",
+  btn_submit:"S'INSCRIRE",gen:'GÉNÉRATION…',
+  ok_title:'✓ Inscription enregistrée !',ok_text:'Ta carte est téléchargée. Tu vas recevoir un email de confirmation — pense à vérifier tes spams / courriers indésirables. Nos équipes reviennent vers toi très vite.',
+  link_label:'TON LIEN PERSONNEL À PARTAGER',copy:'COPIER',copied:'COPIÉ ✓',
+  err_email:"Adresse email invalide. Vérifie le format (ex. prenom@mail.com).",err_age:"L'âge doit être un nombre entre 16 et 99.",err_generic:'Inscription impossible.'
+ },
+ en:{
+  h1:'BECOME AN OFFICIAL DRIVER',
+  intro:'Join the first official The Ring league. Get your Driver Card and enter the ranking.',
+  l_first:'First name',l_last:'Last name',l_alias:'Nickname',l_age:'Age',l_country:'Country',l_city:'City',l_email:'Email',l_style:'Driving style',
+  ph_first:'First name',ph_last:'Last name',ph_alias:'Your driver nickname',ph_age:'16 to 99',ph_city:'Your city',ph_email:'you@email.com',ph_style:'Describe yourself in a few words (optional)',
+  l_formule:'Plan',hint_formule:'For information only, no commitment: it just lets The Ring contact you about your future equipment.',
+  opt_achat_t:'I buy my equipment',opt_achat_d:'My own high-end RC car. The teleoperation gear (camera + comms) is fitted then removed on site at each visit.',
+  opt_loc_t:'I rent (pre-equipped)',opt_loc_d:'Ready-to-drive vehicle provided by The Ring. Perfect to start and discover.',
+  l_photo:'Driver photo (optional)',btn_photo:'⇪ UPLOAD A PHOTO',f_overall:'OVERALL',f_level:'LEVEL',f_season:'SEASON',
+  consent:'I am 16 or older and I agree that my Driver Card (photo + info) is published by The Ring and that a public link is created.',
+  btn_submit:'SIGN UP',gen:'GENERATING…',
+  ok_title:'✓ Registration saved!',ok_text:'Your card has been downloaded. You will receive a confirmation email — please check your spam / junk folder. Our team will get back to you very soon.',
+  link_label:'YOUR PERSONAL LINK TO SHARE',copy:'COPY',copied:'COPIED ✓',
+  err_email:'Invalid email address. Check the format (e.g. name@mail.com).',err_age:'Age must be a number between 16 and 99.',err_generic:'Registration failed.'
+ }
+};
+const T=k=>I18N[LANG][k]||k;
+
+function buildCountries(){const s=$('i_nat');s.innerHTML='';COUNTRIES.forEach((c,i)=>{const o=document.createElement('option');o.value=c.v;o.textContent=c[LANG];if(i===0)o.selected=true;s.appendChild(o);});}
+function applyLang(lang){
+  LANG=(lang==='en')?'en':'fr';
+  document.documentElement.lang=LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{el.textContent=T(el.getAttribute('data-i18n'));});
+  document.querySelectorAll('[data-ph]').forEach(el=>{el.placeholder=T(el.getAttribute('data-ph'));});
+  // libellés pays
+  const cur=$('i_nat').value;[...$('i_nat').options].forEach((o,i)=>{o.textContent=COUNTRIES[i][LANG];});$('i_nat').value=cur;
+  // boutons langue
+  document.querySelectorAll('[data-setlang]').forEach(b=>b.classList.toggle('on',b.getAttribute('data-setlang')===LANG));
+  // bouton submit (si pas en cours de génération)
+  if(!$('inscription').dataset.busy)$('inscription').textContent=T('btn_submit');
+  if(typeof validateEmailField==='function'){validateEmailField();validateAgeField();}
+  render();checkForm();
+}
+
 function eq(){const e=document.querySelector('input[name=equip]:checked');return e?e.value:'';}
-function val(id){return ($(id).value||'').replace(/\s+/g,' ').trim();}
-function data(){return{first:val('i_first'),last:val('i_last'),alias:val('i_alias'),age:val('i_age'),nationality:val('i_nat')||'France',city:val('i_city'),style:val('i_style'),email:val('i_email').toLowerCase(),equipment:eq(),overall:50,level:'ROOKIE',season:'S0'};}
+function data(){return{first:$('i_first').value,last:$('i_last').value,alias:$('i_alias').value,age:$('i_age').value,nationality:$('i_nat').value,city:$('i_city').value,style:$('i_style').value,email:$('i_email').value,equipment:eq(),language:LANG,overall:50,level:'ROOKIE',season:'S0'};}
 function render(){mountPostCard($('card'),data(),photoData);fit();}
-['i_first','i_last','i_alias','i_age','i_city','i_style'].forEach(id=>$(id).addEventListener('input',()=>{render();checkForm();}));
-$('i_nat').addEventListener('change',()=>{render();checkForm();});
+function onField(){render();checkForm();}
+function clean(el,re){const p=el.selectionStart;el.value=el.value.replace(re,'');try{el.setSelectionRange(p,p);}catch(e){}}
+$('i_first').addEventListener('input',()=>{clean($('i_first'),/[^\p{L} \-']/gu);onField();});
+$('i_last').addEventListener('input',()=>{clean($('i_last'),/[^\p{L} \-']/gu);onField();});
+$('i_city').addEventListener('input',()=>{clean($('i_city'),/[^\p{L} \-']/gu);onField();});
+$('i_alias').addEventListener('input',()=>{clean($('i_alias'),/[^\p{L}0-9_\-]/gu);onField();});
+$('i_age').addEventListener('input',()=>{$('i_age').value=$('i_age').value.replace(/\D/g,'').slice(0,2);validateAgeField();onField();});
+$('i_style').addEventListener('input',onField);
+$('i_nat').addEventListener('change',onField);
+$('i_email').addEventListener('input',()=>{validateEmailField();checkForm();});
+$('i_consent').addEventListener('change',checkForm);
 $('i_photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{photoData=ev.target.result;render();};r.readAsDataURL(f);});
-document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('change',()=>{
-  document.querySelectorAll('.equip .opt').forEach(o=>o.classList.remove('sel'));
-  r.closest('.opt').classList.add('sel');if(validationVisible) validate(true);checkForm();
-}));
+document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('change',()=>{document.querySelectorAll('.equip .opt').forEach(o=>o.classList.remove('sel'));r.closest('.opt').classList.add('sel');checkForm();}));
 
 function fit(){const w=document.querySelector('.previewWrap'),el=$('card');const s=Math.min(1,Math.min(w.clientWidth,460)/1080);el.style.transform=`scale(${s})`;w.style.height=(1080*s)+'px';}
 window.addEventListener('resize',fit);
-
-let validationVisible=false;
-const fieldMap={first:'i_first',last:'i_last',alias:'i_alias',age:'i_age',nationality:'i_nat',city:'i_city',email:'i_email',style:'i_style'};
-function clearFieldErrors(){
-  document.querySelectorAll('.field.error').forEach(f=>f.classList.remove('error'));
-  document.querySelectorAll('.field .err').forEach(e=>e.textContent='');
-  const equip=$('equip');
-  if(equip) equip.classList.remove('error');
-  if($('e_equip')) $('e_equip').textContent='';
-}
-function setFieldError(key,msg){
-  const id=fieldMap[key];
-  const input=id?$(id):null;
-  const err=$('e_'+(key==='nationality'?'nat':key));
-  if(input&&input.closest('.field')) input.closest('.field').classList.add('error');
-  if(err) err.textContent=msg;
-}
-function setEquipError(msg){
-  $('equip').classList.add('error');
-  if($('e_equip')) $('e_equip').textContent=msg;
-}
-function validate(show){
-  const v=data();
-  const errors=[];
-  const nameRe=/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}$/;
-  const aliasRe=/^[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,10}$/;
-  const cityRe=/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,45}$/;
-  const emailRe=/^[^\s@<>'"]+@[^\s@<>'"]+\.[^\s@<>'"]{2,}$/;
-
-  if(!v.first) errors.push(['first','Prénom obligatoire.']);
-  else if(!nameRe.test(v.first)) errors.push(['first','Lettres uniquement, 30 caractères maximum.']);
-
-  if(!v.last) errors.push(['last','Nom obligatoire.']);
-  else if(!nameRe.test(v.last)) errors.push(['last','Lettres uniquement, 30 caractères maximum.']);
-
-  if(!v.alias) errors.push(['alias','Pseudo obligatoire.']);
-  else if(!aliasRe.test(v.alias)) errors.push(['alias','2 à 10 caractères : lettres, chiffres, tiret ou underscore.']);
-
-  if(!v.age) errors.push(['age','Âge obligatoire.']);
-  else if(!/^\d+$/.test(v.age)||Number(v.age)<16||Number(v.age)>99) errors.push(['age','Nombre uniquement, entre 16 et 99.']);
-
-  if(!v.nationality) errors.push(['nationality','Choisis un pays.']);
-
-  if(!v.city) errors.push(['city','Ville obligatoire.']);
-  else if(!cityRe.test(v.city)) errors.push(['city','Lettres uniquement, 45 caractères maximum.']);
-
-  if(!v.email) errors.push(['email','Email obligatoire.']);
-  else if(!emailRe.test(v.email)) errors.push(['email','Adresse email invalide. Exemple : nom@email.com']);
-
-  if(v.style&&(/[<>]/.test(v.style)||v.style.length>60)) errors.push(['style','60 caractères maximum, sans caractères < ou >.']);
-
-  if(!v.equipment) errors.push(['equip','Choisis une formule.']);
-  if(!$('i_consent').checked) errors.push(['consent','Tu dois accepter la publication de ta Driver Card.']);
-
-  if(show){
-    clearFieldErrors();
-    for(const [key,msg] of errors){
-      if(key==='equip') setEquipError(msg);
-      else if(key==='consent') showError(msg,false);
-      else setFieldError(key,msg);
-    }
-  }
-  return errors.length===0;
-}
-function checkForm(){
-  const ok=validate(validationVisible);
-  $('inscription').disabled=!ok;
-}
-function showError(msg,scroll=true){
-  $('afterReg').innerHTML='<div id="errBox" style="margin-top:14px;color:#ff5c5c;font-size:13px;line-height:1.4;font-weight:700"></div>';
-  $('errBox').textContent=msg||'Inscription impossible.';
-  $('afterReg').classList.add('show');
-  if(scroll) $('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-['i_first','i_last','i_alias','i_age','i_nat','i_city','i_email','i_style'].forEach(id=>{
-  $(id).addEventListener('input',()=>{if(validationVisible) validate(true); checkForm();});
-  $(id).addEventListener('blur',()=>{validationVisible=true; validate(true); checkForm();});
-});
-$('i_consent').addEventListener('change',()=>{validationVisible=true; validate(true); checkForm();});
+function checkForm(){const v=data();const ok=$('i_consent').checked&&v.first.trim()&&v.last.trim()&&v.alias.trim()&&v.age.trim()&&v.nationality.trim()&&v.city.trim()&&v.email.trim()&&v.equipment;$('inscription').disabled=!ok;}
 const slugify=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+function showErr(msg){$('afterReg').innerHTML=`<div class="err">${msg}</div>`;$('afterReg').classList.add('show');$('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});}
 
-// Génère la carte dans un conteneur INVISIBLE à taille réelle (1080x1080) -> export fiable
+/* ===== Validation par champ : bordure rouge + texte d'aide ===== */
+function fieldOf(input){return input.closest('.field');}
+function setHint(input,msg){const f=fieldOf(input);if(!f)return;f.classList.add('invalid');let h=f.querySelector('.hint-err');if(!h){h=document.createElement('small');h.className='hint-err';f.appendChild(h);}h.textContent=msg;}
+function clearHint(input){const f=fieldOf(input);if(!f)return;f.classList.remove('invalid');const h=f.querySelector('.hint-err');if(h)h.textContent='';}
+function validateEmailField(){const v=$('i_email').value.trim();if(v&&!EMAIL_RE.test(v)){setHint($('i_email'),T('err_email'));return false;}clearHint($('i_email'));return EMAIL_RE.test(v);}
+function validateAgeField(){const v=$('i_age').value.trim();const n=parseInt(v,10);if(v&&!(n>=16&&n<=99)){setHint($('i_age'),T('err_age'));return false;}clearHint($('i_age'));return n>=16&&n<=99;}
+
 async function generateCard(){
   const stage=document.createElement('div');
   stage.style.cssText='position:fixed;left:-10000px;top:0;width:1080px;height:1080px;z-index:-1';
@@ -223,69 +274,73 @@ async function generateCard(){
 }
 
 $('inscription').onclick=async()=>{
-  const btn=$('inscription'),label=btn.textContent;
-  btn.disabled=true;
-  btn.textContent='GÉNÉRATION…';
-  $('afterReg').innerHTML='';
-  $('afterReg').classList.remove('show');
-
+  const eOk=validateEmailField(), aOk=validateAgeField();
+  if(!eOk||!aOk){const bad=!eOk?$('i_email'):$('i_age');bad.focus();bad.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  const btn=$('inscription');btn.dataset.busy='1';btn.disabled=true;btn.textContent=T('gen');
+  $('afterReg').classList.remove('show');$('afterReg').innerHTML='';
   try{
-    validationVisible=true;
-    if(!validate(true)){btn.textContent=label;checkForm();return;}
     const cv=await generateCard();
     const cardPng=cv.toDataURL('image/png');
     const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
     const slug=slugify($('i_alias').value||$('i_last').value);
-    const file=new File([blob],`TTR_S0_${slug}.png`,{type:'image/png'});
-
-    let link = location.origin + '/drivers/' + slug;
-
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ payload: data(), photo: photoData, card: cardPng, website: $('i_website').value })
-    });
-
-    const text = await res.text();
-    let j = {};
-
-    try {
-      j = JSON.parse(text);
-    } catch {
-      throw new Error(text || 'Erreur serveur.');
-    }
-
-    if (!res.ok) {
-      throw new Error(j.error || 'Inscription impossible.');
-    }
-
-    if (j && j.slug) {
-      link = location.origin + '/drivers/' + j.slug;
-    }
-
-    // Téléchargement UNIQUEMENT si l'inscription est réellement enregistrée
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.download=file.name;
-    a.href=url;
-    a.click();
-
-    $('afterReg').innerHTML=`<div class="ok">✓ Inscription enregistrée&nbsp;!</div>
-      <div class="ok2">Ta carte est téléchargée. Tu vas recevoir un email de confirmation — <b style="color:#fff">pense à vérifier tes spams / courriers indésirables</b>. Nos équipes reviennent vers toi très vite.</div>
-      <div class="lbl">TON LIEN PERSONNEL À PARTAGER</div>
-      <div class="linkbox"><input value="${link}" readonly><button id="cp">COPIER</button></div>`;
-    $('afterReg').classList.add('show');
-    $('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});
-    $('cp').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(link);$('cp').textContent='COPIÉ ✓';};
+    const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:data(),photo:photoData,card:cardPng})});
+    const t=await res.text();let j={};try{j=JSON.parse(t);}catch(e){}
+    if(!res.ok){throw new Error(j.error||T('err_generic'));}
+    const link=location.origin+'/drivers/'+(j.slug||slug);
+    const url=URL.createObjectURL(blob);const a=document.createElement('a');a.download=`TTR_S0_${slug}.png`;a.href=url;a.click();
+    $('afterReg').innerHTML=`<div class="ok">${T('ok_title')}</div><div class="ok2">${T('ok_text')}</div>
+      <div class="lbl">${T('link_label')}</div>
+      <div class="linkbox"><input value="${link}" readonly><button id="cp">${T('copy')}</button></div>`;
+    $('afterReg').classList.add('show');$('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});
+    $('cp').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(link);$('cp').textContent=T('copied');};
     setTimeout(()=>URL.revokeObjectURL(url),5000);
-
-  }catch(e){
-    showError(e && e.message ? e.message : 'Inscription impossible.');
-  }
-
-  btn.textContent=label;
-  checkForm();
+  }catch(e){showErr((e&&e.message)?e.message:T('err_generic'));}
+  delete btn.dataset.busy;btn.textContent=T('btn_submit');checkForm();
 };
-render();checkForm();window.addEventListener('load',fit);setTimeout(fit,300);
+
+/* ===== MUSIQUE (Web Audio, synthétisée — compatible PC/iOS/Android) ===== */
+let AC=null,master=null,musicOn=false,ci=0,musicTimer=null,oscs=[];
+const CHORDS=[
+ [146.83,174.61,220.00,261.63,329.63], // Dm9
+ [196.00,246.94,293.66,329.63,349.23], // G13
+ [130.81,164.81,196.00,246.94,293.66], // Cmaj9
+ [220.00,261.63,329.63,392.00,293.66]  // Am11
+];
+function ensureAudio(){
+  if(AC)return true;
+  try{const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return false;AC=new Ctx();}catch(e){AC=null;return false;}
+  master=AC.createGain();master.gain.value=0;master.connect(AC.destination);
+  const rev=AC.createConvolver();const len=Math.floor(AC.sampleRate*2.2);const imp=AC.createBuffer(2,len,AC.sampleRate);
+  for(let ch=0;ch<2;ch++){const d=imp.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
+  rev.buffer=imp;const revG=AC.createGain();revG.gain.value=0.32;rev.connect(revG);revG.connect(master);AC._rev=revG;
+  const filt=AC.createBiquadFilter();filt.type='lowpass';filt.frequency.value=920;filt.Q.value=0.6;filt.connect(master);filt.connect(rev);
+  const padG=AC.createGain();padG.gain.value=0.16;padG.connect(filt);
+  for(let i=0;i<3;i++){const o=AC.createOscillator();o.type=i===2?'triangle':'sine';o.frequency.value=CHORDS[0][i];o.connect(padG);o.start();oscs.push(o);}
+  const lfo=AC.createOscillator();lfo.frequency.value=0.07;const lg=AC.createGain();lg.gain.value=0.05;lfo.connect(lg);lg.connect(padG.gain);lfo.start();
+  function pluck(f){const o=AC.createOscillator();o.type='triangle';o.frequency.value=f;const g=AC.createGain();g.gain.value=0;o.connect(g);g.connect(AC._rev);g.connect(master);const t=AC.currentTime;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.06,t+0.02);g.gain.exponentialRampToValueAtTime(0.0008,t+1.7);o.start(t);o.stop(t+1.8);}
+  function step(){const c=CHORDS[ci%CHORDS.length];for(let i=0;i<3;i++)oscs[i].frequency.setTargetAtTime(c[i],AC.currentTime,0.7);if(musicOn&&Math.random()<0.7)pluck(c[3+(ci%2)]*2);ci++;}
+  AC._step=step;step();
+  musicTimer=setInterval(()=>{if(musicOn)AC._step();},3800);
+  return true;
+}
+function startMusic(){if(!ensureAudio())return;if(AC.resume)AC.resume();musicOn=true;master.gain.setTargetAtTime(0.12,AC.currentTime,0.9);$('musicBtn').classList.add('on');}
+function stopMusic(){if(!AC){return;}musicOn=false;master.gain.setTargetAtTime(0.0,AC.currentTime,0.4);$('musicBtn').classList.remove('on');}
+function toggleMusic(){if(!AC||!musicOn)startMusic();else stopMusic();}
+$('musicBtn').onclick=toggleMusic;
+
+/* ===== SPLASH -> choix langue ===== */
+document.querySelectorAll('.flagbtn').forEach(b=>b.addEventListener('click',()=>{
+  applyLang(b.getAttribute('data-lang'));
+  startMusic();
+  $('splash').classList.add('hide');
+  $('topctl').classList.remove('hidden');
+  document.body.classList.remove('locked');
+  setTimeout(()=>{$('splash').style.display='none';fit();},650);
+}));
+document.querySelectorAll('[data-setlang]').forEach(b=>b.addEventListener('click',()=>applyLang(b.getAttribute('data-setlang'))));
+
+/* init */
+buildCountries();applyLang('fr');
+window.addEventListener('load',fit);setTimeout(fit,300);
 </script>
 </body></html>

@@ -59,7 +59,7 @@ $('enter').onclick=load;$('pass').addEventListener('keydown',e=>{if(e.key==='Ent
 async function load(){
   PASS=$('pass').value;
   const r=await fetch('/api/admin-list',{headers:{'x-admin-pass':PASS}});
-  if(r.status!==200){$('err').textContent='Mot de passe invalide.';return;}
+  if(r.status!==200){let m='Mot de passe invalide.';try{const j=await r.json();if(j&&j.error)m=j.error;}catch(e){}$('err').textContent=m;return;}
   const data=await r.json();
   if(!Array.isArray(data)){ $('err').textContent=data.error||'Erreur de chargement.'; return; }
   ROWS=data;
@@ -85,7 +85,7 @@ function render(row){
         <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
       </div>
       <div class="bar">
-        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span>
+        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span>
         <button class="btn" data-act="save">ENREGISTRER</button>
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         ${row.card_url?`<a class="btn ghost" style="text-decoration:none" href="${row.card_url}" target="_blank" download>⬇ CARTE</a>`:''}
@@ -104,23 +104,16 @@ function render(row){
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-
 function selected(){return [...document.querySelectorAll('.sel:checked')];}
 function updateSel(){const n=selected().length;$('selCount').textContent=n+' sélectionnée(s)';$('dlZip').disabled=n===0;}
 $('selAll').addEventListener('change',e=>{document.querySelectorAll('.sel').forEach(c=>c.checked=e.target.checked);updateSel();});
-
 $('dlZip').onclick=async()=>{
   const sel=selected();if(!sel.length)return;
   const wantCards=$('optCards').checked,wantPhotos=$('optPhotos').checked,wantData=$('optData').checked;
   if(!wantCards&&!wantPhotos&&!wantData){alert('Choisis au moins : Cartes, Photos ou Données.');return;}
   $('dlZip').disabled=true;$('zipState').textContent='Préparation…';
   const rowsSel=sel.map(c=>ROWS.find(r=>r.slug===c.dataset.slug)).filter(Boolean);
-
-  // CSV seul -> téléchargement direct
-  if(wantData&&!wantCards&&!wantPhotos){
-    dlBlob(csvBlob(rowsSel),'candidatures.csv');
-    $('zipState').textContent=rowsSel.length+' ligne(s) exportée(s).';$('dlZip').disabled=false;return;
-  }
+  if(wantData&&!wantCards&&!wantPhotos){dlBlob(csvBlob(rowsSel),'candidatures.csv');$('zipState').textContent=rowsSel.length+' ligne(s) exportée(s).';$('dlZip').disabled=false;return;}
   const zip=new JSZip();let okc=0;
   for(const c of sel){
     const slug=c.dataset.slug||'pilote';
@@ -135,12 +128,12 @@ $('dlZip').onclick=async()=>{
 function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
 function csvBlob(rows){
   const eqL=e=>e==='achat'?'Achat':(e==='location'?'Location':'');
-  const cols=['Pseudo','Prénom','Nom','Âge','Ville','Nationalité','Style de conduite','Email','Formule','Statut','Masquée','Lien public','Date'];
+  const cols=['Pseudo','Prénom','Nom','Âge','Ville','Pays','Langue','Style de conduite','Email','Formule','Statut','Masquée','Lien public','Date'];
   const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
   const lines=[cols.join(';')];
   rows.forEach(r=>{
     const link=location.origin+'/drivers/'+(r.slug||'');
-    lines.push([r.alias,r.first_name,r.last_name,r.age,r.city,r.nationality,r.driving_style,r.email,eqL(r.equipment),r.status,(r.hidden?'oui':'non'),link,(r.created_at||'').slice(0,19).replace('T',' ')].map(q).join(';'));
+    lines.push([r.alias,r.first_name,r.last_name,r.age,r.city,r.nationality,(r.language||'fr').toUpperCase(),r.driving_style,r.email,eqL(r.equipment),r.status,(r.hidden?'oui':'non'),link,(r.created_at||'').slice(0,19).replace('T',' ')].map(q).join(';'));
   });
   return new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
 }

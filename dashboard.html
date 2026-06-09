@@ -21,6 +21,7 @@ a{color:var(--cyan);text-decoration:none}
 .chip b{color:#fff}
 .chip.hot{border-color:#e22ed0;background:#1a0c18}
 .chip.mod{border-color:#caa53a;background:#1a160a}
+.chip.lng{border-color:#34b8ff;background:#0a1622}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
 @media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:16px}
@@ -37,6 +38,8 @@ a{color:var(--cyan);text-decoration:none}
 .fill.achat{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
 .fill.loc{background:linear-gradient(90deg,#7a33f0,#e22ed0)}
 .fill.photo{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.fill.fr{background:linear-gradient(90deg,#0b2ea0,#e1000f)}
+.fill.en{background:linear-gradient(90deg,#012169,#C8102E)}
 .cities .row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
 .cities .nm{width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cities .tr{flex:1;height:9px;background:#070809;border-radius:5px;overflow:hidden}
@@ -74,7 +77,10 @@ a{color:var(--cyan);text-decoration:none}
     <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
     <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
   </div>
-  <div class="card" style="margin-bottom:18px"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  <div class="grid2">
+    <div class="card"><h2>RÉPARTITION PAR LANGUE</h2><div id="langs"></div></div>
+    <div class="card"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  </div>
   <div class="card recent"><h2>DERNIÈRES INSCRIPTIONS</h2><div id="recent"></div></div>
 </div>
 
@@ -83,76 +89,62 @@ const $=id=>document.getElementById(id);
 let PASS='';
 $('enter').onclick=load;$('pass').addEventListener('keydown',e=>{if(e.key==='Enter')load();});
 $('refresh') && ($('refresh').onclick=load);
-
 async function load(){
   PASS=PASS||$('pass').value;
   const r=await fetch('/api/admin-list',{headers:{'x-admin-pass':PASS}});
-  if(r.status!==200){$('err').textContent='Mot de passe invalide.';PASS='';return;}
+  if(r.status!==200){let m='Mot de passe invalide.';try{const j=await r.json();if(j&&j.error)m=j.error;}catch(e){}$('err').textContent=m;PASS='';return;}
   const rows=await r.json();
   $('gate').style.display='none';$('app').style.display='block';
   render(Array.isArray(rows)?rows:[]);
 }
-
 function dayKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x;}
-
 function render(rows){
   const now=new Date();
   const today0=startOfDay(now).getTime();
   const yest0=today0-864e5;
   const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
-
-  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0;
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0, frN=0, enN=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
     const t=r.created_at?new Date(r.created_at).getTime():0;
-    if(t>=today0)todayN++;
-    else if(t>=yest0)yestN++;
+    if(t>=today0)todayN++; else if(t>=yest0)yestN++;
     if(t>=d7)n7++; if(t>=d30)n30++;
     if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
     if(r.photo_url)withPhoto++;
     if(r.hidden)hidden++;
+    if((r.language||'fr')==='en')enN++; else frN++;
     const c=(r.city||'').trim(); if(c){const k=c.toLowerCase();cityMap[k]=cityMap[k]||{n:0,label:c};cityMap[k].n++;}
     if(t){const k=dayKey(new Date(t));dayMap[k]=(dayMap[k]||0)+1;}
   });
-
   $('updated').textContent='Mis à jour le '+now.toLocaleString('fr-FR');
-
-  // Alertes
   const al=[];
   al.push(`<div class="chip hot">🔥 <span><b>${todayN}</b> inscription(s) aujourd'hui</span></div>`);
   al.push(`<div class="chip"><span>Hier : <b>${yestN}</b> · 7 jours : <b>${n7}</b></span></div>`);
+  al.push(`<div class="chip lng">🌐 <span>FR <b>${frN}</b> · EN <b>${enN}</b></span></div>`);
   if(hidden>0)al.push(`<div class="chip mod">⚠ <span><b>${hidden}</b> carte(s) masquée(s)</span></div>`);
   $('alerts').innerHTML=al.join('');
-
-  // KPIs
-  $('kpis').innerHTML=[
-    ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
-  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
-
-  // Formule + photo
+  $('kpis').innerHTML=[['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
   const denom=Math.max(achat+loc,1);
   $('formule').innerHTML=`
     <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
     <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
     <div class="split" style="margin-top:16px"><div class="row"><span>Avec photo</span><b>${withPhoto}/${total} (${total?Math.round(withPhoto/total*100):0}%)</b></div><div class="track"><div class="fill photo" style="width:${total?Math.round(withPhoto/total*100):0}%"></div></div></div>`;
-
-  // Top villes
+  const ld=Math.max(frN+enN,1);
+  $('langs').innerHTML=`
+    <div class="split"><div class="row"><span>🇫🇷 Français</span><b>${frN} (${Math.round(frN/ld*100)}%)</b></div><div class="track"><div class="fill fr" style="width:${Math.round(frN/ld*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>🇬🇧 English</span><b>${enN} (${Math.round(enN/ld*100)}%)</b></div><div class="track"><div class="fill en" style="width:${Math.round(enN/ld*100)}%"></div></div></div>`;
   const cities=Object.values(cityMap).sort((a,b)=>b.n-a.n).slice(0,6);
   const maxC=Math.max(1,...cities.map(c=>c.n));
   $('cities').innerHTML=cities.length?cities.map(c=>`<div class="row"><span class="nm">${esc(c.label)}</span><span class="tr"><i style="width:${Math.round(c.n/maxC*100)}%"></i></span><span class="ct">${c.n}</span></div>`).join(''):'<span style="color:var(--muted);font-size:12px">Aucune donnée.</span>';
-
-  // Chart 14 jours
   const days=[];for(let i=13;i>=0;i--){const dd=new Date(today0-i*864e5);days.push({k:dayKey(dd),lab:dd.getDate()});}
   const maxD=Math.max(1,...days.map(d=>dayMap[d.k]||0));
   $('chart').innerHTML=days.map(d=>{const n=dayMap[d.k]||0;return `<div class="col"><div class="n">${n||''}</div><div class="b" style="height:${Math.round(n/maxD*100)}%"></div><div class="d">${d.lab}</div></div>`;}).join('');
-
-  // Dernières inscriptions
   const recent=rows.slice(0,8);
   $('recent').innerHTML=recent.length?recent.map(r=>{
     const tg=r.equipment==='achat'?'<span class="tag a">ACHAT</span>':(r.equipment==='location'?'<span class="tag l">LOCATION</span>':'<span class="tag n">—</span>');
     const when=r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-    return `<div class="r"><span><b>${esc(r.alias||'')}</b> <span class="m">· ${esc(r.city||'—')}</span></span><span>${tg} <span class="m">${when}</span></span></div>`;
+    return `<div class="r"><span><b>${esc(r.alias||'')}</b> <span class="m">· ${esc(r.city||'—')} · ${(r.language||'fr').toUpperCase()}</span></span><span>${tg} <span class="m">${when}</span></span></div>`;
   }).join(''):'<span style="color:var(--muted);font-size:12px">Aucune inscription pour le moment.</span>';
 }
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}

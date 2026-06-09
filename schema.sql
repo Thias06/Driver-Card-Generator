@@ -18,33 +18,29 @@ create table if not exists drivers (
   season text default 'S0',
   overall int default 50,
   level text default 'ROOKIE',
-  equipment text
+  equipment text,
+  language text default 'fr'                -- V3 : langue choisie (fr | en)
 );
 
--- Si la table existe déjà (déploiement précédent), ajoute la colonne formule :
+-- Si la table existe déjà (déploiement précédent), ajoute les colonnes manquantes :
 alter table drivers add column if not exists equipment text;
+alter table drivers add column if not exists language text default 'fr';   -- *** NOUVEAU V3 ***
 
--- Accès uniquement via les fonctions serveur (clé service_role), donc on garde la table
--- protégée : RLS activé sans policy publique. La clé service_role contourne RLS.
+-- Accès uniquement via les fonctions serveur (clé service_role) : RLS activé sans policy publique.
 alter table drivers enable row level security;
 
 -- IMPORTANT (Storage) : créer un bucket PUBLIC nommé "media"
 -- Dashboard → Storage → New bucket → name = media → Public = ON
 
-
--- Sécurité / intégrité supplémentaire recommandée
--- Empêche deux inscriptions avec le même email.
+-- Sécurité / intégrité : empêche deux inscriptions avec le même email.
 do $$
 begin
-  if not exists (
-    select 1 from pg_constraint where conname = 'drivers_email_unique'
-  ) then
+  if not exists (select 1 from pg_constraint where conname = 'drivers_email_unique') then
     alter table drivers add constraint drivers_email_unique unique (email);
   end if;
 end $$;
 
--- Contraintes simples côté base. Si la table contient déjà des valeurs invalides,
--- corrige-les avant d'activer ces contraintes.
+-- Âge borné 16–99 (corrige d'éventuelles valeurs invalides avant d'activer).
 do $$
 begin
   if not exists (select 1 from pg_constraint where conname = 'drivers_age_range') then
