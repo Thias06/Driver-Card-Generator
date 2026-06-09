@@ -1,140 +1,160 @@
 <!doctype html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Ring · Admin — Season 0</title>
+<title>The Ring · Tableau de bord — Season 0</title>
 <link rel="stylesheet" href="/card.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--txt);font-family:var(--fb);padding:24px}
-h1{font-family:var(--ft);font-size:14px;letter-spacing:3px;margin-bottom:6px}
-.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+body{background:radial-gradient(900px 600px at 90% -10%,rgba(122,51,240,.14),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.12),transparent 60%),var(--bg);color:var(--txt);font-family:var(--fb);padding:24px;min-height:100vh}
+a{color:var(--cyan);text-decoration:none}
 .gate{max-width:340px;margin:80px auto;background:#0e0f15;border:1px solid var(--line);border-radius:14px;padding:24px}
+.gate h1{font-family:var(--ft);font-size:13px;letter-spacing:2px;margin-bottom:6px}
 .gate input{width:100%;background:#070809;border:1px solid var(--line);color:#fff;border-radius:9px;padding:11px;margin:10px 0}
 .btn{background:var(--brand);border:none;color:#fff;font-family:var(--ft);letter-spacing:1px;font-size:11px;padding:11px 14px;border-radius:9px;cursor:pointer}
-.btn.ghost{background:#0e0f17;border:1px solid var(--violet)}
-.btn[disabled]{opacity:.4;cursor:not-allowed}
-.toolbar{position:sticky;top:0;z-index:5;background:#0a0b10;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-.toolbar label{font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;cursor:pointer}
-.toolbar .count{color:var(--cyan);font-family:var(--ft);font-size:11px;letter-spacing:1px}
-.row{display:grid;grid-template-columns:30px 220px 1fr;gap:16px;background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;align-items:start}
-.chk{width:20px;height:20px;accent-color:#7a33f0;margin-top:4px}
-.prevbox{width:220px;height:220px;overflow:hidden;border-radius:10px;position:relative;background:#040406}
-.prevbox .cardPost{transform-origin:top left;transform:scale(.2037)}
-.f{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.f label{font-family:var(--ft);font-size:8px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:4px}
-.f input{width:100%;background:#070809;border:1px solid var(--line);color:#fff;border-radius:8px;padding:8px;font-size:13px}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
-.tag{font-family:var(--ft);font-size:9px;letter-spacing:1px;padding:5px 9px;border-radius:6px}
-.tag.pub{background:#0c3;color:#031}.tag.hid{background:#a22;color:#fff}.tag.pend{background:#555;color:#fff}
-.tag.eq{background:#15203a;color:#7fb0ff}
-a{color:var(--cyan)}
+.btn.ghost{background:#0e0f17;border:1px solid var(--line);color:var(--txt)}
+.wrap{max-width:1080px;margin:0 auto}
+.head{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.head img{width:48px}.head h1{font-family:var(--ft);font-size:15px;letter-spacing:2px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:18px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.alerts{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.chip{font-size:12.5px;padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#0c0d13;display:flex;gap:8px;align-items:center}
+.chip b{color:#fff}
+.chip.hot{border-color:#e22ed0;background:#1a0c18}
+.chip.mod{border-color:#caa53a;background:#1a160a}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:16px}
+.kpi .l{font-family:var(--ft);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
+.kpi .v{font-family:var(--fd);font-style:italic;font-weight:800;font-size:38px;line-height:1;margin-top:8px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+.card{background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h2{font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:14px}
+.split{margin-bottom:12px}
+.split .row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.track{height:10px;border-radius:6px;background:#070809;overflow:hidden}
+.track .fill{height:100%;border-radius:6px}
+.fill.achat{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
+.fill.loc{background:linear-gradient(90deg,#7a33f0,#e22ed0)}
+.fill.photo{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.cities .row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+.cities .nm{width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cities .tr{flex:1;height:9px;background:#070809;border-radius:5px;overflow:hidden}
+.cities .tr i{display:block;height:100%;background:var(--rookie);border-radius:5px}
+.cities .ct{width:26px;text-align:right;color:var(--muted)}
+.chart{display:flex;align-items:flex-end;gap:5px;height:140px;padding-top:10px}
+.chart .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px;height:100%}
+.chart .col .b{width:100%;max-width:26px;background:linear-gradient(180deg,#7a33f0,#2e54ff);border-radius:4px 4px 0 0;min-height:2px}
+.chart .col .d{font-size:8.5px;color:var(--muted)}
+.chart .col .n{font-size:9px;color:#cfd1dc}
+.recent .r{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #15161d;font-size:13px}
+.recent .r:first-child{border-top:none}
+.recent .r .m{color:var(--muted);font-size:11.5px}
+.tag{font-family:var(--ft);font-size:8px;letter-spacing:1px;padding:3px 7px;border-radius:5px}
+.tag.a{background:#10233f;color:#7fb0ff}.tag.l{background:#23103a;color:#c79bff}.tag.n{background:#1a1b22;color:#9092a4}
 </style></head><body>
+
 <div id="gate" class="gate">
-  <h1>ADMIN — THE RING</h1>
+  <h1>TABLEAU DE BORD — THE RING</h1>
   <input id="pass" type="password" placeholder="Mot de passe admin">
   <button class="btn" id="enter" style="width:100%">ENTRER</button>
   <p id="err" style="color:#f55;font-size:11px;margin-top:8px"></p>
 </div>
-<div id="app" style="display:none">
-  <h1>CANDIDATURES — SEASON 0</h1>
-  <div class="sub" id="count"></div>
-  <div class="toolbar">
-    <label><input type="checkbox" id="selAll" class="chk" style="margin:0">Tout sélectionner</label>
-    <span class="count" id="selCount">0 sélectionnée(s)</span>
-    <span style="width:1px;height:18px;background:var(--line)"></span>
-    <span style="color:var(--muted);font-size:11px">Inclure :</span>
-    <label><input type="checkbox" id="optCards" checked>Cartes</label>
-    <label><input type="checkbox" id="optPhotos">Photos</label>
-    <label><input type="checkbox" id="optData">Données (CSV/Excel)</label>
-    <button class="btn" id="dlZip" disabled>⬇ TÉLÉCHARGER LA SÉLECTION</button>
-    <span id="zipState" style="color:var(--muted);font-size:11px"></span>
+
+<div id="app" class="wrap" style="display:none">
+  <div class="head"><img src="/ttr-logo.png" alt="The Ring"><h1>TABLEAU DE BORD — SEASON 0</h1></div>
+  <div class="sub" id="updated"></div>
+  <div class="bar">
+    <button class="btn ghost" id="refresh">↻ Rafraîchir</button>
+    <a class="btn ghost" href="/admin.html" style="display:inline-block">Ouvrir /admin</a>
   </div>
-  <div id="list"></div>
+  <div class="alerts" id="alerts"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid2">
+    <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
+    <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
+  </div>
+  <div class="card" style="margin-bottom:18px"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  <div class="card recent"><h2>DERNIÈRES INSCRIPTIONS</h2><div id="recent"></div></div>
 </div>
-<script src="/card.js"></script>
+
 <script>
 const $=id=>document.getElementById(id);
-let PASS='', ROWS=[];
+let PASS='';
 $('enter').onclick=load;$('pass').addEventListener('keydown',e=>{if(e.key==='Enter')load();});
+$('refresh') && ($('refresh').onclick=load);
+
 async function load(){
-  PASS=$('pass').value;
+  PASS=PASS||$('pass').value;
   const r=await fetch('/api/admin-list',{headers:{'x-admin-pass':PASS}});
-  if(r.status!==200){let m='Mot de passe invalide.';try{const j=await r.json();if(j&&j.error)m=j.error;}catch(e){}$('err').textContent=m;return;}
-  const data=await r.json();
-  if(!Array.isArray(data)){ $('err').textContent=data.error||'Erreur de chargement.'; return; }
-  ROWS=data;
+  if(r.status!==200){$('err').textContent='Mot de passe invalide.';PASS='';return;}
+  const rows=await r.json();
   $('gate').style.display='none';$('app').style.display='block';
-  $('count').textContent=ROWS.length+' inscription(s)';
-  $('list').innerHTML='';ROWS.forEach(render);updateSel();
+  render(Array.isArray(rows)?rows:[]);
 }
-function eqLabel(e){return e==='achat'?'ACHAT':(e==='location'?'LOCATION':'—');}
-function render(row){
-  const wrap=document.createElement('div');wrap.className='row';
-  const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level};
-  const st=row.hidden?'<span class="tag hid">MASQUÉE</span>':(row.status==='published'?'<span class="tag pub">PUBLIÉE</span>':'<span class="tag pend">'+esc((row.status||'').toUpperCase())+'</span>');
-  wrap.innerHTML=`
-    <div><input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}"></div>
-    <div><div class="prevbox"><div class="cardPost" id="prev-${row.id}"></div></div></div>
-    <div>
-      <div class="f">
-        <div><label>PSEUDO</label><input data-f="alias" value="${esc(row.alias)}"></div>
-        <div><label>STYLE DE CONDUITE</label><input data-f="driving_style" value="${esc(row.driving_style||'')}"></div>
-        <div><label>PRÉNOM</label><input data-f="first_name" value="${esc(row.first_name)}"></div>
-        <div><label>NOM</label><input data-f="last_name" value="${esc(row.last_name)}"></div>
-        <div><label>VILLE</label><input data-f="city" value="${esc(row.city||'')}"></div>
-        <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
-      </div>
-      <div class="bar">
-        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span>
-        <button class="btn" data-act="save">ENREGISTRER</button>
-        <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
-        ${row.card_url?`<a class="btn ghost" style="text-decoration:none" href="${row.card_url}" target="_blank" download>⬇ CARTE</a>`:''}
-        ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
-        <span style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
-      </div>
-    </div>`;
-  $('list').appendChild(wrap);
-  mountPostCard($('prev-'+row.id),D,row.photo_url||'');
-  const inputs=wrap.querySelectorAll('input[data-f]');
-  function get(f){const e=wrap.querySelector('input[data-f="'+f+'"]');return e?e.value:'';}
-  inputs.forEach(inp=>inp.addEventListener('input',()=>{mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level},row.photo_url||'');}));
-  wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Enregistré.');};
-  wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
-  wrap.querySelector('.sel').addEventListener('change',updateSel);
-}
-async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
-function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function selected(){return [...document.querySelectorAll('.sel:checked')];}
-function updateSel(){const n=selected().length;$('selCount').textContent=n+' sélectionnée(s)';$('dlZip').disabled=n===0;}
-$('selAll').addEventListener('change',e=>{document.querySelectorAll('.sel').forEach(c=>c.checked=e.target.checked);updateSel();});
-$('dlZip').onclick=async()=>{
-  const sel=selected();if(!sel.length)return;
-  const wantCards=$('optCards').checked,wantPhotos=$('optPhotos').checked,wantData=$('optData').checked;
-  if(!wantCards&&!wantPhotos&&!wantData){alert('Choisis au moins : Cartes, Photos ou Données.');return;}
-  $('dlZip').disabled=true;$('zipState').textContent='Préparation…';
-  const rowsSel=sel.map(c=>ROWS.find(r=>r.slug===c.dataset.slug)).filter(Boolean);
-  if(wantData&&!wantCards&&!wantPhotos){dlBlob(csvBlob(rowsSel),'candidatures.csv');$('zipState').textContent=rowsSel.length+' ligne(s) exportée(s).';$('dlZip').disabled=false;return;}
-  const zip=new JSZip();let okc=0;
-  for(const c of sel){
-    const slug=c.dataset.slug||'pilote';
-    if(wantCards&&c.dataset.card){try{const b=await (await fetch(c.dataset.card,{mode:'cors'})).blob();zip.file(slug+'/carte.png',b);okc++;}catch(e){}}
-    if(wantPhotos&&c.dataset.photo){try{const b=await (await fetch(c.dataset.photo,{mode:'cors'})).blob();const ext=(c.dataset.photo.split('.').pop()||'jpg').split('?')[0];zip.file(slug+'/photo.'+ext,b);}catch(e){}}
-  }
-  if(wantData) zip.file('candidatures.csv',csvBlob(rowsSel));
-  const out=await zip.generateAsync({type:'blob'});
-  dlBlob(out,'the-ring-selection.zip');
-  $('zipState').textContent='Téléchargé ('+okc+' carte(s)).';$('dlZip').disabled=false;
-};
-function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
-function csvBlob(rows){
-  const eqL=e=>e==='achat'?'Achat':(e==='location'?'Location':'');
-  const cols=['Pseudo','Prénom','Nom','Âge','Ville','Pays','Langue','Style de conduite','Email','Formule','Statut','Masquée','Lien public','Date'];
-  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
-  const lines=[cols.join(';')];
+
+function dayKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x;}
+
+function render(rows){
+  const now=new Date();
+  const today0=startOfDay(now).getTime();
+  const yest0=today0-864e5;
+  const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
+
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0;
+  const cityMap={}, dayMap={};
   rows.forEach(r=>{
-    const link=location.origin+'/drivers/'+(r.slug||'');
-    lines.push([r.alias,r.first_name,r.last_name,r.age,r.city,r.nationality,(r.language||'fr').toUpperCase(),r.driving_style,r.email,eqL(r.equipment),r.status,(r.hidden?'oui':'non'),link,(r.created_at||'').slice(0,19).replace('T',' ')].map(q).join(';'));
+    const t=r.created_at?new Date(r.created_at).getTime():0;
+    if(t>=today0)todayN++;
+    else if(t>=yest0)yestN++;
+    if(t>=d7)n7++; if(t>=d30)n30++;
+    if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
+    if(r.photo_url)withPhoto++;
+    if(r.hidden)hidden++;
+    const c=(r.city||'').trim(); if(c){const k=c.toLowerCase();cityMap[k]=cityMap[k]||{n:0,label:c};cityMap[k].n++;}
+    if(t){const k=dayKey(new Date(t));dayMap[k]=(dayMap[k]||0)+1;}
   });
-  return new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+
+  $('updated').textContent='Mis à jour le '+now.toLocaleString('fr-FR');
+
+  // Alertes
+  const al=[];
+  al.push(`<div class="chip hot">🔥 <span><b>${todayN}</b> inscription(s) aujourd'hui</span></div>`);
+  al.push(`<div class="chip"><span>Hier : <b>${yestN}</b> · 7 jours : <b>${n7}</b></span></div>`);
+  if(hidden>0)al.push(`<div class="chip mod">⚠ <span><b>${hidden}</b> carte(s) masquée(s)</span></div>`);
+  $('alerts').innerHTML=al.join('');
+
+  // KPIs
+  $('kpis').innerHTML=[
+    ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
+  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+
+  // Formule + photo
+  const denom=Math.max(achat+loc,1);
+  $('formule').innerHTML=`
+    <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
+    <div class="split" style="margin-top:16px"><div class="row"><span>Avec photo</span><b>${withPhoto}/${total} (${total?Math.round(withPhoto/total*100):0}%)</b></div><div class="track"><div class="fill photo" style="width:${total?Math.round(withPhoto/total*100):0}%"></div></div></div>`;
+
+  // Top villes
+  const cities=Object.values(cityMap).sort((a,b)=>b.n-a.n).slice(0,6);
+  const maxC=Math.max(1,...cities.map(c=>c.n));
+  $('cities').innerHTML=cities.length?cities.map(c=>`<div class="row"><span class="nm">${esc(c.label)}</span><span class="tr"><i style="width:${Math.round(c.n/maxC*100)}%"></i></span><span class="ct">${c.n}</span></div>`).join(''):'<span style="color:var(--muted);font-size:12px">Aucune donnée.</span>';
+
+  // Chart 14 jours
+  const days=[];for(let i=13;i>=0;i--){const dd=new Date(today0-i*864e5);days.push({k:dayKey(dd),lab:dd.getDate()});}
+  const maxD=Math.max(1,...days.map(d=>dayMap[d.k]||0));
+  $('chart').innerHTML=days.map(d=>{const n=dayMap[d.k]||0;return `<div class="col"><div class="n">${n||''}</div><div class="b" style="height:${Math.round(n/maxD*100)}%"></div><div class="d">${d.lab}</div></div>`;}).join('');
+
+  // Dernières inscriptions
+  const recent=rows.slice(0,8);
+  $('recent').innerHTML=recent.length?recent.map(r=>{
+    const tg=r.equipment==='achat'?'<span class="tag a">ACHAT</span>':(r.equipment==='location'?'<span class="tag l">LOCATION</span>':'<span class="tag n">—</span>');
+    const when=r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+    return `<div class="r"><span><b>${esc(r.alias||'')}</b> <span class="m">· ${esc(r.city||'—')}</span></span><span>${tg} <span class="m">${when}</span></span></div>`;
+  }).join(''):'<span style="color:var(--muted);font-size:12px">Aucune inscription pour le moment.</span>';
 }
-</script></body></html>
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+</script>
+</body></html>

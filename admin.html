@@ -1,85 +1,147 @@
-// POST /api/admin-update  (header x-admin-pass)  body: { id, fields:{...} }
-const SB = process.env.SUPABASE_URL;
-const KEY = process.env.SUPABASE_SERVICE_KEY;
-const PASS = process.env.ADMIN_PASSWORD;
-
-const ADMIN_WINDOW_MS = 15 * 60 * 1000;
-const ADMIN_MAX_FAILS = 6;
-const ALLOWED = ['alias', 'first_name', 'last_name', 'city', 'nationality', 'driving_style', 'status', 'hidden'];
-
-// Liste de pays unifiée avec le formulaire (valeurs stockées = libellés FR)
-const COUNTRIES = ['France','Belgique','Suisse','Luxembourg','Monaco','Canada','Espagne','Italie','Portugal','Allemagne','Royaume-Uni','Maroc','Algérie','Tunisie','Autre'];
-
-function getIp(req) {
-  return String(req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || '')
-    .split(',')[0].trim() || 'unknown';
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ring · Admin — Season 0</title>
+<link rel="stylesheet" href="/card.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--fb);padding:24px}
+h1{font-family:var(--ft);font-size:14px;letter-spacing:3px;margin-bottom:6px}
+.sub{color:var(--muted);font-size:12px;margin-bottom:16px}
+.gate{max-width:340px;margin:80px auto;background:#0e0f15;border:1px solid var(--line);border-radius:14px;padding:24px}
+.gate input{width:100%;background:#070809;border:1px solid var(--line);color:#fff;border-radius:9px;padding:11px;margin:10px 0}
+.btn{background:var(--brand);border:none;color:#fff;font-family:var(--ft);letter-spacing:1px;font-size:11px;padding:11px 14px;border-radius:9px;cursor:pointer}
+.btn.ghost{background:#0e0f17;border:1px solid var(--violet)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.toolbar{position:sticky;top:0;z-index:5;background:#0a0b10;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.toolbar label{font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;cursor:pointer}
+.toolbar .count{color:var(--cyan);font-family:var(--ft);font-size:11px;letter-spacing:1px}
+.row{display:grid;grid-template-columns:30px 220px 1fr;gap:16px;background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;align-items:start}
+.chk{width:20px;height:20px;accent-color:#7a33f0;margin-top:4px}
+.prevbox{width:220px;height:220px;overflow:hidden;border-radius:10px;position:relative;background:#040406}
+.prevbox .cardPost{transform-origin:top left;transform:scale(.2037)}
+.f{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.f label{font-family:var(--ft);font-size:8px;letter-spacing:1.5px;color:var(--muted);display:block;margin-bottom:4px}
+.f input{width:100%;background:#070809;border:1px solid var(--line);color:#fff;border-radius:8px;padding:8px;font-size:13px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+.tag{font-family:var(--ft);font-size:9px;letter-spacing:1px;padding:5px 9px;border-radius:6px}
+.tag.pub{background:#0c3;color:#031}.tag.hid{background:#a22;color:#fff}.tag.pend{background:#555;color:#fff}
+.tag.eq{background:#15203a;color:#7fb0ff}
+a{color:var(--cyan)}
+</style></head><body>
+<div id="gate" class="gate">
+  <h1>ADMIN — THE RING</h1>
+  <input id="pass" type="password" placeholder="Mot de passe admin">
+  <button class="btn" id="enter" style="width:100%">ENTRER</button>
+  <p id="err" style="color:#f55;font-size:11px;margin-top:8px"></p>
+</div>
+<div id="app" style="display:none">
+  <h1>CANDIDATURES — SEASON 0</h1>
+  <div class="sub" id="count"></div>
+  <div class="toolbar">
+    <label><input type="checkbox" id="selAll" class="chk" style="margin:0">Tout sélectionner</label>
+    <span class="count" id="selCount">0 sélectionnée(s)</span>
+    <span style="width:1px;height:18px;background:var(--line)"></span>
+    <span style="color:var(--muted);font-size:11px">Inclure :</span>
+    <label><input type="checkbox" id="optCards" checked>Cartes</label>
+    <label><input type="checkbox" id="optPhotos">Photos</label>
+    <label><input type="checkbox" id="optData">Données (CSV/Excel)</label>
+    <button class="btn" id="dlZip" disabled>⬇ TÉLÉCHARGER LA SÉLECTION</button>
+    <span id="zipState" style="color:var(--muted);font-size:11px"></span>
+  </div>
+  <div id="list"></div>
+</div>
+<script src="/card.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+let PASS='', ROWS=[];
+$('enter').onclick=load;$('pass').addEventListener('keydown',e=>{if(e.key==='Enter')load();});
+async function load(){
+  PASS=$('pass').value;
+  const r=await fetch('/api/admin-list',{headers:{'x-admin-pass':PASS}});
+  if(r.status!==200){$('err').textContent='Mot de passe invalide.';return;}
+  const data=await r.json();
+  if(!Array.isArray(data)){ $('err').textContent=data.error||'Erreur de chargement.'; return; }
+  ROWS=data;
+  $('gate').style.display='none';$('app').style.display='block';
+  $('count').textContent=ROWS.length+' inscription(s)';
+  $('list').innerHTML='';ROWS.forEach(render);updateSel();
 }
-function isBlocked(ip) {
-  const now = Date.now();
-  globalThis.__ttrAdminFails = globalThis.__ttrAdminFails || new Map();
-  const b = globalThis.__ttrAdminFails.get(ip);
-  if (!b) return false;
-  if (now > b.resetAt) { globalThis.__ttrAdminFails.delete(ip); return false; }
-  return b.count >= ADMIN_MAX_FAILS;
+function eqLabel(e){return e==='achat'?'ACHAT':(e==='location'?'LOCATION':'—');}
+function render(row){
+  const wrap=document.createElement('div');wrap.className='row';
+  const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level};
+  const st=row.hidden?'<span class="tag hid">MASQUÉE</span>':(row.status==='published'?'<span class="tag pub">PUBLIÉE</span>':'<span class="tag pend">'+esc((row.status||'').toUpperCase())+'</span>');
+  wrap.innerHTML=`
+    <div><input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}"></div>
+    <div><div class="prevbox"><div class="cardPost" id="prev-${row.id}"></div></div></div>
+    <div>
+      <div class="f">
+        <div><label>PSEUDO</label><input data-f="alias" value="${esc(row.alias)}"></div>
+        <div><label>STYLE DE CONDUITE</label><input data-f="driving_style" value="${esc(row.driving_style||'')}"></div>
+        <div><label>PRÉNOM</label><input data-f="first_name" value="${esc(row.first_name)}"></div>
+        <div><label>NOM</label><input data-f="last_name" value="${esc(row.last_name)}"></div>
+        <div><label>VILLE</label><input data-f="city" value="${esc(row.city||'')}"></div>
+        <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
+      </div>
+      <div class="bar">
+        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span>
+        <button class="btn" data-act="save">ENREGISTRER</button>
+        <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
+        ${row.card_url?`<a class="btn ghost" style="text-decoration:none" href="${row.card_url}" target="_blank" download>⬇ CARTE</a>`:''}
+        ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
+        <span style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
+      </div>
+    </div>`;
+  $('list').appendChild(wrap);
+  mountPostCard($('prev-'+row.id),D,row.photo_url||'');
+  const inputs=wrap.querySelectorAll('input[data-f]');
+  function get(f){const e=wrap.querySelector('input[data-f="'+f+'"]');return e?e.value:'';}
+  inputs.forEach(inp=>inp.addEventListener('input',()=>{mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level},row.photo_url||'');}));
+  wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Enregistré.');};
+  wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
+  wrap.querySelector('.sel').addEventListener('change',updateSel);
 }
-function recordAdminFail(ip) {
-  const now = Date.now();
-  globalThis.__ttrAdminFails = globalThis.__ttrAdminFails || new Map();
-  const b = globalThis.__ttrAdminFails.get(ip) || { count: 0, resetAt: now + ADMIN_WINDOW_MS };
-  if (now > b.resetAt) { b.count = 0; b.resetAt = now + ADMIN_WINDOW_MS; }
-  b.count += 1;
-  globalThis.__ttrAdminFails.set(ip, b);
-}
-function clearAdminFails(ip) { if (globalThis.__ttrAdminFails) globalThis.__ttrAdminFails.delete(ip); }
+async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
-function readBody(req) {
-  return new Promise((resolve) => {
-    if (req.body && typeof req.body === 'object') return resolve(req.body);
-    let d = ''; req.on('data', c => d += c);
-    req.on('end', () => { try { resolve(JSON.parse(d || '{}')); } catch { resolve({}); } });
-  });
-}
-function cleanText(value, max = 80) { return String(value || '').trim().replace(/\s+/g, ' ').slice(0, max); }
+function selected(){return [...document.querySelectorAll('.sel:checked')];}
+function updateSel(){const n=selected().length;$('selCount').textContent=n+' sélectionnée(s)';$('dlZip').disabled=n===0;}
+$('selAll').addEventListener('change',e=>{document.querySelectorAll('.sel').forEach(c=>c.checked=e.target.checked);updateSel();});
 
-function validatePatch(patch) {
-  const out = {};
-  const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,40}$/;
-  const aliasRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,20}$/;
-  const cityRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,60}$/;
-  for (const k of ALLOWED) {
-    if (!(k in patch)) continue;
-    const v = patch[k];
-    if (k === 'hidden') { out.hidden = !!v; continue; }
-    if (k === 'status') { if (!['published','pending','rejected'].includes(String(v))) throw new Error('Statut invalide.'); out.status = String(v); continue; }
-    if (k === 'alias') { const x = cleanText(v, 20); if (!aliasRegex.test(x)) throw new Error('Pseudo invalide : 2 à 20 caractères (lettres, chiffres, tiret, underscore).'); out.alias = x; continue; }
-    if (k === 'first_name' || k === 'last_name') { const x = cleanText(v, 40); if (!nameRegex.test(x)) throw new Error('Nom ou prénom invalide.'); out[k] = x; continue; }
-    if (k === 'city') { const x = cleanText(v, 60); if (!cityRegex.test(x)) throw new Error('Ville invalide.'); out.city = x; continue; }
-    if (k === 'nationality') { const x = cleanText(v, 30); if (!COUNTRIES.includes(x)) throw new Error('Pays invalide.'); out.nationality = x; continue; }
-    if (k === 'driving_style') { const x = cleanText(v, 90); if (/[<>]/.test(x)) throw new Error('Style invalide.'); out.driving_style = x; }
+$('dlZip').onclick=async()=>{
+  const sel=selected();if(!sel.length)return;
+  const wantCards=$('optCards').checked,wantPhotos=$('optPhotos').checked,wantData=$('optData').checked;
+  if(!wantCards&&!wantPhotos&&!wantData){alert('Choisis au moins : Cartes, Photos ou Données.');return;}
+  $('dlZip').disabled=true;$('zipState').textContent='Préparation…';
+  const rowsSel=sel.map(c=>ROWS.find(r=>r.slug===c.dataset.slug)).filter(Boolean);
+
+  // CSV seul -> téléchargement direct
+  if(wantData&&!wantCards&&!wantPhotos){
+    dlBlob(csvBlob(rowsSel),'candidatures.csv');
+    $('zipState').textContent=rowsSel.length+' ligne(s) exportée(s).';$('dlZip').disabled=false;return;
   }
-  return out;
-}
-
-module.exports = async (req, res) => {
-  const ip = getIp(req);
-  if (isBlocked(ip)) return res.status(429).json({ error: 'Trop de tentatives admin. Réessaie plus tard.' });
-  if (!PASS || req.headers['x-admin-pass'] !== PASS) { recordAdminFail(ip); return res.status(401).json({ error: 'unauthorized' }); }
-  clearAdminFails(ip);
-  if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
-  try {
-    const body = await readBody(req);
-    if (!body.id) return res.status(400).json({ error: 'id manquant' });
-    const patch = validatePatch(body.fields || {});
-    const r = await fetch(`${SB}/rest/v1/drivers?id=eq.${encodeURIComponent(body.id)}`, {
-      method: 'PATCH',
-      headers: { apikey: KEY, Authorization: `Bearer ${KEY}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
-      body: JSON.stringify(patch)
-    });
-    const text = await r.text();
-    let json = {}; try { json = JSON.parse(text || '{}'); } catch { json = {}; }
-    if (!r.ok) return res.status(500).json({ error: (json && (json.message || json.error)) || text || 'Erreur Supabase' });
-    return res.status(200).json(json);
-  } catch (e) {
-    return res.status(500).json({ error: String(e && e.message || e) });
+  const zip=new JSZip();let okc=0;
+  for(const c of sel){
+    const slug=c.dataset.slug||'pilote';
+    if(wantCards&&c.dataset.card){try{const b=await (await fetch(c.dataset.card,{mode:'cors'})).blob();zip.file(slug+'/carte.png',b);okc++;}catch(e){}}
+    if(wantPhotos&&c.dataset.photo){try{const b=await (await fetch(c.dataset.photo,{mode:'cors'})).blob();const ext=(c.dataset.photo.split('.').pop()||'jpg').split('?')[0];zip.file(slug+'/photo.'+ext,b);}catch(e){}}
   }
+  if(wantData) zip.file('candidatures.csv',csvBlob(rowsSel));
+  const out=await zip.generateAsync({type:'blob'});
+  dlBlob(out,'the-ring-selection.zip');
+  $('zipState').textContent='Téléchargé ('+okc+' carte(s)).';$('dlZip').disabled=false;
 };
+function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+function csvBlob(rows){
+  const eqL=e=>e==='achat'?'Achat':(e==='location'?'Location':'');
+  const cols=['Pseudo','Prénom','Nom','Âge','Ville','Nationalité','Style de conduite','Email','Formule','Statut','Masquée','Lien public','Date'];
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const lines=[cols.join(';')];
+  rows.forEach(r=>{
+    const link=location.origin+'/drivers/'+(r.slug||'');
+    lines.push([r.alias,r.first_name,r.last_name,r.age,r.city,r.nationality,r.driving_style,r.email,eqL(r.equipment),r.status,(r.hidden?'oui':'non'),link,(r.created_at||'').slice(0,19).replace('T',' ')].map(q).join(';'));
+  });
+  return new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+}
+</script></body></html>
