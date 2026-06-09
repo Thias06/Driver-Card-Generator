@@ -54,6 +54,12 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 .stage{display:flex;justify-content:center}
 .previewWrap{width:100%;max-width:480px;display:flex;justify-content:center}
 .hp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.field.error input,.field.error select{border-color:#ff4d4d!important;box-shadow:0 0 0 3px rgba(255,77,77,.16)!important}
+.field .err{display:none;margin-top:6px;color:#ff5c5c;font-size:11px;line-height:1.35;font-weight:700}
+.field.error .err{display:block}
+.equip.error{border:1px solid rgba(255,77,77,.8);border-radius:12px;padding:8px}
+.equipErr{display:none;margin-top:7px;color:#ff5c5c;font-size:11px;line-height:1.35;font-weight:700}
+.equip.error+.equipErr{display:block}
 </style></head>
 <body>
 <div class="app">
@@ -61,20 +67,20 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
     <div class="bh"><img src="/ttr-logo.png" alt="The Ring"><h1>DEVIENS PILOTE OFFICIEL<small>THE RING LEAGUE · SEASON 0</small></h1></div>
     <p class="intro">Rejoins la première ligue officielle The Ring. <b>Obtiens ta Driver Card</b> et entre dans le classement.</p>
     <div class="row2">
-      <div class="field"><label>Prénom<span class="req">*</span></label><input id="i_first" placeholder="Prénom" maxlength="30" autocomplete="given-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"></div>
-      <div class="field"><label>Nom<span class="req">*</span></label><input id="i_last" placeholder="Nom" maxlength="30" autocomplete="family-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"></div>
+      <div class="field"><label>Prénom<span class="req">*</span></label><input id="i_first" placeholder="Prénom" maxlength="30" autocomplete="given-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"><div class="err" id="e_first"></div></div>
+      <div class="field"><label>Nom<span class="req">*</span></label><input id="i_last" placeholder="Nom" maxlength="30" autocomplete="family-name" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}"><div class="err" id="e_last"></div></div>
     </div>
-    <div class="field"><label>Pseudo<span class="req">*</span></label><input id="i_alias" placeholder="Ton pseudo de pilote" maxlength="10" pattern="[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,10}"></div>
+    <div class="field"><label>Pseudo<span class="req">*</span></label><input id="i_alias" placeholder="Ton pseudo de pilote" maxlength="10" pattern="[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,10}"><div class="err" id="e_alias"></div></div>
     <div class="row2">
-      <div class="field"><label>Âge<span class="req">*</span></label><input id="i_age" type="number" inputmode="numeric" min="16" max="99" placeholder="16-99"></div>
+      <div class="field"><label>Âge<span class="req">*</span></label><input id="i_age" type="number" inputmode="numeric" min="16" max="99" placeholder="16-99"><div class="err" id="e_age"></div></div>
       <div class="field"><label>Pays<span class="req">*</span></label><select id="i_nat">
           <option selected>France</option><option>Belgique</option><option>Suisse</option><option>Luxembourg</option><option>Monaco</option>
           <option>Canada</option><option>Royaume-Uni</option><option>Italie</option><option>Espagne</option><option>Allemagne</option><option>Autre</option>
-        </select></div>
+        </select><div class="err" id="e_nat"></div></div>
     </div>
-    <div class="field"><label>Ville<span class="req">*</span></label><input id="i_city" placeholder="Ta ville" maxlength="45" autocomplete="address-level2" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,45}"></div>
-    <div class="field"><label>Email<span class="req">*</span></label><input id="i_email" type="email" maxlength="120" autocomplete="email" placeholder="ton@email.com"></div>
-    <div class="field"><label>Style de conduite</label><input id="i_style" maxlength="60" placeholder="Chacun son style ! (optionnel)"></div>
+    <div class="field"><label>Ville<span class="req">*</span></label><input id="i_city" placeholder="Ta ville" maxlength="45" autocomplete="address-level2" pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,45}"><div class="err" id="e_city"></div></div>
+    <div class="field"><label>Email<span class="req">*</span></label><input id="i_email" type="email" maxlength="120" autocomplete="email" placeholder="ton@email.com"><div class="err" id="e_email"></div></div>
+    <div class="field"><label>Style de conduite</label><input id="i_style" maxlength="60" placeholder="Chacun son style ! (optionnel)"><div class="err" id="e_style"></div></div>
     <div class="hp" aria-hidden="true"><label>Site web</label><input id="i_website" tabindex="-1" autocomplete="off"></div>
 
     <div class="field"><label>Formule<span class="req">*</span></label>
@@ -86,7 +92,7 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
         <label class="opt"><input type="radio" name="equip" value="location">
           <span class="t">Je loue (pré-équipé)</span>
           <span class="d">Véhicule RC prêt à rouler fourni. Idéal pour débuter et découvrir l'immersion intense The Ring.</span></label>
-      </div>
+      </div><div class="equipErr" id="e_equip"></div>
     </div>
 
     <div class="field" style="margin-top:4px"><label>Photo du pilote (optionnel)</label>
@@ -115,40 +121,90 @@ $('i_nat').addEventListener('change',()=>{render();checkForm();});
 $('i_photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{photoData=ev.target.result;render();};r.readAsDataURL(f);});
 document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('change',()=>{
   document.querySelectorAll('.equip .opt').forEach(o=>o.classList.remove('sel'));
-  r.closest('.opt').classList.add('sel');checkForm();
+  r.closest('.opt').classList.add('sel');if(validationVisible) validate(true);checkForm();
 }));
 
 function fit(){const w=document.querySelector('.previewWrap'),el=$('card');const s=Math.min(1,Math.min(w.clientWidth,460)/1080);el.style.transform=`scale(${s})`;w.style.height=(1080*s)+'px';}
 window.addEventListener('resize',fit);
 
+let validationVisible=false;
+const fieldMap={first:'i_first',last:'i_last',alias:'i_alias',age:'i_age',nationality:'i_nat',city:'i_city',email:'i_email',style:'i_style'};
+function clearFieldErrors(){
+  document.querySelectorAll('.field.error').forEach(f=>f.classList.remove('error'));
+  document.querySelectorAll('.field .err').forEach(e=>e.textContent='');
+  const equip=$('equip');
+  if(equip) equip.classList.remove('error');
+  if($('e_equip')) $('e_equip').textContent='';
+}
+function setFieldError(key,msg){
+  const id=fieldMap[key];
+  const input=id?$(id):null;
+  const err=$('e_'+(key==='nationality'?'nat':key));
+  if(input&&input.closest('.field')) input.closest('.field').classList.add('error');
+  if(err) err.textContent=msg;
+}
+function setEquipError(msg){
+  $('equip').classList.add('error');
+  if($('e_equip')) $('e_equip').textContent=msg;
+}
 function validate(show){
   const v=data();
+  const errors=[];
   const nameRe=/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}$/;
   const aliasRe=/^[A-Za-zÀ-ÖØ-öø-ÿ0-9_-]{2,10}$/;
   const cityRe=/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,45}$/;
   const emailRe=/^[^\s@<>'"]+@[^\s@<>'"]+\.[^\s@<>'"]{2,}$/;
-  let msg='';
-  if(!$('i_consent').checked) msg='Tu dois accepter la publication de ta Driver Card.';
-  else if(!nameRe.test(v.first)) msg='Le prénom doit contenir uniquement des lettres.';
-  else if(!nameRe.test(v.last)) msg='Le nom doit contenir uniquement des lettres.';
-  else if(!aliasRe.test(v.alias)) msg='Le pseudo doit faire 2 à 10 caractères et peut contenir lettres, chiffres, tiret ou underscore.';
-  else if(!/^\d+$/.test(v.age)||Number(v.age)<16||Number(v.age)>99) msg='L’âge doit être compris entre 16 et 99 ans.';
-  else if(!v.nationality) msg='Merci de choisir un pays.';
-  else if(!cityRe.test(v.city)) msg='La ville doit contenir uniquement des lettres.';
-  else if(!emailRe.test(v.email)) msg='Adresse email invalide.';
-  else if(!v.equipment) msg='Merci de choisir une formule.';
-  if(show&&msg){showError(msg);}
-  return !msg;
+
+  if(!v.first) errors.push(['first','Prénom obligatoire.']);
+  else if(!nameRe.test(v.first)) errors.push(['first','Lettres uniquement, 30 caractères maximum.']);
+
+  if(!v.last) errors.push(['last','Nom obligatoire.']);
+  else if(!nameRe.test(v.last)) errors.push(['last','Lettres uniquement, 30 caractères maximum.']);
+
+  if(!v.alias) errors.push(['alias','Pseudo obligatoire.']);
+  else if(!aliasRe.test(v.alias)) errors.push(['alias','2 à 10 caractères : lettres, chiffres, tiret ou underscore.']);
+
+  if(!v.age) errors.push(['age','Âge obligatoire.']);
+  else if(!/^\d+$/.test(v.age)||Number(v.age)<16||Number(v.age)>99) errors.push(['age','Nombre uniquement, entre 16 et 99.']);
+
+  if(!v.nationality) errors.push(['nationality','Choisis un pays.']);
+
+  if(!v.city) errors.push(['city','Ville obligatoire.']);
+  else if(!cityRe.test(v.city)) errors.push(['city','Lettres uniquement, 45 caractères maximum.']);
+
+  if(!v.email) errors.push(['email','Email obligatoire.']);
+  else if(!emailRe.test(v.email)) errors.push(['email','Adresse email invalide. Exemple : nom@email.com']);
+
+  if(v.style&&(/[<>]/.test(v.style)||v.style.length>60)) errors.push(['style','60 caractères maximum, sans caractères < ou >.']);
+
+  if(!v.equipment) errors.push(['equip','Choisis une formule.']);
+  if(!$('i_consent').checked) errors.push(['consent','Tu dois accepter la publication de ta Driver Card.']);
+
+  if(show){
+    clearFieldErrors();
+    for(const [key,msg] of errors){
+      if(key==='equip') setEquipError(msg);
+      else if(key==='consent') showError(msg,false);
+      else setFieldError(key,msg);
+    }
+  }
+  return errors.length===0;
 }
-function checkForm(){$('inscription').disabled=!validate(false);}
-function showError(msg){
+function checkForm(){
+  const ok=validate(validationVisible);
+  $('inscription').disabled=!ok;
+}
+function showError(msg,scroll=true){
   $('afterReg').innerHTML='<div id="errBox" style="margin-top:14px;color:#ff5c5c;font-size:13px;line-height:1.4;font-weight:700"></div>';
   $('errBox').textContent=msg||'Inscription impossible.';
   $('afterReg').classList.add('show');
-  $('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(scroll) $('afterReg').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-['i_first','i_last','i_alias','i_age','i_nat','i_city','i_email'].forEach(id=>$(id).addEventListener('input',checkForm));
-$('i_consent').addEventListener('change',checkForm);
+['i_first','i_last','i_alias','i_age','i_nat','i_city','i_email','i_style'].forEach(id=>{
+  $(id).addEventListener('input',()=>{if(validationVisible) validate(true); checkForm();});
+  $(id).addEventListener('blur',()=>{validationVisible=true; validate(true); checkForm();});
+});
+$('i_consent').addEventListener('change',()=>{validationVisible=true; validate(true); checkForm();});
 const slugify=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
 // Génère la carte dans un conteneur INVISIBLE à taille réelle (1080x1080) -> export fiable
@@ -174,6 +230,7 @@ $('inscription').onclick=async()=>{
   $('afterReg').classList.remove('show');
 
   try{
+    validationVisible=true;
     if(!validate(true)){btn.textContent=label;checkForm();return;}
     const cv=await generateCard();
     const cardPng=cv.toDataURL('image/png');
