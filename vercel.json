@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/drivers/:slug",
+      "destination": "/api/public-driver?slug=:slug"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard.html"
+    }
+  ]
+}
