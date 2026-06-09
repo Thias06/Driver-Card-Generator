@@ -60,52 +60,47 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 
 /* ---- POST 1080x1080 ---- */
 .cardPost{width:1080px;height:1080px}
-.cardPost .lay{display:flex;flex-direction:column;align-items:center;text-align:center;padding:64px 70px 58px}
-.cardPost .top{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
-.cardPost .kick{font-family:var(--ft);font-size:15px;letter-spacing:5px;color:var(--cyan)}
-.cardPost .top .ttrlogo{width:150px}
-.cardPost .ph{position:relative;width:468px;height:468px;border-radius:16px;overflow:hidden;background:var(--brand);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.cardPost .lay{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 56px 40px}
+.cardPost .top{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cardPost .kick{font-family:var(--ft);font-size:14px;letter-spacing:5px;color:var(--cyan)}
+.cardPost .top .ttrlogo{width:144px}
+.cardPost .ph{position:relative;width:616px;height:616px;border-radius:18px;overflow:hidden;background:var(--brand);box-shadow:0 24px 60px rgba(0,0,0,.5)}
 .cardPost .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
 .cardPost .ph .pl{position:absolute;inset:0;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
 .cardPost .ph .pl svg{width:120px}.cardPost .ph .pl span{font-family:var(--ft);font-size:14px;letter-spacing:4px}
-.cardPost .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:76px;line-height:.9;color:#fff;text-transform:uppercase;margin-top:34px;letter-spacing:-1px}
-.cardPost .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:30px;color:#fff;text-transform:uppercase;margin-top:6px;opacity:.92}
-.cardPost .loc{font-family:var(--ft);font-size:15px;letter-spacing:2px;color:var(--muted);margin-top:16px}
-.cardPost .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:21px;color:#dfe1ec;margin-top:12px;line-height:1.3}
-.cardPost .ovr{display:flex;align-items:center;justify-content:center;gap:20px;margin-top:26px}
-.cardPost .badge{width:112px;height:112px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 25%,#14151c,#060709);border:3px solid var(--cyan);box-shadow:0 0 30px -6px var(--cyan)}
-.cardPost .badge b{font-family:var(--fd);font-style:italic;font-weight:800;font-size:52px;color:#fff;line-height:.9}
-.cardPost .badge span{font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--cyan)}
-.cardPost .rookie{font-family:var(--ft);font-size:18px;letter-spacing:4px;color:#fff;padding:13px 24px;border-radius:9px;background:var(--rookie)}
-.cardPost .foot{width:100%;margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1f2029;padding-top:20px}
-.cardPost .foot .s0{font-family:var(--ft);font-size:13px;letter-spacing:3px;color:#fff}
-.cardPost .foot .u{font-family:var(--ft);font-size:13px;letter-spacing:2px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cardPost .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:60px;line-height:.9;color:#fff;text-transform:uppercase;margin-top:24px;letter-spacing:-1px}
+.cardPost .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:26px;color:#fff;text-transform:uppercase;margin-top:4px;opacity:.92}
+.cardPost .loc{font-family:var(--ft);font-size:13px;letter-spacing:2px;color:var(--muted);margin-top:12px}
+.cardPost .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:19px;color:#dfe1ec;margin-top:8px;line-height:1.3}
+.cardPost .ovr{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:18px}
+.cardPost .badge{position:relative;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 32% 26%,#5cc6ff,#2e7bff 55%,#1230a8);border:2px solid rgba(255,255,255,.28);box-shadow:0 8px 20px rgba(46,123,255,.55),inset 0 5px 12px rgba(255,255,255,.35),inset 0 -8px 14px rgba(0,0,0,.35)}
+.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:50px;color:#fff;line-height:1;text-shadow:0 2px 5px rgba(0,20,80,.5)}
+.cardPost .rookie{font-family:var(--ft);font-size:18px;letter-spacing:4px;color:#fff;padding:13px 26px;border-radius:10px;background:var(--rookie)}
+.cardPost .foot{width:100%;margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1f2029;padding-top:14px}
+.cardPost .foot .s0{font-family:var(--ft);font-size:12px;letter-spacing:3px;color:#fff}
+.cardPost .foot .u{font-family:var(--ft);font-size:12px;letter-spacing:2px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---- STORY 1080x1920 ---- */
 .cardStory{width:1080px;height:1920px}
-.cardStory .lay{display:flex;flex-direction:column;align-items:center;padding:90px 80px 80px}
+.cardStory .lay{display:flex;flex-direction:column;align-items:center;padding:70px 60px 80px}
 .cardStory .sTop{width:100%;display:flex;align-items:center;justify-content:space-between}
 .cardStory .kick{font-family:var(--ft);font-size:20px;letter-spacing:6px;color:var(--cyan)}
-.cardStory .sTop .ttrlogo{width:190px}
-.cardStory .frame{width:600px;border-radius:8px;overflow:hidden;margin-top:70px;box-shadow:0 30px 70px rgba(0,0,0,.6)}
-.cardStory .pic{position:relative;height:600px;background:var(--brand)}
+.cardStory .sTop .ttrlogo{width:200px}
+.cardStory .frame{width:940px;border-radius:8px;overflow:hidden;margin-top:56px;box-shadow:0 30px 70px rgba(0,0,0,.6)}
+.cardStory .pic{position:relative;height:940px;background:var(--brand)}
 .cardStory .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
 .cardStory .pic .pl{position:absolute;inset:0;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
-.cardStory .pic .pl svg{width:150px}.cardStory .pic .pl span{font-family:var(--ft);font-size:15px;letter-spacing:4px}
-.cardStory .nb{background:var(--royal);padding:30px 34px}
-.cardStory .nb .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:70px;color:#fff;text-transform:uppercase;line-height:.92}
-.cardStory .nb .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:30px;color:#fff;text-transform:uppercase;opacity:.92;margin-top:4px}
-.cardStory .meta{background:#fff;color:#0a0a0d;font-family:var(--ft);font-size:18px;letter-spacing:2px;padding:18px 34px;display:flex;justify-content:space-between;align-items:center}
+.cardStory .pic .pl svg{width:170px}.cardStory .pic .pl span{font-family:var(--ft);font-size:16px;letter-spacing:4px}
+.cardStory .nb{background:var(--royal);padding:34px 40px}
+.cardStory .nb .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:78px;color:#fff;text-transform:uppercase;line-height:.92}
+.cardStory .nb .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:32px;color:#fff;text-transform:uppercase;opacity:.92;margin-top:4px}
+.cardStory .meta{background:#fff;color:#0a0a0d;font-family:var(--ft);font-size:20px;letter-spacing:2px;padding:22px 40px;display:flex;justify-content:space-between;align-items:center}
 .cardStory .meta .ovr{color:#2e54ff}
-.cardStory .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:26px;color:#dfe1ec;margin-top:34px;text-align:center;max-width:760px;line-height:1.35}
-.cardStory .sBadge{display:flex;align-items:center;gap:18px;margin-top:30px}
-.cardStory .sBadge .rookie{font-family:var(--ft);font-size:20px;letter-spacing:4px;color:#fff;padding:14px 28px;border-radius:10px;background:var(--rookie)}
-.cardStory .sBadge .ov{font-family:var(--ft);font-size:18px;letter-spacing:2px;color:var(--muted)}
-.cardStory .sBadge .ov b{font-family:var(--fd);font-style:italic;font-weight:800;font-size:30px;color:#fff}
+.cardStory .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:28px;color:#dfe1ec;margin-top:44px;text-align:center;max-width:880px;line-height:1.35}
 .cardStory .cta{margin-top:auto;text-align:center}
-.cardStory .cta .big{font-family:var(--fd);font-style:italic;font-weight:800;font-size:56px;color:#fff;text-transform:uppercase;line-height:.95}
-.cardStory .cta .join{font-family:var(--ft);font-size:22px;letter-spacing:5px;color:#fff;margin-top:26px}
-.cardStory .cta .u{font-family:var(--ft);font-size:17px;letter-spacing:3px;margin-top:16px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cardStory .cta .big{font-family:var(--fd);font-style:italic;font-weight:800;font-size:58px;color:#fff;text-transform:uppercase;line-height:.95}
+.cardStory .cta .join{font-family:var(--ft);font-size:22px;letter-spacing:5px;color:#fff;margin-top:24px}
+.cardStory .cta .u{font-family:var(--ft);font-size:18px;letter-spacing:3px;margin-top:16px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 
 <div class="app">
@@ -157,7 +152,7 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
           <div class="name" id="pName">HUGO HASLE</div>
           <div class="loc" id="pLoc">MARSEILLE · FRANCE</div>
           <div class="style" id="pStyle">« Agressif &amp; précis »</div>
-          <div class="ovr"><div class="badge"><b>50</b><span>OVR</span></div><div class="rookie">ROOKIE</div></div>
+          <div class="ovr"><div class="badge"><b>50</b></div><div class="rookie">ROOKIE</div></div>
           <div class="foot"><div class="s0">SEASON 0 — FOUNDERS</div><div class="u">thering-drive.com</div></div>
         </div>
       </div>
