@@ -1,291 +1,250 @@
-<!-- The Ring — Générateur de carte pilote "The Pro League" -->
+<!-- The Ring — Driver Card Generator · SEASON 0 FOUNDERS -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Ring · Card Generator</title>
+<title>The Ring · Driver Card Generator — Season 0</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Saira:ital,wght@0,300;0,500;0,700;1,300;1,600;1,800&family=Saira+Condensed:ital,wght@1,600;1,800&family=Saira+Semi+Condensed:wght@600;800&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Saira:ital,wght@0,300;0,500;0,600;1,300;1,600&family=Saira+Condensed:ital,wght@1,600;1,800&family=Saira+Semi+Condensed:wght@500;600;700&display=swap');
 :root{
-  --bg:#050507;
-  --panel:#0d0e13;
-  --line:#1c1d27;
-  --cyan:#34b8ff;
-  --blue:#2e54ff;
-  --royal:#2f45e0;
-  --violet:#7a33f0;
-  --magenta:#e22ed0;
-  --pink:#ff2ebe;
-  --txt:#f4f5fb;
-  --muted:#8a8c9e;
+  --bg:#050507;--line:#1c1d27;--txt:#f4f5fb;--muted:#9092a4;
+  --cyan:#34b8ff;--blue:#2e54ff;--royal:#2f45e0;--violet:#7a33f0;--magenta:#e22ed0;--pink:#ff2ebe;
   --brand:linear-gradient(105deg,#34b8ff 0%,#2e54ff 32%,#7a33f0 64%,#e22ed0 100%);
-  --accent:var(--violet);        /* piloté par le tier */
-  --accent2:var(--magenta);
-  --font-tech:'Michroma','Saira Semi Condensed',sans-serif;
-  --font-disp:'Saira Condensed','Saira Semi Condensed','Arial Narrow',sans-serif;
-  --font-body:'Saira',system-ui,sans-serif;
+  --rookie:linear-gradient(100deg,#34b8ff,#2e54ff);
+  --ft:'Michroma','Saira Semi Condensed',sans-serif;
+  --fd:'Saira Condensed','Saira Semi Condensed','Arial Narrow',sans-serif;
+  --fb:'Saira',system-ui,sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:
-    radial-gradient(900px 600px at 85% -10%, rgba(122,51,240,.18), transparent 60%),
-    radial-gradient(800px 600px at -10% 110%, rgba(46,84,255,.16), transparent 60%),
-    var(--bg);
-  color:var(--txt);font-family:var(--font-body);min-height:100vh;
-  padding:28px 20px 60px;
-}
-.app{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:380px 1fr;gap:36px;align-items:start}
-@media(max-width:900px){.app{grid-template-columns:1fr;gap:28px}}
-
-/* ---------- Panneau de contrôle ---------- */
-.controls{background:linear-gradient(180deg,#0e0f15,#090a0e);border:1px solid var(--line);border-radius:18px;padding:22px 20px;position:sticky;top:20px}
-@media(max-width:900px){.controls{position:static}}
-.brandhead{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.brandhead svg{width:46px;height:auto}
-.brandhead h1{font-family:var(--font-tech);font-size:13px;letter-spacing:3px}
-.brandhead h1 small{display:block;color:var(--muted);font-size:9px;letter-spacing:4px;margin-top:3px}
-.tagline{color:var(--muted);font-size:12px;margin:10px 0 20px;line-height:1.5}
-.field{margin-bottom:15px}
-.field label{display:flex;justify-content:space-between;font-family:var(--font-tech);font-size:9.5px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:7px}
-.field label b{color:var(--pink);font-family:var(--font-body);font-weight:700;letter-spacing:0}
-.field input[type=text]{width:100%;background:#070809;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-family:var(--font-body);font-size:14px;font-weight:600}
-.field input[type=text]:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(122,51,240,.18)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-input[type=range]{width:100%;-webkit-appearance:none;height:5px;border-radius:5px;background:#1a1b24;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--pink);cursor:pointer;border:2px solid #fff;box-shadow:0 0 10px rgba(255,46,190,.6)}
-input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--pink);cursor:pointer;border:2px solid #fff}
-.photobtn{display:block;width:100%;text-align:center;background:#070809;border:1px dashed #333murl;border:1px dashed #2c2d3a;color:var(--muted);border-radius:9px;padding:11px;font-size:12px;cursor:pointer;font-family:var(--font-tech);letter-spacing:1px}
+body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.14),transparent 60%),var(--bg);color:var(--txt);font-family:var(--fb);min-height:100vh;padding:26px 18px 60px}
+.app{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:360px 1fr;gap:34px;align-items:start}
+@media(max-width:920px){.app{grid-template-columns:1fr;gap:24px}}
+.controls{background:linear-gradient(180deg,#0e0f15,#090a0e);border:1px solid var(--line);border-radius:18px;padding:22px 20px;position:sticky;top:18px}
+@media(max-width:920px){.controls{position:static}}
+.bh{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.bh svg{width:46px}.bh h1{font-family:var(--ft);font-size:12px;letter-spacing:2.5px}
+.bh h1 small{display:block;color:var(--muted);font-size:8.5px;letter-spacing:3px;margin-top:3px}
+.tag{color:var(--muted);font-size:12px;margin:10px 0 18px;line-height:1.5}
+.tag b{color:var(--cyan)}
+.field{margin-bottom:13px}
+.field label{display:block;font-family:var(--ft);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+.field input{width:100%;background:#070809;border:1px solid var(--line);color:var(--txt);border-radius:9px;padding:10px 12px;font-family:var(--fb);font-size:14px;font-weight:600}
+.field input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(122,51,240,.18)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.photobtn{display:block;text-align:center;background:#070809;border:1px dashed #2c2d3a;color:var(--muted);border-radius:9px;padding:11px;font-size:12px;cursor:pointer;font-family:var(--ft);letter-spacing:1px}
 .photobtn:hover{border-color:var(--violet);color:var(--txt)}
-.dlbtn{width:100%;margin-top:8px;background:var(--brand);border:none;color:#fff;font-family:var(--font-tech);letter-spacing:2px;font-size:12px;padding:14px;border-radius:11px;cursor:pointer;box-shadow:0 8px 24px rgba(122,51,240,.35)}
+.fixed{display:flex;gap:8px;margin:14px 0 4px}
+.fixed div{flex:1;background:#070809;border:1px solid var(--line);border-radius:9px;padding:9px;text-align:center}
+.fixed div span{display:block;font-family:var(--ft);font-size:7.5px;letter-spacing:1.5px;color:var(--muted)}
+.fixed div b{font-family:var(--fd);font-style:italic;font-weight:800;font-size:20px;color:#fff}
+.fixed div.r b{color:var(--cyan);font-size:15px}
+.dlbtn{width:100%;margin-top:14px;background:var(--brand);border:none;color:#fff;font-family:var(--ft);letter-spacing:1.5px;font-size:11.5px;padding:14px;border-radius:11px;cursor:pointer;box-shadow:0 8px 24px rgba(122,51,240,.35)}
+.dlbtn.alt{background:#0e0f17;border:1px solid var(--violet);box-shadow:none;margin-top:8px}
 .dlbtn:active{transform:translateY(1px)}
-.hint{color:#5b5d6e;font-size:10.5px;margin-top:12px;line-height:1.5;text-align:center}
+.hint{color:#5b5d6e;font-size:10px;margin-top:12px;line-height:1.5;text-align:center}
 
-/* ---------- Scène + carte ---------- */
-.stage{display:flex;justify-content:center}
-.cardWrap{width:760px;max-width:100%}
-.card{
-  width:760px;height:950px;border-radius:24px;overflow:hidden;position:relative;
-  background:var(--bg);transform-origin:top left;
-  font-family:var(--font-body);box-shadow:0 30px 80px rgba(0,0,0,.6);
-}
-/* texture circuit en fond */
-.card::before{
-  content:"";position:absolute;inset:0;opacity:.5;
-  background:
-    repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 2px, transparent 2px 26px),
-    repeating-linear-gradient(25deg, rgba(255,255,255,.012) 0 2px, transparent 2px 34px);
-  -webkit-mask:radial-gradient(120% 90% at 100% 0%, #000 30%, transparent 75%);
-          mask:radial-gradient(120% 90% at 100% 0%, #000 30%, transparent 75%);
-}
-.card>*{position:relative;z-index:2}
+.stage{display:flex;flex-direction:column;align-items:center;gap:16px}
+.tabs{display:flex;gap:8px;background:#0c0d13;border:1px solid var(--line);border-radius:11px;padding:5px}
+.tabs button{background:transparent;border:none;color:var(--muted);font-family:var(--ft);font-size:10px;letter-spacing:1.5px;padding:9px 16px;border-radius:8px;cursor:pointer}
+.tabs button.on{background:var(--brand);color:#fff}
+.previewWrap{width:100%;display:flex;justify-content:center}
 
-.cardGrid{display:grid;grid-template-columns:340px 1fr;height:100%}
+/* ====== CARTES (dimensions export exactes) ====== */
+.card{transform-origin:top center;position:relative;overflow:hidden;background:#040406;font-family:var(--fb)}
+.card .trk{position:absolute;inset:0;opacity:.85}
+.card .vg{position:absolute;inset:0}
+.card>.lay{position:relative;z-index:3;height:100%}
+.ttr{display:block}
 
-/* colonne photo */
-.photoCol{position:relative;overflow:hidden;background:var(--brand)}
-.photoCol .grain{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.55) 100%)}
-.bigNum{position:absolute;right:-10px;bottom:-28px;font-family:var(--font-disp);font-style:italic;font-weight:800;font-size:300px;line-height:.8;color:rgba(255,255,255,.16);z-index:1;letter-spacing:-10px}
-.photoImg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:2}
-.photoPlaceholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:2;color:rgba(255,255,255,.85)}
-.photoPlaceholder svg{width:120px;height:120px;opacity:.9}
-.photoPlaceholder span{font-family:var(--font-tech);font-size:11px;letter-spacing:3px}
+/* monogramme helper sizes via inline svg */
 
-/* colonne infos */
-.infoCol{padding:30px 30px 26px;display:flex;flex-direction:column}
-.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
-.leaguelabel{font-family:var(--font-tech);font-size:12px;letter-spacing:4px;color:#fff;line-height:1.5;padding-top:6px}
-.leaguelabel i{display:block;font-style:normal;font-size:8.5px;letter-spacing:3px;color:var(--muted);margin-top:5px}
-.ttr{width:78px;height:auto}
+/* ---- POST 1080x1080 ---- */
+.cardPost{width:1080px;height:1080px}
+.cardPost .lay{display:grid;grid-template-columns:498px 1fr}
+.cardPost .ph{position:relative;background:var(--brand);overflow:hidden}
+.cardPost .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.cardPost .ph .pl{position:absolute;inset:0;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
+.cardPost .ph .pl svg{width:150px}.cardPost .ph .pl span{font-family:var(--ft);font-size:15px;letter-spacing:4px}
+.cardPost .ph .grad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.45))}
+.cardPost .info{padding:58px 54px 48px;display:flex;flex-direction:column}
+.cardPost .top{display:flex;align-items:flex-start;justify-content:space-between}
+.cardPost .kick{font-family:var(--ft);font-size:14px;letter-spacing:4px;color:var(--cyan);padding-top:8px}
+.cardPost .top svg{width:104px}
+.cardPost .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:84px;line-height:.9;color:#fff;text-transform:uppercase;margin-top:44px;letter-spacing:-1px}
+.cardPost .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:34px;color:#fff;text-transform:uppercase;margin-top:6px;opacity:.92}
+.cardPost .loc{font-family:var(--ft);font-size:16px;letter-spacing:2px;color:var(--muted);margin-top:20px}
+.cardPost .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:22px;color:#dfe1ec;margin-top:14px;line-height:1.3}
+.cardPost .ovr{display:flex;align-items:center;gap:20px;margin-top:auto}
+.cardPost .badge{width:118px;height:118px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 25%,#14151c,#060709);border:3px solid var(--cyan);box-shadow:0 0 30px -6px var(--cyan)}
+.cardPost .badge b{font-family:var(--fd);font-style:italic;font-weight:800;font-size:54px;color:#fff;line-height:.9}
+.cardPost .badge span{font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--cyan)}
+.cardPost .rookie{font-family:var(--ft);font-size:18px;letter-spacing:4px;color:#fff;padding:13px 24px;border-radius:9px;background:var(--rookie)}
+.cardPost .foot{margin-top:30px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1f2029;padding-top:20px}
+.cardPost .foot .s0{font-family:var(--ft);font-size:13px;letter-spacing:3px;color:#fff}
+.cardPost .foot .u{font-family:var(--ft);font-size:13px;letter-spacing:2px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
 
-.ovrRow{display:flex;align-items:center;gap:16px;margin:18px 0 6px}
-.ovr{width:96px;height:96px;border-radius:50%;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 30% 25%, #14151c, #060709);
-  border:2px solid var(--accent);box-shadow:0 0 26px -6px var(--accent), inset 0 0 18px rgba(0,0,0,.6)}
-.ovr b{font-family:var(--font-disp);font-style:italic;font-weight:800;font-size:46px;line-height:.9;color:#fff}
-.ovr span{font-family:var(--font-tech);font-size:8px;letter-spacing:2px;color:var(--accent)}
-.tier{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-tech);font-size:13px;letter-spacing:3px;color:#fff;
-  padding:9px 16px;border-radius:8px;background:linear-gradient(100deg,var(--accent),var(--accent2));box-shadow:0 6px 18px -6px var(--accent)}
-.tier::before{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
-
-.nameBlock{margin:22px 0 2px}
-.firstname{font-family:var(--font-disp);font-style:italic;font-weight:600;font-size:30px;line-height:1;color:#fff;text-transform:uppercase}
-.lastname{font-family:var(--font-disp);font-style:italic;font-weight:800;font-size:58px;line-height:.92;color:#fff;text-transform:uppercase;letter-spacing:-.5px}
-.vehicle{font-family:var(--font-tech);font-size:13px;letter-spacing:3px;color:var(--muted);margin-top:14px}
-
-.sep{height:1px;background:linear-gradient(90deg,var(--accent),transparent);margin:22px 0 18px}
-
-.stats{display:flex;flex-direction:column;gap:15px;flex:1}
-.stat .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px}
-.stat .lab{font-family:var(--font-tech);font-size:10px;letter-spacing:2px;color:var(--muted)}
-.stat .val{font-family:var(--font-disp);font-style:italic;font-weight:800;font-size:22px;color:#fff}
-.segbar{display:flex;gap:4px}
-.seg{flex:1;height:9px;border-radius:2px;background:#171821}
-.seg.on{background:linear-gradient(90deg,var(--accent),var(--accent2))}
-
-.footer{margin-top:18px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:14px}
-.footer .join{font-family:var(--font-tech);font-size:9px;letter-spacing:3px;color:#fff}
-.footer .url{font-family:var(--font-tech);font-size:9px;letter-spacing:2px;
-  background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* ---- STORY 1080x1920 ---- */
+.cardStory{width:1080px;height:1920px}
+.cardStory .lay{display:flex;flex-direction:column;align-items:center;padding:90px 80px 80px}
+.cardStory .sTop{width:100%;display:flex;align-items:center;justify-content:space-between}
+.cardStory .kick{font-family:var(--ft);font-size:20px;letter-spacing:6px;color:var(--cyan)}
+.cardStory .sTop svg{width:130px}
+.cardStory .frame{width:600px;border-radius:8px;overflow:hidden;margin-top:70px;box-shadow:0 30px 70px rgba(0,0,0,.6)}
+.cardStory .pic{position:relative;height:600px;background:var(--brand)}
+.cardStory .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.cardStory .pic .pl{position:absolute;inset:0;display:flex;flex-direction:column;gap:18px;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
+.cardStory .pic .pl svg{width:150px}.cardStory .pic .pl span{font-family:var(--ft);font-size:15px;letter-spacing:4px}
+.cardStory .nb{background:var(--royal);padding:30px 34px}
+.cardStory .nb .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:70px;color:#fff;text-transform:uppercase;line-height:.92}
+.cardStory .nb .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:30px;color:#fff;text-transform:uppercase;opacity:.92;margin-top:4px}
+.cardStory .meta{background:#fff;color:#0a0a0d;font-family:var(--ft);font-size:18px;letter-spacing:2px;padding:18px 34px;display:flex;justify-content:space-between;align-items:center}
+.cardStory .meta .ovr{color:#2e54ff}
+.cardStory .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:26px;color:#dfe1ec;margin-top:34px;text-align:center;max-width:760px;line-height:1.35}
+.cardStory .sBadge{display:flex;align-items:center;gap:18px;margin-top:30px}
+.cardStory .sBadge .rookie{font-family:var(--ft);font-size:20px;letter-spacing:4px;color:#fff;padding:14px 28px;border-radius:10px;background:var(--rookie)}
+.cardStory .sBadge .ov{font-family:var(--ft);font-size:18px;letter-spacing:2px;color:var(--muted)}
+.cardStory .sBadge .ov b{font-family:var(--fd);font-style:italic;font-weight:800;font-size:30px;color:#fff}
+.cardStory .cta{margin-top:auto;text-align:center}
+.cardStory .cta .big{font-family:var(--fd);font-style:italic;font-weight:800;font-size:56px;color:#fff;text-transform:uppercase;line-height:.95}
+.cardStory .cta .join{font-family:var(--ft);font-size:22px;letter-spacing:5px;color:#fff;margin-top:26px}
+.cardStory .cta .u{font-family:var(--ft);font-size:17px;letter-spacing:3px;margin-top:16px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 
 <div class="app">
-  <!-- ===== Contrôles ===== -->
+  <!-- ===== Formulaire candidat ===== -->
   <div class="controls">
-    <div class="brandhead">
-      <!-- monogramme TTR -->
-      <svg viewBox="0 0 120 70" aria-label="TTR"><defs>
-        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#34b8ff"/><stop offset=".5" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/>
-        </linearGradient></defs>
-        <g fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round">
-          <path d="M8 14 H46 M27 14 V58"/>
-          <path d="M40 14 H86 M63 14 V58"/>
-          <path d="M82 58 V14 H104 a14 14 0 0 1 0 28 H86 M96 42 L110 58"/>
-        </g></svg>
-      <h1>THE RING<small>CARD&nbsp;GENERATOR</small></h1>
+    <div class="bh">
+      <svg viewBox="0 0 120 70"><defs><linearGradient id="g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34b8ff"/><stop offset=".5" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/></linearGradient></defs><g fill="none" stroke="url(#g0)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 L46 14 M27 14 L27 58"/><path d="M40 14 L86 14 M63 14 L63 58"/><path d="M82 58 L82 14 L104 14 a14 14 0 0 1 0 28 L86 42 M96 42 L110 58"/></g></svg>
+      <h1>DRIVER CARD GENERATOR<small>SEASON&nbsp;0 · FOUNDERS</small></h1>
     </div>
-    <p class="tagline">Crée la carte officielle d'un pilote de <b style="color:#fff">The Pro League</b>. 3 stats issues de la télémétrie : Speed, Accuracy, Reactivity.</p>
+    <p class="tag">Formulaire candidat → <b>Driver Card officielle</b>. En Season 0, tous les pilotes démarrent à Overall 50 / ROOKIE.</p>
 
-    <div class="field"><label>Prénom</label><input id="i_first" type="text" value="Léa"></div>
-    <div class="field"><label>Nom</label><input id="i_last" type="text" value="Martin"></div>
     <div class="row2">
-      <div class="field"><label>Véhicule</label><input id="i_veh" type="text" value="RC-GT01"></div>
-      <div class="field"><label>N°</label><input id="i_num" type="text" value="7"></div>
+      <div class="field"><label>Prénom</label><input id="i_first" type="text" value="Hugo"></div>
+      <div class="field"><label>Nom</label><input id="i_last" type="text" value="Hasle"></div>
     </div>
-
-    <div class="field"><label>Speed <b id="v_speed">84</b></label><input id="r_speed" type="range" min="0" max="99" value="84"></div>
-    <div class="field"><label>Accuracy <b id="v_acc">80</b></label><input id="r_acc" type="range" min="0" max="99" value="80"></div>
-    <div class="field"><label>Reactivity <b id="v_react">74</b></label><input id="r_react" type="range" min="0" max="99" value="74"></div>
-
-    <div class="field" style="margin-top:18px">
-      <label>Photo du pilote</label>
+    <div class="field"><label>Pseudo</label><input id="i_alias" type="text" value="HASH"></div>
+    <div class="row2">
+      <div class="field"><label>Âge</label><input id="i_age" type="text" value="24"></div>
+      <div class="field"><label>Nationalité</label><input id="i_nat" type="text" value="France"></div>
+    </div>
+    <div class="field"><label>Ville</label><input id="i_city" type="text" value="Marseille"></div>
+    <div class="field"><label>Style de conduite</label><input id="i_style" type="text" value="Agressif & précis"></div>
+    <div class="field" style="margin-top:14px"><label>Photo du pilote</label>
       <label class="photobtn" for="i_photo">⇪ IMPORTER UNE PHOTO</label>
-      <input id="i_photo" type="file" accept="image/*" style="display:none">
+      <input id="i_photo" type="file" accept="image/*" style="display:none"></div>
+
+    <div class="fixed">
+      <div><span>OVERALL</span><b>50</b></div>
+      <div class="r"><span>NIVEAU</span><b>ROOKIE</b></div>
+      <div><span>SAISON</span><b style="font-size:15px">S0</b></div>
     </div>
 
-    <button class="dlbtn" id="dl">⬇ TÉLÉCHARGER LA CARTE (PNG)</button>
-    <p class="hint">OVR & palier (Rookie / Pro / Elite) calculés automatiquement.<br>Photo détourée conseillée (fond transparent).</p>
+    <button class="dlbtn" id="dlPost">⬇ EXPORT INSTAGRAM POST · 1080×1080</button>
+    <button class="dlbtn alt" id="dlStory">⬇ EXPORT INSTAGRAM STORY · 1080×1920</button>
+    <p class="hint">Âge collecté pour la vérification 16+ (non affiché sur la carte).<br>Photo détourée (fond transparent) = meilleur rendu.</p>
   </div>
 
-  <!-- ===== Carte ===== -->
+  <!-- ===== Aperçu ===== -->
   <div class="stage">
-    <div class="cardWrap">
-      <div class="card" id="card">
-        <div class="cardGrid">
-          <!-- photo -->
-          <div class="photoCol">
-            <div class="bigNum" id="bigNum">7</div>
-            <img class="photoImg" id="photoImg" alt="" style="display:none">
-            <div class="photoPlaceholder" id="ph">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.7-9 6v2h18v-2c0-3.3-4-6-9-6Z"/></svg>
-              <span>PHOTO&nbsp;PILOTE</span>
-            </div>
-            <div class="grain"></div>
-          </div>
-          <!-- infos -->
-          <div class="infoCol">
-            <div class="topbar">
-              <div class="leaguelabel">THE&nbsp;PRO&nbsp;LEAGUE<i>ROUND&nbsp;MARSEILLE&nbsp;2026</i></div>
-              <svg class="ttr" viewBox="0 0 120 70"><defs>
-                <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#34b8ff"/><stop offset=".5" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/>
-                </linearGradient></defs>
-                <g fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round">
-                  <path d="M8 14 H46 M27 14 V58"/><path d="M40 14 H86 M63 14 V58"/>
-                  <path d="M82 58 V14 H104 a14 14 0 0 1 0 28 H86 M96 42 L110 58"/>
-                </g></svg>
-            </div>
+    <div class="tabs"><button id="tabPost" class="on">POST 1:1</button><button id="tabStory">STORY 9:16</button></div>
+    <div class="previewWrap">
 
-            <div class="ovrRow">
-              <div class="ovr"><b id="ovr">82</b><span>OVR</span></div>
-              <div class="tier" id="tier">PRO</div>
+      <!-- POST -->
+      <div class="card cardPost" id="cardPost">
+        <div class="lay">
+          <div class="ph"><img id="pPhoto" alt="" style="display:none"><div class="pl" id="pPlace"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.7-9 6v2h18v-2c0-3.3-4-6-9-6Z"/></svg><span>PHOTO PILOTE</span></div><div class="grad"></div></div>
+          <div class="info">
+            <div class="top"><div class="kick">SEASON&nbsp;0 · FOUNDERS</div>
+              <svg viewBox="0 0 120 70"><defs><linearGradient id="gp" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34b8ff"/><stop offset=".5" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/></linearGradient></defs><g fill="none" stroke="url(#gp)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 L46 14 M27 14 L27 58"/><path d="M40 14 L86 14 M63 14 L63 58"/><path d="M82 58 L82 14 L104 14 a14 14 0 0 1 0 28 L86 42 M96 42 L110 58"/></g></svg>
             </div>
-
-            <div class="nameBlock">
-              <div class="firstname" id="firstOut">LÉA</div>
-              <div class="lastname" id="lastOut">MARTIN</div>
-            </div>
-            <div class="vehicle" id="vehOut">RC-GT01</div>
-
-            <div class="sep"></div>
-
-            <div class="stats" id="stats"></div>
-
-            <div class="footer">
-              <span class="join">JOIN&nbsp;US&nbsp;IN&nbsp;MARSEILLE</span>
-              <span class="url">thering-drive.com</span>
-            </div>
+            <div class="pseudo" id="pAlias">HASH</div>
+            <div class="name" id="pName">HUGO HASLE</div>
+            <div class="loc" id="pLoc">MARSEILLE · FRANCE</div>
+            <div class="style" id="pStyle">« Agressif &amp; précis »</div>
+            <div class="ovr"><div class="badge"><b>50</b><span>OVR</span></div><div class="rookie">ROOKIE</div></div>
+            <div class="foot"><div class="s0">SEASON 0 — FOUNDERS</div><div class="u">thering-drive.com</div></div>
           </div>
         </div>
       </div>
+
+      <!-- STORY -->
+      <div class="card cardStory" id="cardStory" style="display:none">
+        <svg class="trk" viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="#15161d" stroke-width="86" stroke-linecap="round"><path d="M-60 360 C 240 180, 520 560, 760 360 S 1180 180, 1240 480"/><path d="M-80 980 C 260 820, 420 1260, 720 1040 S 1140 820, 1240 1120"/><path d="M-60 1560 C 220 1380, 600 1760, 860 1520 S 1180 1380, 1240 1640"/></g>
+          <g fill="none" stroke="#0c0d12" stroke-width="78" stroke-linecap="round"><path d="M-60 360 C 240 180, 520 560, 760 360 S 1180 180, 1240 480"/><path d="M-80 980 C 260 820, 420 1260, 720 1040 S 1140 820, 1240 1120"/><path d="M-60 1560 C 220 1380, 600 1760, 860 1520 S 1180 1380, 1240 1640"/></g>
+        </svg>
+        <div class="vg" style="background:radial-gradient(120% 70% at 50% 38%,transparent 45%,rgba(0,0,0,.55))"></div>
+        <div class="lay">
+          <div class="sTop"><div class="kick">SEASON&nbsp;0 · FOUNDERS</div>
+            <svg viewBox="0 0 120 70"><defs><linearGradient id="gs" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34b8ff"/><stop offset=".5" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/></linearGradient></defs><g fill="none" stroke="url(#gs)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14 L46 14 M27 14 L27 58"/><path d="M40 14 L86 14 M63 14 L63 58"/><path d="M82 58 L82 14 L104 14 a14 14 0 0 1 0 28 L86 42 M96 42 L110 58"/></g></svg>
+          </div>
+          <div class="frame">
+            <div class="pic"><img id="sPhoto" alt="" style="display:none"><div class="pl" id="sPlace"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.7-9 6v2h18v-2c0-3.3-4-6-9-6Z"/></svg><span>PHOTO PILOTE</span></div></div>
+            <div class="nb"><div class="pseudo" id="sAlias">HASH</div><div class="name" id="sName">HUGO HASLE</div></div>
+            <div class="meta"><span id="sLoc">MARSEILLE · FRANCE</span><span class="ovr">OVR 50 · ROOKIE</span></div>
+          </div>
+          <div class="style" id="sStyle">« Agressif &amp; précis »</div>
+          <div class="cta">
+            <div class="big">DEVIENS PILOTE<br>OFFICIEL THE RING</div>
+            <div class="join">JOIN&nbsp;US&nbsp;IN&nbsp;MARSEILLE</div>
+            <div class="u">thering-drive.com</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const STAT=[['speed','SPEED'],['acc','ACCURACY'],['react','REACTIVITY']];
-const W={speed:.50,acc:.30,react:.20};
-
-function tierOf(o){
-  if(o>=85) return {n:'ELITE', a:'#e22ed0', b:'#ff2ebe'};
-  if(o>=70) return {n:'PRO',   a:'#7a33f0', b:'#e22ed0'};
-  return       {n:'ROOKIE',a:'#2e54ff', b:'#34b8ff'};
-}
-function segbar(v){
-  const on=Math.round(v/10);
-  let h='<div class="segbar">';
-  for(let i=0;i<10;i++) h+=`<div class="seg ${i<on?'on':''}"></div>`;
-  return h+'</div>';
-}
+const up=s=>(s||'').toUpperCase();
 function render(){
-  const vals={};
-  STAT.forEach(([k])=>{vals[k]=+$('r_'+k).value; $('v_'+k).textContent=vals[k];});
-  const ovr=Math.round(STAT.reduce((s,[k])=>s+vals[k]*W[k],0));
-  const t=tierOf(ovr);
-  $('ovr').textContent=ovr;
-  $('tier').textContent=t.n;
-  document.documentElement.style.setProperty('--accent',t.a);
-  document.documentElement.style.setProperty('--accent2',t.b);
-
-  $('firstOut').textContent=($('i_first').value||'').toUpperCase();
-  $('lastOut').textContent=($('i_last').value||'').toUpperCase();
-  $('vehOut').textContent=$('i_veh').value||'';
-  $('bigNum').textContent=$('i_num').value||'';
-
-  $('stats').innerHTML=STAT.map(([k,lab])=>
-    `<div class="stat"><div class="top"><span class="lab">${lab}</span><span class="val">${vals[k]}</span></div>${segbar(vals[k])}</div>`
-  ).join('');
+  const first=up($('i_first').value),last=up($('i_last').value),alias=up($('i_alias').value);
+  const loc=[up($('i_city').value),up($('i_nat').value)].filter(Boolean).join(' · ');
+  const styleRaw=($('i_style').value||'').trim();
+  const style=styleRaw?('« '+styleRaw+' »'):'';
+  const full=(first+' '+last).trim();
+  $('pAlias').textContent=alias; $('pName').textContent=full; $('pLoc').textContent=loc;
+  $('pStyle').textContent=style; $('pStyle').style.display=style?'block':'none';
+  $('sAlias').textContent=alias; $('sName').textContent=full; $('sLoc').textContent=loc;
+  $('sStyle').textContent=style; $('sStyle').style.display=style?'block':'none';
 }
-['i_first','i_last','i_veh','i_num'].forEach(id=>$(id).addEventListener('input',render));
-STAT.forEach(([k])=>$('r_'+k).addEventListener('input',render));
+['i_first','i_last','i_alias','i_age','i_nat','i_city','i_style'].forEach(id=>$(id).addEventListener('input',render));
+$('i_photo').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=ev=>{[['pPhoto','pPlace'],['sPhoto','sPlace']].forEach(([img,pl])=>{$(img).src=ev.target.result;$(img).style.display='block';$(pl).style.display='none';});};
+  r.readAsDataURL(f);});
 
-$('i_photo').addEventListener('change',e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=ev=>{$('photoImg').src=ev.target.result;$('photoImg').style.display='block';$('ph').style.display='none';};
-  r.readAsDataURL(f);
-});
-
-// fit preview to container
+let fmt='post';
 function fit(){
-  const wrap=document.querySelector('.cardWrap'), card=$('card');
-  const s=Math.min(1, wrap.clientWidth/760);
-  card.style.transform=`scale(${s})`;
-  wrap.style.height=(950*s)+'px';
+  const wrap=document.querySelector('.previewWrap');
+  const el=fmt==='post'?$('cardPost'):$('cardStory');
+  const maxW=Math.min(wrap.clientWidth,460);
+  const s=maxW/1080; el.style.transform=`scale(${s})`;
+  const h=(fmt==='post'?1080:1920)*s; wrap.style.height=h+'px';
 }
+function setFmt(f){fmt=f;
+  $('cardPost').style.display=f==='post'?'block':'none';
+  $('cardStory').style.display=f==='story'?'block':'none';
+  $('tabPost').classList.toggle('on',f==='post');
+  $('tabStory').classList.toggle('on',f==='story');
+  fit();
+}
+$('tabPost').onclick=()=>setFmt('post');
+$('tabStory').onclick=()=>setFmt('story');
 window.addEventListener('resize',fit);
 
-$('dl').addEventListener('click',async()=>{
-  const card=$('card'); const prev=card.style.transform;
-  card.style.transform='scale(1)';
+async function exportCard(el,name){
+  const prev=el.style.transform,prevDisp=el.style.display;
+  el.style.display='block'; el.style.transform='scale(1)';
   await (document.fonts&&document.fonts.ready);
-  const cv=await html2canvas(card,{scale:2,backgroundColor:null,useCORS:true});
-  card.style.transform=prev;
-  const a=document.createElement('a');
-  a.download=`TTR_${$('i_first').value}_${$('i_last').value}.png`.replace(/\s+/g,'_');
-  a.href=cv.toDataURL('image/png'); a.click();
-});
+  const cv=await html2canvas(el,{scale:1,backgroundColor:'#040406',useCORS:true,width:el.offsetWidth,height:el.offsetHeight});
+  el.style.transform=prev; el.style.display=prevDisp; fit();
+  const a=document.createElement('a');a.download=name;a.href=cv.toDataURL('image/png');a.click();
+}
+const fn=()=>`TTR_S0_${$('i_alias').value||$('i_last').value}`.replace(/\s+/g,'_');
+$('dlPost').onclick=()=>exportCard($('cardPost'),fn()+'_POST_1080.png');
+$('dlStory').onclick=()=>exportCard($('cardStory'),fn()+'_STORY_1080x1920.png');
 
-render(); window.addEventListener('load',fit); setTimeout(fit,300);
+render();setFmt('post');window.addEventListener('load',fit);setTimeout(fit,300);
 </script>
