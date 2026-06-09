@@ -1,30 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Saira:ital,wght@0,300;0,500;0,600;1,300;1,600&family=Saira+Condensed:ital,wght@1,600;1,800&family=Saira+Semi+Condensed:wght@500;600;700&display=swap');
-:root{
-  --bg:#050507;--line:#1c1d27;--txt:#f4f5fb;--muted:#9092a4;
-  --cyan:#34b8ff;--blue:#2e54ff;--royal:#2f45e0;--violet:#7a33f0;--magenta:#e22ed0;--pink:#ff2ebe;
-  --brand:linear-gradient(105deg,#34b8ff 0%,#2e54ff 32%,#7a33f0 64%,#e22ed0 100%);
-  --rookie:linear-gradient(100deg,#34b8ff,#2e54ff);
-  --ft:'Michroma','Saira Semi Condensed',sans-serif;
-  --fd:'Saira Condensed','Saira Semi Condensed','Arial Narrow',sans-serif;
-  --fb:'Saira',system-ui,sans-serif;
-}
-.cardPost{width:1080px;height:1080px;border-radius:24px;overflow:hidden;position:relative;background:#040406;font-family:var(--fb);transform-origin:top center}
-.cardPost .lay{display:flex;flex-direction:column;align-items:center;text-align:center;padding:48px 56px 40px;height:100%}
-.cardPost .top{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.cardPost .kick{font-family:var(--ft);font-size:14px;letter-spacing:5px;color:var(--cyan)}
-.cardPost .ttrlogo{width:144px;height:auto;display:block}
-.cardPost .ph{position:relative;width:616px;height:616px;border-radius:18px;overflow:hidden;background:var(--brand);box-shadow:0 24px 60px rgba(0,0,0,.5)}
-.cardPost .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
-.cardPost .ph .pl{position:absolute;inset:0;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;color:rgba(255,255,255,.85)}
-.cardPost .ph .pl svg{width:120px}.cardPost .ph .pl span{font-family:var(--ft);font-size:14px;letter-spacing:4px}
-.cardPost .pseudo{font-family:var(--fd);font-style:italic;font-weight:800;font-size:60px;line-height:.9;color:#fff;text-transform:uppercase;margin-top:24px;letter-spacing:-1px}
-.cardPost .name{font-family:var(--fd);font-style:italic;font-weight:600;font-size:26px;color:#fff;text-transform:uppercase;margin-top:4px;opacity:.92}
-.cardPost .loc{font-family:var(--ft);font-size:13px;letter-spacing:2px;color:var(--muted);margin-top:12px}
-.cardPost .style{font-family:var(--fb);font-style:italic;font-weight:500;font-size:19px;color:#dfe1ec;margin-top:8px;line-height:1.3}
-.cardPost .ovr{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:18px}
-.cardPost .badge{position:relative;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 32% 26%,#5cc6ff,#2e7bff 55%,#1230a8);border:2px solid rgba(255,255,255,.28);box-shadow:0 8px 20px rgba(46,123,255,.55),inset 0 5px 12px rgba(255,255,255,.35),inset 0 -8px 14px rgba(0,0,0,.35)}
-.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:50px;color:#fff;line-height:1;text-shadow:0 2px 5px rgba(0,20,80,.5)}
-.cardPost .rookie{font-family:var(--ft);font-size:18px;letter-spacing:4px;color:#fff;padding:13px 26px;border-radius:10px;background:var(--rookie)}
-.cardPost .foot{width:100%;margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1f2029;padding-top:14px}
-.cardPost .foot .s0{font-family:var(--ft);font-size:12px;letter-spacing:3px;color:#fff}
-.cardPost .foot .u{font-family:var(--ft);font-size:12px;letter-spacing:2px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+# Variables à renseigner dans Vercel → Settings → Environment Variables
+SUPABASE_URL=https://xxxxxxxx.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGciOi...   # Supabase → Settings → API → service_role (secret)
+RESEND_API_KEY=re_xxxxxxxx           # Resend → API Keys
+TEAM_EMAIL=mtthias@hotmail.com       # reçoit chaque inscription
+FROM_EMAIL=The Ring <onboarding@resend.dev>   # remplacer par league@thering-drive.com une fois le domaine vérifié
+ADMIN_PASSWORD=choisis-un-mot-de-passe-solide

@@ -1,42 +1,47 @@
-// Source unique de la Driver Card (format Post 1080x1080).
-// Utilisé par le formulaire, la page publique et l'admin.
-(function (g) {
-  function esc(s) {
-    return (s == null ? '' : String(s)).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+// GET /api/admin-list  (header x-admin-pass)
+const SB = process.env.SUPABASE_URL;
+const KEY = process.env.SUPABASE_SERVICE_KEY;
+const PASS = process.env.ADMIN_PASSWORD;
+
+const ADMIN_WINDOW_MS = 15 * 60 * 1000;
+const ADMIN_MAX_FAILS = 6;
+
+function getIp(req) {
+  return String(req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || '')
+    .split(',')[0].trim() || 'unknown';
+}
+function isBlocked(ip) {
+  const now = Date.now();
+  globalThis.__ttrAdminFails = globalThis.__ttrAdminFails || new Map();
+  const b = globalThis.__ttrAdminFails.get(ip);
+  if (!b) return false;
+  if (now > b.resetAt) { globalThis.__ttrAdminFails.delete(ip); return false; }
+  return b.count >= ADMIN_MAX_FAILS;
+}
+function recordAdminFail(ip) {
+  const now = Date.now();
+  globalThis.__ttrAdminFails = globalThis.__ttrAdminFails || new Map();
+  const b = globalThis.__ttrAdminFails.get(ip) || { count: 0, resetAt: now + ADMIN_WINDOW_MS };
+  if (now > b.resetAt) { b.count = 0; b.resetAt = now + ADMIN_WINDOW_MS; }
+  b.count += 1;
+  globalThis.__ttrAdminFails.set(ip, b);
+}
+function clearAdminFails(ip) { if (globalThis.__ttrAdminFails) globalThis.__ttrAdminFails.delete(ip); }
+
+module.exports = async (req, res) => {
+  const ip = getIp(req);
+  if (isBlocked(ip)) return res.status(429).json({ error: 'Trop de tentatives admin. Réessaie plus tard.' });
+  if (!PASS || req.headers['x-admin-pass'] !== PASS) { recordAdminFail(ip); return res.status(401).json({ error: 'unauthorized' }); }
+  clearAdminFails(ip);
+  try {
+    const r = await fetch(`${SB}/rest/v1/drivers?select=*&order=created_at.desc`, {
+      headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
     });
+    const text = await r.text();
+    let json = []; try { json = JSON.parse(text || '[]'); } catch { json = []; }
+    if (!r.ok) return res.status(500).json({ error: (json && (json.message || json.error)) || text || 'Erreur Supabase' });
+    return res.status(200).json(Array.isArray(json) ? json : []);
+  } catch (e) {
+    return res.status(500).json({ error: String(e && e.message || e) });
   }
-  function up(s) { return esc(s).toUpperCase(); }
-
-  // data = {first,last,alias,city,nationality,style, overall=50, level='ROOKIE'}
-  // photoUrl = url de la photo (ou vide -> placeholder)
-  g.buildPostCard = function (data, photoUrl) {
-    var first = up(data.first), last = up(data.last), alias = up(data.alias || data.last);
-    var loc = [up(data.city), up(data.nationality)].filter(Boolean).join(' · ');
-    var styleRaw = (data.style || '').trim();
-    var style = styleRaw ? '« ' + esc(styleRaw) + ' »' : '';
-    var overall = data.overall || 50, level = esc(data.level || 'ROOKIE');
-    var full = (first + ' ' + last).trim();
-    var photo = photoUrl
-      ? '<img src="' + esc(photoUrl) + '" alt="" crossorigin="anonymous">'
-      : '<div class="pl"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0 2c-5 0-9 2.7-9 6v2h18v-2c0-3.3-4-6-9-6Z"/></svg><span>PHOTO PILOTE</span></div>';
-    return '' +
-      '<div class="lay">' +
-        '<div class="top"><div class="kick">SEASON&nbsp;0 · FOUNDERS</div>' +
-          '<img class="ttrlogo" src="/ttr-logo.png" alt="The Ring"></div>' +
-        '<div class="ph">' + photo + '</div>' +
-        '<div class="pseudo">' + alias + '</div>' +
-        '<div class="name">' + full + '</div>' +
-        '<div class="loc">' + loc + '</div>' +
-        (style ? '<div class="style">' + style + '</div>' : '') +
-        '<div class="ovr"><div class="badge"><b>' + overall + '</b></div><div class="rookie">' + level + '</div></div>' +
-        '<div class="foot"><div class="s0">SEASON 0 — FOUNDERS</div><div class="u">thering-drive.com</div></div>' +
-      '</div>';
-  };
-
-  // Monte la carte dans un conteneur .cardPost
-  g.mountPostCard = function (el, data, photoUrl) {
-    el.className = 'cardPost';
-    el.innerHTML = g.buildPostCard(data, photoUrl);
-  };
-})(window);
+};
