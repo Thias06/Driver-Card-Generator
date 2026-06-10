@@ -136,6 +136,8 @@ module.exports = async (req, res) => {
 
     const body = await readBody(req);
     const p = body.payload || {};
+    const lang = (p.language === 'en') ? 'en' : 'fr';
+    const en = lang === 'en';
 
     const cleanEmail = String(p.email || '').trim().toLowerCase();
     const cleanAlias = String(p.alias || '').trim();
@@ -202,6 +204,7 @@ module.exports = async (req, res) => {
       card_url,
       slug,
       equipment: p.equipment || '',
+      language: lang,
       season: 'S0',
       overall: 50,
       level: 'ROOKIE'
@@ -217,6 +220,7 @@ module.exports = async (req, res) => {
       <p><b>Pseudo :</b> ${cleanAlias}<br><b>Nom :</b> ${p.first} ${p.last}<br>
       <b>Âge :</b> ${p.age || '-'}<br><b>Ville :</b> ${p.city || '-'} · ${p.nationality || '-'}<br>
       <b>Style :</b> ${p.style || '-'}<br><b>Email :</b> ${cleanEmail}<br>
+      <b>Langue :</b> ${en ? 'EN' : 'FR'}<br>
       <b>Formule :</b> ${equipmentLabel(p.equipment)}</p>
       <p><b>Carte :</b> <a href="${card_url}">${card_url}</a><br>
       <b>Lien public :</b> <a href="${link}">${link}</a><br>
@@ -231,6 +235,20 @@ module.exports = async (req, res) => {
 
     const logo = `${base}/ttr-logo.png`;
 
+    const tx = en ? {
+      hi:`Congratulations, ${p.first}!`,
+      welcome:`Welcome to <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. Your registration is confirmed and your official Driver Card has been created. 🏁`,
+      btn:'VIEW MY DRIVER CARD',
+      back:`Our team will get back to you <b style="color:#fff">very soon</b> to finalize your registration.`,
+      invite:`Grow the community: invite your friends and family to sign up 👇`
+    } : {
+      hi:`Félicitations, ${p.first} !`,
+      welcome:`Bienvenue dans <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. Ton inscription est bien enregistrée et ta Driver Card officielle est créée. 🏁`,
+      btn:'VOIR MA DRIVER CARD',
+      back:`Nos équipes reviennent vers toi <b style="color:#fff">très vite</b> pour finaliser ton inscription.`,
+      invite:`Fais grandir la communauté : invite tes proches, amis et famille à s'inscrire 👇`
+    };
+
     const userHtml = `
 <div style="margin:0;padding:0;background:#050507">
 <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#050507">
@@ -241,15 +259,15 @@ module.exports = async (req, res) => {
   </td></tr>
   <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>
   <tr><td style="padding:30px 30px 8px">
-    <div style="font-family:Arial,sans-serif;font-weight:800;font-size:30px;color:#ffffff;text-transform:uppercase">Félicitations, ${p.first} !</div>
+    <div style="font-family:Arial,sans-serif;font-weight:800;font-size:30px;color:#ffffff;text-transform:uppercase">${tx.hi}</div>
   </td></tr>
   <tr><td style="padding:6px 30px 0">
-    <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">Bienvenue dans <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. Ton inscription est bien enregistrée et ta Driver Card officielle est créée. 🏁</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.welcome}</p>
     <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
-      <a href="${link}" style="display:inline-block;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">VOIR MA DRIVER CARD</a>
+      <a href="${link}" style="display:inline-block;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">${tx.btn}</a>
     </td></tr></table>
-    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">Nos équipes reviennent vers toi <b style="color:#fff">très vite</b> pour finaliser ton inscription.</p>
-    <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">Fais grandir la communauté : invite tes proches, amis et famille à s'inscrire 👇</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.back}</p>
+    <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
     <p style="margin:0 0 22px"><a href="${base}/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">${base}/</a></p>
   </td></tr>
   <tr><td style="height:1px;background:#1d1e28;font-size:0;line-height:0">&nbsp;</td></tr>
@@ -257,7 +275,8 @@ module.exports = async (req, res) => {
 </table>
 </td></tr></table></div>`;
 
-    await sendEmail(cleanEmail, 'Bienvenue dans The Ring League 🏁', userHtml).catch(() => {});
+    const userSubject = en ? 'Welcome to The Ring League 🏁' : 'Bienvenue dans The Ring League 🏁';
+    await sendEmail(cleanEmail, userSubject, userHtml).catch(() => {});
 
     return res.status(200).json({ slug, link });
 

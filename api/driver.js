@@ -24,14 +24,17 @@ module.exports = async (req, res) => {
     city: row.city, nationality: row.nationality, style: row.driving_style,
     overall: row.overall || 50, level: row.level || 'ROOKIE'
   };
-  const title = `${row.alias} — The Pro League · Season 0`;
+  const en = row.language === 'en';
+  const title = `${row.alias} — The Ring League · Season 0`;
+  const desc = en ? 'Official The Ring Driver Card — Season 0 Founders.' : 'Driver Card officielle The Ring — Season 0 Founders.';
+  const cta = en ? 'BECOME AN OFFICIAL DRIVER →' : 'DEVIENS PILOTE OFFICIEL →';
   const og = row.card_url || '';
 
-  res.status(200).send(`<!doctype html><html lang="fr"><head>
+  res.status(200).send(`<!doctype html><html lang="${en ? 'en' : 'fr'}"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title>
 <meta property="og:title" content="${title}">
-<meta property="og:description" content="Driver Card officielle The Ring — Season 0 Founders.">
+<meta property="og:description" content="${desc}">
 ${og ? `<meta property="og:image" content="${og}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${og}">` : ''}
 <link rel="stylesheet" href="/card.css">
 <style>
@@ -42,7 +45,7 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 .cta a{background:var(--brand);color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px}
 </style></head><body>
 <div class="wrap"><div class="cardPost" id="card"></div></div>
-<div class="cta"><a href="/">DEVIENS PILOTE OFFICIEL →</a></div>
+<div class="cta"><a href="/">${cta}</a></div>
 <script src="/card.js"></script>
 <script>
 var D=${JSON.stringify(D)}; var P=${JSON.stringify(row.photo_url || '')};
