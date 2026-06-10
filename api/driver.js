@@ -41,8 +41,10 @@ ${og ? `<meta property="og:image" content="${og}"><meta name="twitter:card" cont
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.14),transparent 60%),var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px;gap:22px}
 .wrap{width:100%;max-width:560px;display:flex;justify-content:center}
-.cta{font-family:var(--ft);font-size:11px;letter-spacing:3px}
-.cta a{background:var(--brand);color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px}
+.cta{font-family:var(--ft);font-size:11px;letter-spacing:3px;width:100%;display:flex;justify-content:center;padding:0 12px}
+.cta a{background:var(--brand);color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px;white-space:nowrap;text-align:center}
+@media(max-width:520px){.cta{letter-spacing:1.5px;font-size:9px}.cta a{padding:12px 14px}}
+@media(max-width:360px){.cta{letter-spacing:.5px;font-size:8px}.cta a{padding:11px 10px}}
 </style></head><body>
 <div class="wrap"><div class="cardPost" id="card"></div></div>
 <div class="cta"><a href="/">${cta}</a></div>
