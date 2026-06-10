@@ -37,6 +37,9 @@ a{color:var(--cyan);text-decoration:none}
 .fill.achat{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
 .fill.loc{background:linear-gradient(90deg,#7a33f0,#e22ed0)}
 .fill.photo{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.fill.fr{background:linear-gradient(90deg,#0b2ea0,#e1000f)}
+.fill.en{background:linear-gradient(90deg,#012169,#C8102E)}
+.chip.lng{border-color:#34b8ff;background:#0a1622}
 .cities .row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
 .cities .nm{width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cities .tr{flex:1;height:9px;background:#070809;border-radius:5px;overflow:hidden}
@@ -74,7 +77,10 @@ a{color:var(--cyan);text-decoration:none}
     <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
     <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
   </div>
-  <div class="card" style="margin-bottom:18px"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  <div class="grid2">
+    <div class="card"><h2>RÉPARTITION PAR LANGUE</h2><div id="langs"></div></div>
+    <div class="card"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
+  </div>
   <div class="card recent"><h2>DERNIÈRES INSCRIPTIONS</h2><div id="recent"></div></div>
 </div>
 
@@ -102,7 +108,7 @@ function render(rows){
   const yest0=today0-864e5;
   const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
 
-  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0;
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0, frN=0, enN=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
     const t=r.created_at?new Date(r.created_at).getTime():0;
@@ -112,6 +118,7 @@ function render(rows){
     if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
     if(r.photo_url)withPhoto++;
     if(r.hidden)hidden++;
+    if((r.language||'fr')==='en')enN++; else frN++;
     const c=(r.city||'').trim(); if(c){const k=c.toLowerCase();cityMap[k]=cityMap[k]||{n:0,label:c};cityMap[k].n++;}
     if(t){const k=dayKey(new Date(t));dayMap[k]=(dayMap[k]||0)+1;}
   });
@@ -122,6 +129,7 @@ function render(rows){
   const al=[];
   al.push(`<div class="chip hot">🔥 <span><b>${todayN}</b> inscription(s) aujourd'hui</span></div>`);
   al.push(`<div class="chip"><span>Hier : <b>${yestN}</b> · 7 jours : <b>${n7}</b></span></div>`);
+  al.push(`<div class="chip lng">🌐 <span>FR <b>${total?Math.round(frN/total*100):0}%</b> · EN <b>${total?Math.round(enN/total*100):0}%</b></span></div>`);
   if(hidden>0)al.push(`<div class="chip mod">⚠ <span><b>${hidden}</b> carte(s) masquée(s)</span></div>`);
   $('alerts').innerHTML=al.join('');
 
@@ -136,6 +144,12 @@ function render(rows){
     <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
     <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
     <div class="split" style="margin-top:16px"><div class="row"><span>Avec photo</span><b>${withPhoto}/${total} (${total?Math.round(withPhoto/total*100):0}%)</b></div><div class="track"><div class="fill photo" style="width:${total?Math.round(withPhoto/total*100):0}%"></div></div></div>`;
+
+  // Répartition par langue (%)
+  const ld=Math.max(frN+enN,1);
+  $('langs').innerHTML=`
+    <div class="split"><div class="row"><span>🇫🇷 Français</span><b>${frN} (${Math.round(frN/ld*100)}%)</b></div><div class="track"><div class="fill fr" style="width:${Math.round(frN/ld*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>🇬🇧 English</span><b>${enN} (${Math.round(enN/ld*100)}%)</b></div><div class="track"><div class="fill en" style="width:${Math.round(enN/ld*100)}%"></div></div></div>`;
 
   // Top villes
   const cities=Object.values(cityMap).sort((a,b)=>b.n-a.n).slice(0,6);
