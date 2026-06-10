@@ -316,38 +316,21 @@ function showError(msg,scroll=true){
 $('i_consent').addEventListener('change',()=>{validationVisible=true; validate(true); checkForm();});
 const slugify=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 
-/* ===================== SON V6 (Web Audio synthétisé, ~1s, fort) ===================== */
-let revCtx=null;
-function unlockAudio(){ try{ if(!revCtx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;revCtx=new C();} if(revCtx.state==='suspended') revCtx.resume(); }catch(e){} }
-function playRevV6(){
-  if(!revCtx) return;
+/* ===================== SON V6 (fichier /v6.mp3 fourni) ===================== */
+/* Place le fichier "v6.mp3" à la RACINE du dépôt (à côté de index.html). */
+let revAudio=null;
+function unlockAudio(){
   try{
-    const ctx=revCtx, t0=ctx.currentTime, DUR=1.05;
-    const master=ctx.createGain(); master.gain.value=0.0001; master.connect(ctx.destination);
-    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.Q.value=7;
-    lp.frequency.setValueAtTime(500,t0); lp.frequency.exponentialRampToValueAtTime(5200,t0+DUR*0.85);
-    const trem=ctx.createGain(); trem.gain.value=0.78; lp.connect(trem); trem.connect(master);
-    const f0=70, f1=300; // ralenti -> haut régime, montée rapide (~1s)
-    [[1,0.55],[2,0.32],[3,0.18],[4,0.10]].forEach(([mult,vol])=>{
-      const o=ctx.createOscillator(); o.type='sawtooth';
-      o.frequency.setValueAtTime(f0*mult,t0);
-      o.frequency.exponentialRampToValueAtTime(f1*mult,t0+DUR*0.8);
-      const g=ctx.createGain(); g.gain.value=vol; o.connect(g); g.connect(lp);
-      o.start(t0); o.stop(t0+DUR+0.1);
-    });
-    const lfo=ctx.createOscillator(); lfo.type='square';
-    lfo.frequency.setValueAtTime(20,t0); lfo.frequency.exponentialRampToValueAtTime(95,t0+DUR*0.8);
-    const lfoG=ctx.createGain(); lfoG.gain.value=0.26; lfo.connect(lfoG); lfoG.connect(trem.gain);
-    lfo.start(t0); lfo.stop(t0+DUR+0.1);
-    const nb=ctx.createBuffer(1, Math.floor(ctx.sampleRate*DUR), ctx.sampleRate); const nd=nb.getChannelData(0);
-    for(let i=0;i<nd.length;i++) nd[i]=(Math.random()*2-1);
-    const noise=ctx.createBufferSource(); noise.buffer=nb; const ng=ctx.createGain(); ng.gain.value=0.07;
-    noise.connect(ng); ng.connect(lp); noise.start(t0); noise.stop(t0+DUR);
-    // enveloppe : attaque franche, fort, puis coupe nette (~1s)
-    master.gain.setValueAtTime(0.0001,t0);
-    master.gain.exponentialRampToValueAtTime(0.6,t0+0.12);
-    master.gain.setValueAtTime(0.6,t0+DUR*0.8);
-    master.gain.exponentialRampToValueAtTime(0.0001,t0+DUR);
+    if(!revAudio){ revAudio=new Audio('/v6.mp3'); revAudio.preload='auto'; revAudio.volume=1.0; }
+    // "réveille" la lecture dans le geste utilisateur (requis iOS) : on lance puis on remet à zéro
+    revAudio.play().then(()=>{ revAudio.pause(); revAudio.currentTime=0; }).catch(()=>{});
+  }catch(e){}
+}
+function playRevV6(){
+  try{
+    if(!revAudio){ revAudio=new Audio('/v6.mp3'); revAudio.volume=1.0; }
+    revAudio.currentTime=0;
+    revAudio.play().catch(()=>{});
   }catch(e){}
 }
 
