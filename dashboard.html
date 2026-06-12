@@ -39,6 +39,7 @@ a{color:var(--cyan);text-decoration:none}
 .fill.achat{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
 .fill.loc{background:linear-gradient(90deg,#7a33f0,#e22ed0)}
 .fill.photo{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.fill.avatar{background:linear-gradient(90deg,#34b8ff,#e22ed0)}
 .fill.fr{background:linear-gradient(90deg,#0b2ea0,#e1000f)}
 .fill.en{background:linear-gradient(90deg,#012169,#C8102E)}
 .chip.lng{border-color:#34b8ff;background:#0a1622}
@@ -110,7 +111,7 @@ function render(rows){
   const yest0=today0-864e5;
   const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
 
-  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, hidden=0, frN=0, enN=0;
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, avatarN=0, photoN=0, hidden=0, frN=0, enN=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
     const t=r.created_at?new Date(r.created_at).getTime():0;
@@ -119,6 +120,9 @@ function render(rows){
     if(t>=d7)n7++; if(t>=d30)n30++;
     if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
     if(r.photo_url)withPhoto++;
+    if(r.photo_type==='photo')photoN++;
+    else if(r.photo_type==='avatar')avatarN++;
+    else if(r.photo_url)photoN++; // anciennes inscriptions : comptées comme photo
     if(r.hidden)hidden++;
     if((r.language||'fr')==='en')enN++; else frN++;
     const c=(r.city||'').trim(); if(c){const k=c.toLowerCase();cityMap[k]=cityMap[k]||{n:0,label:c};cityMap[k].n++;}
@@ -140,12 +144,14 @@ function render(rows){
     ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
   ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
 
-  // Formule + photo
+  // Formule + avatar/photo
   const denom=Math.max(achat+loc,1);
+  const ptot=Math.max(avatarN+photoN,1);
   $('formule').innerHTML=`
     <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
     <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
-    <div class="split" style="margin-top:16px"><div class="row"><span>Avec photo</span><b>${withPhoto}/${total} (${total?Math.round(withPhoto/total*100):0}%)</b></div><div class="track"><div class="fill photo" style="width:${total?Math.round(withPhoto/total*100):0}%"></div></div></div>`;
+    <div class="split" style="margin-top:16px"><div class="row"><span>Avatar</span><b>${avatarN} (${Math.round(avatarN/ptot*100)}%)</b></div><div class="track"><div class="fill avatar" style="width:${Math.round(avatarN/ptot*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>Photo importée</span><b>${photoN} (${Math.round(photoN/ptot*100)}%)</b></div><div class="track"><div class="fill photo" style="width:${Math.round(photoN/ptot*100)}%"></div></div></div>`;
 
   // Répartition par langue (%)
   const ld=Math.max(frN+enN,1);
