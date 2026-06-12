@@ -78,12 +78,13 @@ a{color:var(--cyan);text-decoration:none}
   <div class="kpis" id="kpis"></div>
   <div class="grid2">
     <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
-    <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
+    <div class="card"><h2>AVATAR / PHOTO</h2><div id="photos"></div></div>
   </div>
   <div class="grid2">
+    <div class="card"><h2>TOP VILLES</h2><div class="cities" id="cities"></div></div>
     <div class="card"><h2>RÉPARTITION PAR LANGUE</h2><div id="langs"></div></div>
-    <div class="card"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
   </div>
+  <div class="card"><h2>INSCRIPTIONS — 14 DERNIERS JOURS</h2><div class="chart" id="chart"></div></div>
   <div class="card recent"><h2>DERNIÈRES INSCRIPTIONS</h2><div id="recent"></div></div>
 </div>
 
@@ -144,14 +145,17 @@ function render(rows){
     ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
   ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
 
-  // Formule + avatar/photo
+  // Formule (valeurs + %)
   const denom=Math.max(achat+loc,1);
-  const ptot=Math.max(avatarN+photoN,1);
   $('formule').innerHTML=`
-    <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat}</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
-    <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc}</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>
-    <div class="split" style="margin-top:16px"><div class="row"><span>Avatar</span><b>${avatarN} (${Math.round(avatarN/ptot*100)}%)</b></div><div class="track"><div class="fill avatar" style="width:${Math.round(avatarN/ptot*100)}%"></div></div></div>
-    <div class="split"><div class="row"><span>Photo importée</span><b>${photoN} (${Math.round(photoN/ptot*100)}%)</b></div><div class="track"><div class="fill photo" style="width:${Math.round(photoN/ptot*100)}%"></div></div></div>`;
+    <div class="split"><div class="row"><span>Achat de l'équipement</span><b>${achat} (${Math.round(achat/denom*100)}%)</b></div><div class="track"><div class="fill achat" style="width:${Math.round(achat/denom*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>Location (pré-équipé)</span><b>${loc} (${Math.round(loc/denom*100)}%)</b></div><div class="track"><div class="fill loc" style="width:${Math.round(loc/denom*100)}%"></div></div></div>`;
+
+  // Avatar / Photo (carte distincte)
+  const ptot=Math.max(avatarN+photoN,1);
+  $('photos').innerHTML=`
+    <div class="split"><div class="row"><span>🪖 Avatar</span><b>${avatarN} (${Math.round(avatarN/ptot*100)}%)</b></div><div class="track"><div class="fill avatar" style="width:${Math.round(avatarN/ptot*100)}%"></div></div></div>
+    <div class="split"><div class="row"><span>📷 Photo importée</span><b>${photoN} (${Math.round(photoN/ptot*100)}%)</b></div><div class="track"><div class="fill photo" style="width:${Math.round(photoN/ptot*100)}%"></div></div></div>`;
 
   // Répartition par langue (%)
   const ld=Math.max(frN+enN,1);

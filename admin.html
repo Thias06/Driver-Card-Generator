@@ -17,8 +17,16 @@ h1{font-family:var(--ft);font-size:14px;letter-spacing:3px;margin-bottom:6px}
 .toolbar{position:sticky;top:0;z-index:5;background:#0a0b10;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
 .toolbar label{font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;cursor:pointer}
 .toolbar .count{color:var(--cyan);font-family:var(--ft);font-size:11px;letter-spacing:1px}
-.row{display:flex;flex-wrap:wrap;gap:14px 18px;background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;align-items:flex-start}
-.selcol{flex:0 0 auto}
+.row{display:block;background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.sumhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.suminfo{flex:1 1 200px;min-width:0}
+.sumtop{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sumtop b{font-size:15px;color:#fff}
+.summeta{color:var(--muted);font-size:12.5px;margin-top:3px;overflow-wrap:anywhere}
+.sumbtns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toggle{background:#0e0f17;border:1px solid var(--violet)}
+.details{display:none}
+.details.open{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-start;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
 .prevcol{flex:0 0 200px}
 .main{flex:1 1 360px;min-width:0}
 .chk{width:20px;height:20px;accent-color:#7a33f0;margin-top:4px}
@@ -78,37 +86,53 @@ function render(row){
   const wrap=document.createElement('div');wrap.className='row';
   const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level,showName:row.show_name!==false};
   const st=row.hidden?'<span class="tag hid">MASQUÉE</span>':(row.status==='published'?'<span class="tag pub">PUBLIÉE</span>':'<span class="tag pend">'+esc((row.status||'').toUpperCase())+'</span>');
+  const full=((row.first_name||'')+' '+(row.last_name||'')).trim();
+  const validerBtn=row.status!=='published'?'<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>':'';
   wrap.innerHTML=`
-    <div class="selcol"><input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}"></div>
-    <div class="prevcol"><div class="prevbox"><div class="cardPost" id="prev-${row.id}"></div></div></div>
-    <div class="main">
-      <div class="f">
-        <div><label>PSEUDO</label><input data-f="alias" value="${esc(row.alias)}"></div>
-        <div><label>STYLE DE CONDUITE</label><input data-f="driving_style" value="${esc(row.driving_style||'')}"></div>
-        <div><label>PRÉNOM</label><input data-f="first_name" value="${esc(row.first_name)}"></div>
-        <div><label>NOM</label><input data-f="last_name" value="${esc(row.last_name)}"></div>
-        <div><label>VILLE</label><input data-f="city" value="${esc(row.city||'')}"></div>
-        <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
+    <div class="sumhead">
+      <input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}">
+      <div class="suminfo">
+        <div class="sumtop"><b>${esc(row.alias||'')}</b> ${st}</div>
+        <div class="summeta">${esc(full||'—')} · ${esc(row.city||'—')}</div>
       </div>
-      <div class="bar">
-        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
-        ${row.status!=='published'?'<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ VALIDER</button>':''}
-        <button class="btn" data-act="save">ENREGISTRER</button>
+      <div class="sumbtns">
+        ${validerBtn}
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         ${row.card_url?`<a class="btn ghost" style="text-decoration:none" href="${row.card_url}" target="_blank" download>⬇ CARTE</a>`:''}
-        ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
-        <span class="email" style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
+        <button class="btn toggle" data-act="more">Plus d'infos ▾</button>
       </div>
-      ${row.motivation?`<div style="margin-top:10px;color:#c9cbd8;font-size:12px;line-height:1.45;background:#0a0b10;border:1px solid var(--line);border-radius:9px;padding:10px"><b style="color:var(--muted);font-family:var(--ft);font-size:9px;letter-spacing:1px">MOTIVATION</b><br>${esc(row.motivation).replace(/\n/g,'<br>')}</div>`:''}
+    </div>
+    <div class="details">
+      <div class="prevcol"><div class="prevbox"><div class="cardPost" id="prev-${row.id}"></div></div></div>
+      <div class="main">
+        <div class="f">
+          <div><label>PSEUDO</label><input data-f="alias" value="${esc(row.alias)}"></div>
+          <div><label>STYLE DE CONDUITE</label><input data-f="driving_style" value="${esc(row.driving_style||'')}"></div>
+          <div><label>PRÉNOM</label><input data-f="first_name" value="${esc(row.first_name)}"></div>
+          <div><label>NOM</label><input data-f="last_name" value="${esc(row.last_name)}"></div>
+          <div><label>VILLE</label><input data-f="city" value="${esc(row.city||'')}"></div>
+          <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
+        </div>
+        <div class="bar">
+          <span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
+          <button class="btn" data-act="save">ENREGISTRER LES MODIFS</button>
+          ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
+          <span class="email" style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
+        </div>
+        ${row.motivation?`<div style="margin-top:10px;color:#c9cbd8;font-size:12px;line-height:1.45;background:#0a0b10;border:1px solid var(--line);border-radius:9px;padding:10px"><b style="color:var(--muted);font-family:var(--ft);font-size:9px;letter-spacing:1px">MOTIVATION</b><br>${esc(row.motivation).replace(/\n/g,'<br>')}</div>`:''}
+      </div>
     </div>`;
   $('list').appendChild(wrap);
-  mountPostCard($('prev-'+row.id),D,row.photo_url||'');
   const inputs=wrap.querySelectorAll('input[data-f]');
   function get(f){const e=wrap.querySelector('input[data-f="'+f+'"]');return e?e.value:'';}
-  inputs.forEach(inp=>inp.addEventListener('input',()=>{mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level,showName:row.show_name!==false},row.photo_url||'');}));
-  wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Enregistré.');};
+  let mounted=false;
+  function mountPreview(){mountPostCard($('prev-'+row.id),D,row.photo_url||'');mounted=true;}
+  inputs.forEach(inp=>inp.addEventListener('input',()=>{if(mounted)mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level,showName:row.show_name!==false},row.photo_url||'');}));
+  wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Modifications enregistrées.');};
   wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
   const vb=wrap.querySelector('[data-act="valider"]');if(vb)vb.onclick=async()=>{const r=await upd(row.id,{status:'published'});if(r&&r.error){alert(r.error);return;}load();};
+  const det=wrap.querySelector('.details');
+  wrap.querySelector('[data-act="more"]').onclick=function(){const open=det.classList.toggle('open');this.innerHTML=open?'Moins ▴':'Plus d\'infos ▾';if(open&&!mounted)mountPreview();};
   wrap.querySelector('.sel').addEventListener('change',updateSel);
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}

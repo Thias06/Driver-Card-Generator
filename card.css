@@ -21,6 +21,7 @@
 .cardPost .frame{border-radius:22px;overflow:hidden;border:4px solid rgba(255,255,255,.9);background:#000;display:flex;flex-direction:column;box-shadow:0 22px 55px rgba(0,0,0,.55)}
 .cardPost .ph{position:relative;width:100%;height:600px;background:var(--brand);overflow:hidden}
 .cardPost .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.cardPost .ph .phimg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat}
 .cardPost .ph>svg{position:absolute;inset:0;width:100%;height:100%}
 .cardPost .nameband{background:#3e50f6;padding:24px 34px 30px;overflow:hidden}
 .cardPost .nb-name{font-family:var(--fb);font-style:italic;font-weight:500;font-size:34px;color:#eef0ff;line-height:1;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
