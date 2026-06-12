@@ -1,8 +1,6 @@
 <!doctype html><html lang="fr"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Ring · Admin — Season 0</title>
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="stylesheet" href="/card.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
@@ -72,7 +70,7 @@ async function load(){
 function eqLabel(e){return e==='achat'?'ACHAT':(e==='location'?'LOCATION':'—');}
 function render(row){
   const wrap=document.createElement('div');wrap.className='row';
-  const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level};
+  const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level,showName:row.show_name!==false};
   const st=row.hidden?'<span class="tag hid">MASQUÉE</span>':(row.status==='published'?'<span class="tag pub">PUBLIÉE</span>':'<span class="tag pend">'+esc((row.status||'').toUpperCase())+'</span>');
   wrap.innerHTML=`
     <div><input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}"></div>
@@ -87,21 +85,24 @@ function render(row){
         <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
       </div>
       <div class="bar">
-        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span>
+        ${st}<span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span>
+        ${row.status!=='published'?'<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ VALIDER</button>':''}
         <button class="btn" data-act="save">ENREGISTRER</button>
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         ${row.card_url?`<a class="btn ghost" style="text-decoration:none" href="${row.card_url}" target="_blank" download>⬇ CARTE</a>`:''}
         ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
         <span style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
       </div>
+      ${row.motivation?`<div style="margin-top:10px;color:#c9cbd8;font-size:12px;line-height:1.45;background:#0a0b10;border:1px solid var(--line);border-radius:9px;padding:10px"><b style="color:var(--muted);font-family:var(--ft);font-size:9px;letter-spacing:1px">MOTIVATION</b><br>${esc(row.motivation).replace(/\n/g,'<br>')}</div>`:''}
     </div>`;
   $('list').appendChild(wrap);
   mountPostCard($('prev-'+row.id),D,row.photo_url||'');
   const inputs=wrap.querySelectorAll('input[data-f]');
   function get(f){const e=wrap.querySelector('input[data-f="'+f+'"]');return e?e.value:'';}
-  inputs.forEach(inp=>inp.addEventListener('input',()=>{mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level},row.photo_url||'');}));
+  inputs.forEach(inp=>inp.addEventListener('input',()=>{mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level,showName:row.show_name!==false},row.photo_url||'');}));
   wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Enregistré.');};
   wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
+  const vb=wrap.querySelector('[data-act="valider"]');if(vb)vb.onclick=async()=>{const r=await upd(row.id,{status:'published'});if(r&&r.error){alert(r.error);return;}load();};
   wrap.querySelector('.sel').addEventListener('change',updateSel);
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
