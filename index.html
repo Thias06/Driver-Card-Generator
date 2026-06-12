@@ -41,19 +41,20 @@ body.locked{overflow:hidden}
 .equip .opt.sel::before{background:#fff}
 
 /* ---- Photo + avatars ---- */
-.photolabel{color:#d7d9e4!important}
+.photo-field{text-align:center}
+.photolabel{color:#eef0f7!important;text-align:center;font-size:11px!important;letter-spacing:2.5px!important;margin-bottom:9px!important}
 .photowrap{position:relative}
-.photobtn{display:block;text-align:center;background:#0c0a14;border:1px solid #3a2d5a;color:#d7d9e4;border-radius:9px;padding:12px;font-size:12px;cursor:pointer;font-family:var(--ft);letter-spacing:1px;transition:border-color .15s,background .15s}
-.photobtn:hover{border-color:var(--violet);background:#120e1f;color:#fff}
-.photohint{display:none;margin-top:7px;font-size:10.5px;line-height:1.45;color:#a7adc0;background:#0b0a12;border:1px solid #23202e;border-radius:8px;padding:9px 11px}
+.photobtn{display:block;text-align:center;background:#100c1c;border:1.5px solid #4a3a72;color:#fff;border-radius:11px;padding:15px;font-size:14px;cursor:pointer;font-family:var(--ft);letter-spacing:2px;transition:border-color .15s,background .15s}
+.photobtn:hover{border-color:var(--violet);background:#171029}
+.photohint{display:none;margin-top:8px;font-size:11px;line-height:1.45;color:#b6bccd;background:#0b0a12;border:1px solid #23202e;border-radius:8px;padding:10px 12px;text-align:center}
 @media(hover:hover){.photowrap:hover .photohint{display:block}}
 .photohint.show{display:block}
-.photorules{background:none;border:none;color:#9a86d8;font-size:10.5px;cursor:pointer;padding:7px 0 0;text-decoration:underline;font-family:var(--fb)}
-.photoerr{display:none;margin-top:7px;color:#ff5c5c;font-size:11px;font-weight:700;line-height:1.35}
+.photorules{display:block;margin:9px auto 0;background:none;border:none;color:#9a86d8;font-size:11px;cursor:pointer;text-decoration:underline;font-family:var(--fb)}
+.photoerr{display:none;margin-top:8px;color:#ff5c5c;font-size:11.5px;font-weight:700;line-height:1.35;text-align:center}
 .photoerr.show{display:block}
-.avatarlabel{margin-top:13px;font-family:var(--ft);font-size:9px;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
-.avatars{display:flex;gap:9px;margin-top:8px}
-.avatars .av{width:52px;height:52px;border-radius:12px;overflow:hidden;cursor:pointer;background:linear-gradient(105deg,#34b8ff,#2e54ff 40%,#7a33f0 70%,#e22ed0);border:2px solid transparent;padding:0;flex:0 0 auto;transition:transform .12s}
+.avatarlabel{margin-top:15px;font-family:var(--ft);font-size:10px;letter-spacing:2.5px;color:#c9cbd8;text-transform:uppercase;text-align:center}
+.avatars{display:flex;gap:11px;margin-top:10px;justify-content:center}
+.avatars .av{width:56px;height:56px;border-radius:13px;overflow:hidden;cursor:pointer;background:#0c0d14;border:2px solid transparent;padding:0;flex:0 0 auto;transition:transform .12s}
 .avatars .av:hover{transform:translateY(-2px)}
 .avatars .av svg{width:100%;height:100%;display:block}
 .avatars .av.sel{border-color:#fff;box-shadow:0 0 0 2px var(--violet)}
@@ -76,7 +77,8 @@ body.locked{overflow:hidden}
 .afterReg .linkbox button{background:var(--brand);border:none;color:#fff;border-radius:9px;padding:10px 15px;font-size:11px;font-family:var(--ft);letter-spacing:1px;cursor:pointer}
 .stage{display:flex;justify-content:center}
 @media(min-width:921px){.stage{justify-content:flex-start;padding-left:10px}}
-.previewWrap{width:100%;max-width:560px;display:flex;justify-content:center}
+.previewWrap{width:100%;max-width:560px;position:relative;overflow:hidden}
+.previewWrap .cardPost{position:absolute;top:0;left:0;transform-origin:top left}
 .hp{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
 .field.error input,.field.error select{border-color:#ff4d4d!important;box-shadow:0 0 0 3px rgba(255,77,77,.16)!important}
 .field .err{display:none;margin-top:6px;color:#ff5c5c;font-size:11px;line-height:1.35;font-weight:700}
@@ -94,11 +96,12 @@ body.locked{overflow:hidden}
   .equip .opt .d{font-size:12px}
   .hintinfo{font-size:11.5px}
   .consent{font-size:12px}
-  .photobtn{font-size:13px}
+  .photobtn{font-size:15px}
+  .photolabel{font-size:12px!important}
 }
 
 /* ===== Écran de choix de langue ===== */
-#splash{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:24px;overflow:hidden;
+#splash{position:fixed;left:0;right:0;top:0;height:100vh;height:100svh;height:100dvh;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:24px;overflow:hidden;
   background:radial-gradient(1000px 700px at 80% -10%,rgba(122,51,240,.30),transparent 60%),radial-gradient(900px 700px at -10% 110%,rgba(46,84,255,.26),transparent 60%),#040406;transition:opacity .55s ease}
 #splash.hide{opacity:0;pointer-events:none}
 #splash::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:46px 46px;-webkit-mask:radial-gradient(circle at 50% 42%,#000,transparent 75%);mask:radial-gradient(circle at 50% 42%,#000,transparent 75%);animation:gridmove 26s linear infinite}
@@ -192,7 +195,7 @@ body.locked{overflow:hidden}
       </div><div class="equipErr" id="e_equip"></div>
     </div>
 
-    <div class="field" style="margin-top:4px">
+    <div class="field photo-field" style="margin-top:12px">
       <label class="photolabel"><span data-i18n="l_photo">Photo du pilote</span></label>
       <div class="photowrap">
         <label class="photobtn" for="i_photo" data-i18n="btn_photo">⇪ IMPORTER UNE PHOTO</label>
@@ -220,27 +223,33 @@ body.locked{overflow:hidden}
 const $=id=>document.getElementById(id);
 let photoData='', LANG='fr';
 
-/* ===================== AVATARS (casques The Ring, SVG) ===================== */
-function helmet(opt){
-  var shell=opt.shell,stroke=opt.stroke,visor=opt.visor,tint=opt.tint,stripe=opt.stripe,grad=opt.grad;
-  var gid='tg'+(opt.id||'');
-  var defs=grad?('<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#34b8ff"/><stop offset=".4" stop-color="#2e54ff"/><stop offset=".7" stop-color="#7a33f0"/><stop offset="1" stop-color="#e22ed0"/></linearGradient></defs>'):'';
-  var stripeFill=grad?('url(#'+gid+')'):stripe;
-  return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">'+defs+
-   '<path d="M205 430 L205 470 C205 484 216 495 230 495 L370 495 C384 495 395 484 395 470 L395 430 Z" fill="'+shell+'" stroke="'+stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
-   '<path d="M150 332 C150 222 215 150 300 150 C385 150 450 222 450 332 L450 374 C450 410 421 439 385 439 L215 439 C179 439 150 410 150 374 Z" fill="'+shell+'" stroke="'+stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
-   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+visor+'"/>'+
-   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+tint+'" opacity=".5"/>'+
-   '<path d="M212 312 C260 298 300 297 300 297 L250 340 C228 340 214 332 212 312 Z" fill="#ffffff" opacity=".18"/>'+
-   '<path d="M300 150 C346 150 384 168 410 197 L382 218 C360 196 332 186 300 186 C268 186 240 196 218 218 L190 197 C216 168 254 150 300 150 Z" fill="'+stripeFill+'"/>'+
-   '<rect x="270" y="455" width="60" height="20" rx="10" fill="'+visor+'"/></svg>';
+/* ===================== AVATARS (5 casques The Ring distincts) ===================== */
+function helmet(o){
+  var sid='s'+o.id, gid='g'+o.id;
+  var shellGrad='<linearGradient id="'+sid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.shell+'"/><stop offset="1" stop-color="'+(o.shell2||o.shell)+'"/></linearGradient>';
+  var glow='<radialGradient id="'+gid+'" cx="50%" cy="36%" r="62%"><stop offset="0" stop-color="'+o.tint+'" stop-opacity=".5"/><stop offset="1" stop-color="'+o.tint+'" stop-opacity="0"/></radialGradient>';
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs>'+shellGrad+glow+'</defs>'+
+   '<rect width="600" height="600" fill="#0c0d14"/>'+
+   '<rect width="600" height="600" fill="url(#'+gid+')"/>'+
+   '<path d="M205 430 L205 470 C205 484 216 495 230 495 L370 495 C384 495 395 484 395 470 L395 430 Z" fill="url(#'+sid+')" stroke="'+o.stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
+   '<path d="M150 332 C150 222 215 150 300 150 C385 150 450 222 450 332 L450 374 C450 410 421 439 385 439 L215 439 C179 439 150 410 150 374 Z" fill="url(#'+sid+')" stroke="'+o.stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
+   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+o.visor+'"/>'+
+   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+o.tint+'" opacity=".55"/>'+
+   '<path d="M212 312 C260 298 300 297 300 297 L250 340 C228 340 214 332 212 312 Z" fill="#ffffff" opacity=".22"/>'+
+   (o.accent||'')+
+   '<rect x="270" y="455" width="60" height="20" rx="10" fill="'+o.visor+'"/></svg>';
 }
 const AVATARS=[
-  helmet({id:'0',shell:'#f4f5fb',stroke:'#0b0c12',visor:'#0b0c12',tint:'#34b8ff',grad:true}),
-  helmet({id:'1',shell:'#f4f5fb',stroke:'#0b0c12',visor:'#0b0c12',tint:'#7a33f0',stripe:'#7a33f0'}),
-  helmet({id:'2',shell:'#f4f5fb',stroke:'#0b0c12',visor:'#0b0c12',tint:'#e22ed0',stripe:'#e22ed0'}),
-  helmet({id:'3',shell:'#15131f',stroke:'#34b8ff',visor:'#05060a',tint:'#34b8ff',stripe:'#34b8ff'}),
-  helmet({id:'4',shell:'#15131f',stroke:'#e22ed0',visor:'#05060a',tint:'#e22ed0',grad:true})
+  /* 1 CYAN — bande centrale blanche */
+  helmet({id:'0',shell:'#39c4ff',shell2:'#1f93e0',stroke:'#0a3550',visor:'#06223a',tint:'#8fe3ff',accent:'<path d="M300 150 C330 150 357 160 378 178 L300 200 L222 178 C243 160 270 150 300 150 Z" fill="#fff"/><rect x="288" y="150" width="24" height="285" fill="#fff" opacity=".9"/>'}),
+  /* 2 BLEU — double bande */
+  helmet({id:'1',shell:'#3a59ff',shell2:'#2238c8',stroke:'#0a1550',visor:'#050a2a',tint:'#6f8bff',accent:'<rect x="244" y="150" width="20" height="285" fill="#fff" opacity=".92"/><rect x="336" y="150" width="20" height="285" fill="#fff" opacity=".92"/>'}),
+  /* 3 VIOLET — aileron doré */
+  helmet({id:'2',shell:'#8a44ff',shell2:'#5a23c0',stroke:'#240a52',visor:'#1a0540',tint:'#c8a0ff',accent:'<path d="M286 150 C292 110 300 96 300 96 C300 96 308 110 314 150 Z" fill="#ffd23f" stroke="#7a4d00" stroke-width="3"/>'}),
+  /* 4 MAGENTA — étoile */
+  helmet({id:'3',shell:'#ec4fd8',shell2:'#c01ea8',stroke:'#4a0540',visor:'#2a0026',tint:'#ffb3f0',accent:'<path d="M300 168 l13 27 30 4 -22 21 6 30 -27 -15 -27 15 6 -30 -22 -21 30 -4 Z" fill="#fff"/>'}),
+  /* 5 ORANGE — emblème cercle */
+  helmet({id:'4',shell:'#ff9f1c',shell2:'#e8740a',stroke:'#5a2c00',visor:'#2a1500',tint:'#ffd79a',accent:'<circle cx="300" cy="205" r="26" fill="none" stroke="#fff" stroke-width="9"/>'})
 ];
 function rasterize(svg){return new Promise(function(res){var img=new Image();img.onload=function(){try{var c=document.createElement('canvas');c.width=600;c.height=600;var x=c.getContext('2d');x.clearRect(0,0,600,600);x.drawImage(img,0,0,600,600);res(c.toDataURL('image/png'));}catch(e){res('');}};img.onerror=function(){res('');};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
 function buildAvatars(){var box=$('avatars');box.innerHTML='';AVATARS.forEach(function(svg,i){var b=document.createElement('button');b.type='button';b.className='av'+(i===0?' sel':'');b.innerHTML=svg;b.setAttribute('aria-label','Avatar '+(i+1));b.onclick=function(){selectAvatar(i);};box.appendChild(b);});}
@@ -344,7 +353,7 @@ document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('ch
   r.closest('.opt').classList.add('sel');if(validationVisible) validate(true);checkForm();
 }));
 
-function fit(){const w=document.querySelector('.previewWrap'),el=$('card');const s=Math.min(1,Math.min(w.clientWidth,560)/1080);el.style.transform=`scale(${s})`;w.style.height=(1080*s)+'px';}
+function fit(){const w=document.querySelector('.previewWrap'),el=$('card');const s=Math.min(1,w.clientWidth/1080);el.style.transform=`scale(${s})`;w.style.height=(1350*s)+'px';}
 window.addEventListener('resize',fit);
 
 let validationVisible=false;
@@ -410,14 +419,14 @@ function playRevV6(){try{if(!revAudio){revAudio=new Audio('/v6.mp3');revAudio.vo
 /* ===================== Génération carte ===================== */
 async function generateCard(){
   const stage=document.createElement('div');
-  stage.style.cssText='position:fixed;left:-10000px;top:0;width:1080px;height:1080px;z-index:-1';
+  stage.style.cssText='position:fixed;left:-10000px;top:0;width:1080px;height:1350px;z-index:-1';
   const card=document.createElement('div');stage.appendChild(card);document.body.appendChild(stage);
   mountPostCard(card,data(),photoData);
   await (document.fonts&&document.fonts.ready);
   const img=card.querySelector('img');
   if(img&&!img.complete){await new Promise(r=>{img.onload=r;img.onerror=r;});}
   await new Promise(r=>setTimeout(r,60));
-  const cv=await html2canvas(card,{width:1080,height:1080,windowWidth:1080,windowHeight:1080,scale:1,backgroundColor:'#040406',useCORS:true});
+  const cv=await html2canvas(card,{width:1080,height:1350,windowWidth:1080,windowHeight:1350,scale:1,backgroundColor:'#0c0b0f',useCORS:true});
   document.body.removeChild(stage);
   return cv;
 }

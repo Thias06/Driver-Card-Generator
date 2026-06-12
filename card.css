@@ -27,12 +27,12 @@
 .cardPost .nb-alias{font-family:var(--fd);font-style:italic;font-weight:800;font-size:80px;line-height:.84;color:#fff;text-transform:uppercase;letter-spacing:-2px;white-space:nowrap;overflow:hidden}
 .cardPost .styleband{background:#000;padding:18px 34px;font-family:var(--fb);font-style:italic;font-weight:500;font-size:30px;color:#d2d4e6;line-height:1.25}
 /* OVERALL / STATUS */
-.cardPost .stats{display:flex;justify-content:center;align-items:flex-start;gap:104px;margin-top:50px}
-.cardPost .stat{display:flex;flex-direction:column;align-items:center;gap:18px}
-.cardPost .stat .lbl{font-family:var(--ft);font-size:24px;letter-spacing:5px;color:#d6d8e3}
-.cardPost .stat .val{height:120px;display:flex;align-items:center;justify-content:center}
-.cardPost .badge{position:relative;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 34% 26%,#67ccff,#3a52ff 48%,#7a33f0 100%);border:2px solid rgba(255,255,255,.3);box-shadow:0 10px 24px rgba(74,80,255,.5),inset 0 6px 14px rgba(255,255,255,.35),inset 0 -10px 16px rgba(0,0,0,.35)}
-.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:62px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,18,80,.5)}
-.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:44px;letter-spacing:1px;color:#fff;text-transform:uppercase;padding:18px 40px;border-radius:14px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0)}
+.cardPost .stats{display:flex;justify-content:center;align-items:flex-start;gap:64px;margin:44px auto 0;max-width:720px;width:100%;padding:0 16px;box-sizing:border-box}
+.cardPost .stat{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:0}
+.cardPost .stat .lbl{font-family:var(--ft);font-size:19px;letter-spacing:2px;color:#d6d8e3;white-space:nowrap}
+.cardPost .stat .val{height:112px;display:flex;align-items:center;justify-content:center}
+.cardPost .badge{position:relative;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 34% 26%,#67ccff,#3a52ff 48%,#7a33f0 100%);border:2px solid rgba(255,255,255,.3);box-shadow:0 10px 24px rgba(74,80,255,.5),inset 0 6px 14px rgba(255,255,255,.35),inset 0 -10px 16px rgba(0,0,0,.35)}
+.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:56px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,18,80,.5)}
+.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:34px;letter-spacing:1px;color:#fff;text-transform:uppercase;padding:15px 30px;border-radius:12px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);white-space:nowrap}
 .cardPost .foot{margin-top:auto;display:flex;justify-content:center;padding-top:22px}
 .cardPost .foot .u{font-family:var(--ft);font-size:22px;letter-spacing:3px;color:#c2c4d4}
