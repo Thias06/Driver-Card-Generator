@@ -58,31 +58,41 @@ async function sbGetDriversForDuplicateCheck() {
 }
 
 async function sbInsert(row) {
-  const r = await fetch(`${SB}/rest/v1/drivers`, {
-    method: 'POST',
-    headers: {
-      apikey: KEY,
-      Authorization: `Bearer ${KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    },
-    body: JSON.stringify(row)
-  });
+  // Insertion résiliente : si une colonne optionnelle n'existe pas encore en base
+  // (ex. motivation, show_name), on la retire et on réessaie — l'inscription ne casse jamais.
+  let attempt = Object.assign({}, row);
+  for (let i = 0; i < 4; i++) {
+    const r = await fetch(`${SB}/rest/v1/drivers`, {
+      method: 'POST',
+      headers: {
+        apikey: KEY,
+        Authorization: `Bearer ${KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation'
+      },
+      body: JSON.stringify(attempt)
+    });
 
-  const text = await r.text();
-  let json = {};
-  try { json = JSON.parse(text || '{}'); }
-  catch { json = {}; }
+    const text = await r.text();
+    let json = {};
+    try { json = JSON.parse(text || '{}'); } catch { json = {}; }
 
-  if (!r.ok) {
+    if (r.ok) return Array.isArray(json) ? json[0] : json;
+
     const msg = json.message || json.error || text || 'Erreur insertion Supabase';
     if (String(msg).toLowerCase().includes('duplicate') || json.code === '23505') {
-      throw new Error('Ce pseudo ou cette adresse email est déjà utilisé.');
+      throw new Error('DUP');
+    }
+    // colonne inconnue -> on la retire et on réessaie
+    const m = /Could not find the '([^']+)' column|column "([^"]+)" does not exist/i.exec(String(msg));
+    const col = m && (m[1] || m[2]);
+    if (col && Object.prototype.hasOwnProperty.call(attempt, col)) {
+      delete attempt[col];
+      continue;
     }
     throw new Error(msg);
   }
-
-  return json;
+  throw new Error('Erreur insertion Supabase');
 }
 
 async function sbUpload(path, mime, buf) {
@@ -138,6 +148,8 @@ module.exports = async (req, res) => {
     const p = body.payload || {};
     const lang = (p.language === 'en') ? 'en' : 'fr';
     const en = lang === 'en';
+    const motivation = String(p.motivation || '').replace(/\s+\n/g, '\n').slice(0, 600).trim();
+    const showName = p.showName !== false; // défaut : afficher le nom
 
     const cleanEmail = String(p.email || '').trim().toLowerCase();
     const cleanAlias = String(p.alias || '').trim();
@@ -190,7 +202,7 @@ module.exports = async (req, res) => {
     }
 
     const row = {
-      status: 'published',
+      status: 'pending',
       hidden: false,
       first_name: p.first,
       last_name: p.last,
@@ -205,30 +217,42 @@ module.exports = async (req, res) => {
       slug,
       equipment: p.equipment || '',
       language: lang,
+      motivation: motivation,
+      show_name: showName,
       season: 'S0',
       overall: 50,
       level: 'ROOKIE'
     };
 
-    await sbInsert(row);
+    try {
+      await sbInsert(row);
+    } catch (e) {
+      if (String(e.message) === 'DUP') {
+        return res.status(409).json({ error: en ? 'This nickname or email is already used.' : 'Ce pseudo ou cette adresse email est déjà utilisé.' });
+      }
+      throw e;
+    }
 
     const base = `https://${req.headers.host}`;
     const link = `${base}/drivers/${slug}`;
     const cardB64 = card ? card.buf.toString('base64') : null;
 
-    const teamHtml = `<h2>Nouvelle inscription — Season 0</h2>
+    const teamHtml = `<h2>Nouvelle candidature — Season 0 (à valider)</h2>
       <p><b>Pseudo :</b> ${cleanAlias}<br><b>Nom :</b> ${p.first} ${p.last}<br>
       <b>Âge :</b> ${p.age || '-'}<br><b>Ville :</b> ${p.city || '-'} · ${p.nationality || '-'}<br>
       <b>Style :</b> ${p.style || '-'}<br><b>Email :</b> ${cleanEmail}<br>
       <b>Langue :</b> ${en ? 'EN' : 'FR'}<br>
+      <b>Nom affiché sur la carte :</b> ${showName ? 'Oui' : 'Non (pseudo seul)'}<br>
       <b>Formule :</b> ${equipmentLabel(p.equipment)}</p>
+      <p><b>Motivation :</b><br>${motivation ? motivation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : '-'}</p>
       <p><b>Carte :</b> <a href="${card_url}">${card_url}</a><br>
-      <b>Lien public :</b> <a href="${link}">${link}</a><br>
-      <b>Photo :</b> <a href="${photo_url}">${photo_url}</a></p>`;
+      <b>Lien public (après validation) :</b> <a href="${link}">${link}</a><br>
+      <b>Photo :</b> <a href="${photo_url}">${photo_url}</a></p>
+      <p style="color:#888">⚠ Candidature en attente : à valider dans /admin pour la rendre publique, puis envoyer la carte officielle au pilote.</p>`;
 
     await sendEmail(
       TEAM,
-      `🏁 Inscription Season 0 — ${cleanAlias}`,
+      `🏁 Candidature Season 0 — ${cleanAlias}`,
       teamHtml,
       cardB64 ? [{ filename: `TTR_S0_${slug}.png`, content: cardB64 }] : undefined
     ).catch(() => {});
@@ -236,17 +260,17 @@ module.exports = async (req, res) => {
     const logo = `${base}/ttr-logo.png`;
 
     const tx = en ? {
-      hi:`Congratulations, ${p.first}!`,
-      welcome:`Welcome to <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. Your registration is confirmed and your official Driver Card has been created. 🏁`,
-      btn:'VIEW MY DRIVER CARD',
-      back:`Our team will get back to you <b style="color:#fff">very soon</b> to finalize your registration.`,
-      invite:`Grow the community: invite your friends and family to sign up 👇`
+      hi:`Thank you, ${p.first}!`,
+      l1:`We've received your application to <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. 🏁`,
+      l2:`Our team will <b style="color:#fff">review and validate your application</b>. Once approved, you'll receive your <b style="color:#fff">official Driver Card</b> by email.`,
+      l3:`No action needed on your side for now — we'll get back to you soon.`,
+      invite:`In the meantime, feel free to tell your friends and family about The Ring 👇`
     } : {
-      hi:`Félicitations, ${p.first} !`,
-      welcome:`Bienvenue dans <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. Ton inscription est bien enregistrée et ta Driver Card officielle est créée. 🏁`,
-      btn:'VOIR MA DRIVER CARD',
-      back:`Nos équipes reviennent vers toi <b style="color:#fff">très vite</b> pour finaliser ton inscription.`,
-      invite:`Fais grandir la communauté : invite tes proches, amis et famille à s'inscrire 👇`
+      hi:`Merci, ${p.first} !`,
+      l1:`Nous avons bien reçu ta candidature à <b style="color:#fff">The Ring League — Season&nbsp;0 · Founders</b>. 🏁`,
+      l2:`Notre équipe va <b style="color:#fff">examiner et valider ta candidature</b>. Une fois validée, tu recevras ta <b style="color:#fff">Driver Card officielle</b> par email.`,
+      l3:`Rien à faire de ton côté pour l'instant — on revient vers toi très vite.`,
+      invite:`En attendant, n'hésite pas à parler de The Ring autour de toi 👇`
     };
 
     const userHtml = `
@@ -262,11 +286,9 @@ module.exports = async (req, res) => {
     <div style="font-family:Arial,sans-serif;font-weight:800;font-size:30px;color:#ffffff;text-transform:uppercase">${tx.hi}</div>
   </td></tr>
   <tr><td style="padding:6px 30px 0">
-    <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.welcome}</p>
-    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
-      <a href="${link}" style="display:inline-block;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">${tx.btn}</a>
-    </td></tr></table>
-    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.back}</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l1}</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l3}</p>
     <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
     <p style="margin:0 0 22px"><a href="${base}/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">${base}/</a></p>
   </td></tr>
@@ -275,10 +297,10 @@ module.exports = async (req, res) => {
 </table>
 </td></tr></table></div>`;
 
-    const userSubject = en ? 'Welcome to The Ring League 🏁' : 'Bienvenue dans The Ring League 🏁';
+    const userSubject = en ? 'The Ring League — application received 🏁' : 'The Ring League — candidature reçue 🏁';
     await sendEmail(cleanEmail, userSubject, userHtml).catch(() => {});
 
-    return res.status(200).json({ slug, link });
+    return res.status(200).json({ slug, status: 'pending' });
 
   } catch (e) {
     return res.status(500).json({ error: String(e && e.message || e) });
