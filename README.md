@@ -15,7 +15,7 @@ Une page **/admin** permet de lister, prévisualiser, **modifier les infos** (mo
 
 ---
 
-## Mise en ligne — 3 comptes gratuits, ~30 min
+## Mise en ligne — 3 comptes gratuits, ~30 minutes 
 
 > Les **pilotes n'ont aucun compte à créer**. Ces 3 comptes sont uniquement pour toi (l'équipe), une seule fois.
 
