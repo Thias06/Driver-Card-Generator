@@ -8,17 +8,17 @@
   --fd:'Saira Condensed','Saira Semi Condensed','Arial Narrow',sans-serif;
   --fb:'Saira',system-ui,sans-serif;
 }
-.cardPost{width:1080px;height:1350px;border-radius:18px;overflow:hidden;position:relative;background:radial-gradient(120% 80% at 80% 0%,#1b1a22 0%,#100f14 45%,#0c0b0f 100%);font-family:var(--fb);transform-origin:top center}
+.cardPost{width:1080px;height:1350px;border-radius:18px;overflow:hidden;position:relative;background:radial-gradient(125% 85% at 15% -10%,#2a2937 0%,#17161e 40%,#0c0b10 78%,#08080b 100%);font-family:var(--fb);transform-origin:top center}
 /* bande latérale blanche + texte vertical */
-.cardPost .side{position:absolute;left:0;top:0;width:96px;height:100%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cardPost .side span{display:block;white-space:nowrap;transform:rotate(-90deg);font-family:var(--fd);font-style:italic;font-weight:800;font-size:46px;letter-spacing:6px;color:#0a0a0a;text-transform:uppercase}
+.cardPost .side{position:absolute;left:0;top:0;width:120px;height:100%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cardPost .side span{display:block;white-space:nowrap;transform:rotate(-90deg);font-family:var(--fd);font-style:italic;font-weight:800;font-size:74px;letter-spacing:1px;color:#0a0a0a;text-transform:uppercase}
 /* zone de contenu à droite de la bande */
-.cardPost .content{position:absolute;left:96px;top:0;right:0;bottom:0;display:flex;flex-direction:column;padding:46px 56px 40px 46px}
+.cardPost .content{position:absolute;left:120px;top:0;right:0;bottom:0;display:flex;flex-direction:column;padding:46px 54px 40px 44px}
 .cardPost .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
-.cardPost .kick{font-family:var(--ft);font-size:22px;letter-spacing:6px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cardPost .kick{font-family:var(--ft);font-size:22px;letter-spacing:6px;color:#9b7bff}
 .cardPost .ttrlogo{width:172px;height:auto;display:block}
 /* cadre photo + bandes */
-.cardPost .frame{border-radius:22px;overflow:hidden;border:4px solid rgba(255,255,255,.9);background:#000;display:flex;flex-direction:column;box-shadow:0 22px 55px rgba(0,0,0,.55)}
+.cardPost .frame{border-radius:22px;overflow:hidden;border:11px solid #ffffff;background:#000;display:flex;flex-direction:column;box-shadow:0 22px 55px rgba(0,0,0,.55)}
 .cardPost .ph{position:relative;width:100%;height:600px;background:var(--brand);overflow:hidden}
 .cardPost .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .cardPost .ph .phimg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat}
@@ -28,12 +28,12 @@
 .cardPost .nb-alias{font-family:var(--fd);font-style:italic;font-weight:800;font-size:80px;line-height:.84;color:#fff;text-transform:uppercase;letter-spacing:-2px;white-space:nowrap;overflow:hidden}
 .cardPost .styleband{background:#000;padding:18px 34px;font-family:var(--fb);font-style:italic;font-weight:500;font-size:30px;color:#d2d4e6;line-height:1.25}
 /* OVERALL / STATUS */
-.cardPost .stats{display:flex;justify-content:center;align-items:flex-start;gap:64px;margin:44px auto 0;max-width:720px;width:100%;padding:0 16px;box-sizing:border-box}
-.cardPost .stat{display:flex;flex-direction:column;align-items:center;gap:16px;min-width:0}
-.cardPost .stat .lbl{font-family:var(--ft);font-size:19px;letter-spacing:2px;color:#d6d8e3;white-space:nowrap}
-.cardPost .stat .val{height:112px;display:flex;align-items:center;justify-content:center}
-.cardPost .badge{position:relative;width:112px;height:112px;border-radius:50%;background:radial-gradient(circle at 34% 26%,#67ccff,#3a52ff 48%,#7a33f0 100%);border:2px solid rgba(255,255,255,.3);box-shadow:0 10px 24px rgba(74,80,255,.5),inset 0 6px 14px rgba(255,255,255,.35),inset 0 -10px 16px rgba(0,0,0,.35)}
-.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-50%,-54%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:56px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,18,80,.5)}
-.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:34px;letter-spacing:1px;color:#fff;text-transform:uppercase;padding:15px 30px;border-radius:12px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);white-space:nowrap}
+.cardPost .stats{display:flex;justify-content:center;align-items:flex-start;gap:112px;margin:46px auto 0;max-width:780px;width:100%;padding:0 16px;box-sizing:border-box}
+.cardPost .stat{display:flex;flex-direction:column;align-items:center;gap:18px;min-width:0}
+.cardPost .stat .lbl{font-family:var(--ft);font-size:23px;letter-spacing:3px;color:#d6d8e3;white-space:nowrap}
+.cardPost .stat .val{height:128px;display:flex;align-items:center;justify-content:center}
+.cardPost .badge{position:relative;width:126px;height:126px;border-radius:50%;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);border:2px solid rgba(255,255,255,.32);box-shadow:0 10px 24px rgba(74,80,255,.5),inset 0 6px 14px rgba(255,255,255,.4),inset 0 -10px 16px rgba(0,0,0,.32)}
+.cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-52%,-50%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:62px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,18,80,.5)}
+.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:42px;letter-spacing:1px;color:#fff;text-transform:uppercase;padding:17px 38px;border-radius:13px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);white-space:nowrap}
 .cardPost .foot{margin-top:auto;display:flex;justify-content:center;padding-top:22px}
 .cardPost .foot .u{font-family:var(--ft);font-size:22px;letter-spacing:3px;color:#c2c4d4}
