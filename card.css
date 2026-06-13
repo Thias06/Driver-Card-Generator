@@ -34,6 +34,6 @@
 .cardPost .stat .val{height:128px;display:flex;align-items:center;justify-content:center}
 .cardPost .badge{position:relative;width:126px;height:126px;border-radius:50%;background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.45),rgba(255,255,255,0) 46%),linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);border:2px solid rgba(255,255,255,.3);box-shadow:0 10px 24px rgba(74,80,255,.45)}
 .cardPost .badge b{position:absolute;top:50%;left:50%;transform:translate(-52%,-50%);font-family:var(--fd);font-style:italic;font-weight:800;font-size:62px;color:#fff;line-height:1;text-shadow:0 2px 6px rgba(0,18,80,.5)}
-.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:42px;letter-spacing:1px;color:#fff;text-transform:uppercase;line-height:1;padding:24px 38px;border-radius:13px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);white-space:nowrap}
+.cardPost .rookie{font-family:var(--fd);font-style:italic;font-weight:800;font-size:42px;letter-spacing:1px;color:#fff;text-transform:uppercase;line-height:1;padding:32px 38px 16px;border-radius:13px;background:linear-gradient(100deg,#2e54ff,#7a33f0 55%,#e22ed0);white-space:nowrap}
 .cardPost .foot{margin-top:auto;display:flex;justify-content:center;padding-top:22px}
 .cardPost .foot .u{font-family:var(--ft);font-size:22px;letter-spacing:3px;color:#c2c4d4}
