@@ -225,34 +225,41 @@ body.locked{overflow:hidden}
 const $=id=>document.getElementById(id);
 let photoData='', LANG='fr', photoType='avatar';
 
-/* ===================== AVATARS (5 casques The Ring distincts) ===================== */
+/* ===================== AVATARS (5 casques La League) =====================
+   Base unique recolorable : pour éditer une variante ou en ajouter une,
+   il suffit de changer les couleurs dans PALETTES — aucun dessin SVG à toucher.
+   Champs : glow=halo de fond · shellTop/Mid/Bot=dégradé coque · edge=contour
+            visorTop/Bot=dégradé visière · sheen=reflet · stripe=bande + liserés */
 function helmet(o){
-  var sid='s'+o.id, gid='g'+o.id;
-  var shellGrad='<linearGradient id="'+sid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.shell+'"/><stop offset="1" stop-color="'+(o.shell2||o.shell)+'"/></linearGradient>';
-  var glow='<radialGradient id="'+gid+'" cx="50%" cy="36%" r="62%"><stop offset="0" stop-color="'+o.tint+'" stop-opacity=".5"/><stop offset="1" stop-color="'+o.tint+'" stop-opacity="0"/></radialGradient>';
-  return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs>'+shellGrad+glow+'</defs>'+
-   '<rect width="600" height="600" fill="#0c0d14"/>'+
-   '<rect width="600" height="600" fill="url(#'+gid+')"/>'+
-   '<path d="M205 430 L205 470 C205 484 216 495 230 495 L370 495 C384 495 395 484 395 470 L395 430 Z" fill="url(#'+sid+')" stroke="'+o.stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
-   '<path d="M150 332 C150 222 215 150 300 150 C385 150 450 222 450 332 L450 374 C450 410 421 439 385 439 L215 439 C179 439 150 410 150 374 Z" fill="url(#'+sid+')" stroke="'+o.stroke+'" stroke-width="6" stroke-linejoin="round"/>'+
-   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+o.visor+'"/>'+
-   '<path d="M190 300 C250 278 350 278 410 300 L410 344 C350 332 250 332 190 344 Z" fill="'+o.tint+'" opacity=".55"/>'+
-   '<path d="M212 312 C260 298 300 297 300 297 L250 340 C228 340 214 332 212 312 Z" fill="#ffffff" opacity=".22"/>'+
-   (o.accent||'')+
-   '<rect x="270" y="455" width="60" height="20" rx="10" fill="'+o.visor+'"/></svg>';
+  var i=o.id;
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs>'+
+    '<radialGradient id="bg'+i+'" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="'+o.glow+'" stop-opacity=".55"/><stop offset="1" stop-color="'+o.glow+'" stop-opacity="0"/></radialGradient>'+
+    '<linearGradient id="sh'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.shellTop+'"/><stop offset=".55" stop-color="'+o.shellMid+'"/><stop offset="1" stop-color="'+o.shellBot+'"/></linearGradient>'+
+    '<linearGradient id="vi'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.visorTop+'"/><stop offset="1" stop-color="'+o.visorBot+'"/></linearGradient>'+
+    '<linearGradient id="sn'+i+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+o.sheen+'" stop-opacity="0"/><stop offset=".45" stop-color="'+o.sheen+'" stop-opacity=".75"/><stop offset=".6" stop-color="#ffffff" stop-opacity=".15"/><stop offset="1" stop-color="'+o.sheen+'" stop-opacity="0"/></linearGradient>'+
+    '</defs>'+
+    '<rect width="600" height="600" fill="#0c0d14"/>'+
+    '<rect width="600" height="600" fill="url(#bg'+i+')"/>'+
+    '<path d="M300 96 C212 96 150 168 146 268 C144 322 150 372 168 420 C182 458 210 486 252 498 L348 498 C390 486 418 458 432 420 C450 372 456 322 454 268 C450 168 388 96 300 96 Z" fill="url(#sh'+i+')" stroke="'+o.edge+'" stroke-width="5"/>'+
+    '<path d="M300 112 C236 112 188 156 172 224 C214 196 262 184 300 184 C338 184 386 196 428 224 C412 156 364 112 300 112 Z" fill="#ffffff" opacity=".14"/>'+
+    '<path d="M168 250 C220 224 380 224 432 250 L432 262 C380 238 220 238 168 262 Z" fill="#000" opacity=".22"/>'+
+    '<path d="M176 278 C232 250 368 250 424 278 C420 330 392 366 348 384 L252 384 C208 366 180 330 176 278 Z" fill="url(#vi'+i+')"/>'+
+    '<path d="M192 286 C240 264 360 264 408 286 C402 326 380 354 344 368 L256 368 C220 354 198 326 192 286 Z" fill="'+o.glow+'" opacity=".30"/>'+
+    '<path d="M210 292 C250 274 300 272 300 272 L246 360 C224 352 212 330 210 292 Z" fill="url(#sn'+i+')"/>'+
+    '<path d="M214 430 C214 414 256 408 300 408 C344 408 386 414 386 430 C386 452 360 472 300 472 C240 472 214 452 214 430 Z" fill="url(#sh'+i+')" stroke="'+o.edge+'" stroke-width="4"/>'+
+    '<rect x="276" y="430" width="48" height="13" rx="6" fill="'+o.visorBot+'"/>'+
+    '<path d="M289 110 C295 108 305 108 311 110 L309 246 L291 246 Z" fill="'+o.stripe+'"/>'+
+    '<path d="M196 244 C232 228 280 222 300 222 C320 222 368 228 404 244" fill="none" stroke="'+o.stripe+'" stroke-width="6" stroke-linecap="round" opacity=".9"/>'+
+    '</svg>';
 }
-const AVATARS=[
-  /* 1 CYAN — bande centrale blanche */
-  helmet({id:'0',shell:'#39c4ff',shell2:'#1f93e0',stroke:'#0a3550',visor:'#06223a',tint:'#8fe3ff',accent:'<path d="M300 150 C330 150 357 160 378 178 L300 200 L222 178 C243 160 270 150 300 150 Z" fill="#fff"/><rect x="288" y="150" width="24" height="285" fill="#fff" opacity=".9"/>'}),
-  /* 2 BLEU — double bande (s'arrête au-dessus de la visière) */
-  helmet({id:'1',shell:'#3a59ff',shell2:'#2238c8',stroke:'#0a1550',visor:'#050a2a',tint:'#6f8bff',accent:'<rect x="248" y="158" width="18" height="120" rx="9" fill="#fff" opacity=".92"/><rect x="334" y="158" width="18" height="120" rx="9" fill="#fff" opacity=".92"/>'}),
-  /* 3 VIOLET — aileron doré */
-  helmet({id:'2',shell:'#8a44ff',shell2:'#5a23c0',stroke:'#240a52',visor:'#1a0540',tint:'#c8a0ff',accent:'<path d="M286 150 C292 110 300 96 300 96 C300 96 308 110 314 150 Z" fill="#ffd23f" stroke="#7a4d00" stroke-width="3"/>'}),
-  /* 4 MAGENTA — étoile */
-  helmet({id:'3',shell:'#ec4fd8',shell2:'#c01ea8',stroke:'#4a0540',visor:'#2a0026',tint:'#ffb3f0',accent:'<path d="M300 168 l13 27 30 4 -22 21 6 30 -27 -15 -27 15 6 -30 -22 -21 30 -4 Z" fill="#fff"/>'}),
-  /* 5 ORANGE — emblème cercle */
-  helmet({id:'4',shell:'#ff9f1c',shell2:'#e8740a',stroke:'#5a2c00',visor:'#2a1500',tint:'#ffd79a',accent:'<circle cx="300" cy="205" r="26" fill="none" stroke="#fff" stroke-width="9"/>'})
+const PALETTES=[
+  {id:'0',glow:'#bfe9ff',shellTop:'#ffffff',shellMid:'#e9edf5',shellBot:'#b9c0cf',edge:'#8f97a8',visorTop:'#1a2330',visorBot:'#070a12',sheen:'#9fd8ff',stripe:'#aab2c2'}, /* Nacre */
+  {id:'1',glow:'#8fe3ff',shellTop:'#5fd4ff',shellMid:'#2ea6ef',shellBot:'#1573c2',edge:'#0a3a63',visorTop:'#04202f',visorBot:'#02070d',sheen:'#bff0ff',stripe:'#ffffff'}, /* Cyan */
+  {id:'2',glow:'#c8a0ff',shellTop:'#a96bff',shellMid:'#7d3bf0',shellBot:'#561db0',edge:'#280a5c',visorTop:'#160a30',visorBot:'#070314',sheen:'#e6ccff',stripe:'#ffffff'}, /* Violet */
+  {id:'3',glow:'#ffb3f0',shellTop:'#ff66e0',shellMid:'#e021c0',shellBot:'#a01088',edge:'#420338',visorTop:'#26041f',visorBot:'#0d0008',sheen:'#ffd6f6',stripe:'#ffffff'}, /* Magenta */
+  {id:'4',glow:'#ffd79a',shellTop:'#ffb04d',shellMid:'#f47a14',shellBot:'#c2540a',edge:'#5a2c00',visorTop:'#2a1500',visorBot:'#0d0600',sheen:'#ffe6bf',stripe:'#ffffff'}  /* Orange */
 ];
+const AVATARS=PALETTES.map(helmet);
 function rasterize(svg){return new Promise(function(res){var img=new Image();img.onload=function(){try{var c=document.createElement('canvas');c.width=600;c.height=600;var x=c.getContext('2d');x.clearRect(0,0,600,600);x.drawImage(img,0,0,600,600);res(c.toDataURL('image/png'));}catch(e){res('');}};img.onerror=function(){res('');};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
 function buildAvatars(){var box=$('avatars');box.innerHTML='';AVATARS.forEach(function(svg,i){var b=document.createElement('button');b.type='button';b.className='av'+(i===0?' sel':'');b.innerHTML=svg;b.setAttribute('aria-label','Avatar '+(i+1));b.onclick=function(){selectAvatar(i);};box.appendChild(b);});}
 function clearAvatarSel(){document.querySelectorAll('.avatars .av').forEach(function(x){x.classList.remove('sel');});}
