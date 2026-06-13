@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
     overall: row.overall || 50, level: row.level || 'ROOKIE'
   };
   const en = row.language === 'en';
-  const title = `${row.alias} — The Ring League · Season 0`;
+  const title = `${row.alias} — La League · Season 0`;
   const desc = en ? 'Official The Ring Driver Card — Season 0 Founders.' : 'Driver Card officielle The Ring — Season 0 Founders.';
   const cta = en ? 'BECOME AN OFFICIAL DRIVER →' : 'DEVIENS PILOTE OFFICIEL →';
   const og = row.card_url || '';
