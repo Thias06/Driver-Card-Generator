@@ -40,7 +40,8 @@ ${og ? `<meta property="og:image" content="${og}"><meta name="twitter:card" cont
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.14),transparent 60%),var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 16px;gap:22px}
-.wrap{width:100%;max-width:560px;display:flex;justify-content:center}
+.wrap{width:100%;max-width:560px;position:relative;overflow:hidden;margin:0 auto}
+.wrap .cardPost{position:absolute;top:0;left:0;transform-origin:top left}
 .cta{font-family:var(--ft);font-size:11px;letter-spacing:3px;width:100%;display:flex;justify-content:center;padding:0 12px}
 .cta a{background:var(--brand);color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px;white-space:nowrap;text-align:center}
 @media(max-width:520px){.cta{letter-spacing:1.5px;font-size:9px}.cta a{padding:12px 14px}}
@@ -52,7 +53,7 @@ body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),tra
 <script>
 var D=${JSON.stringify(D)}; var P=${JSON.stringify(row.photo_url || '')};
 mountPostCard(document.getElementById('card'), D, P);
-function fit(){var w=document.querySelector('.wrap'),el=document.getElementById('card');var s=Math.min(1,Math.min(w.clientWidth,520)/1080);el.style.transform='scale('+s+')';w.style.height=(1080*s)+'px';}
+function fit(){var w=document.querySelector('.wrap'),el=document.getElementById('card');var s=Math.min(1,w.clientWidth/1080);el.style.transform='scale('+s+')';w.style.height=(1350*s)+'px';}
 window.addEventListener('resize',fit);window.addEventListener('load',fit);setTimeout(fit,300);fit();
 </script></body></html>`);
 };
