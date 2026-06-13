@@ -58,7 +58,7 @@ body.locked{overflow:hidden}
 @media(max-width:560px){.avatars .av{width:46px;height:46px}.avatars{gap:8px}}
 .avatars .av{width:56px;height:56px;border-radius:13px;overflow:hidden;cursor:pointer;background:#0c0d14;border:2px solid transparent;padding:0;flex:0 0 auto;transition:transform .12s}
 .avatars .av:hover{transform:translateY(-2px)}
-.avatars .av svg{width:100%;height:100%;display:block}
+.avatars .av svg,.avatars .av img{width:100%;height:100%;display:block;object-fit:cover}
 .avatars .av.sel{border-color:#fff;box-shadow:0 0 0 2px var(--violet)}
 
 .fixed{display:flex;gap:8px;margin:14px 0 4px}
@@ -225,45 +225,26 @@ body.locked{overflow:hidden}
 const $=id=>document.getElementById(id);
 let photoData='', LANG='fr', photoType='avatar';
 
-/* ===================== AVATARS (5 casques La League) =====================
-   Base unique recolorable : pour éditer une variante ou en ajouter une,
-   il suffit de changer les couleurs dans PALETTES — aucun dessin SVG à toucher.
-   Champs : glow=halo de fond · shellTop/Mid/Bot=dégradé coque · edge=contour
-            visorTop/Bot=dégradé visière · sheen=reflet · stripe=bande + liserés */
-function helmet(o){
-  var i=o.id;
-  return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"><defs>'+
-    '<radialGradient id="bg'+i+'" cx="50%" cy="30%" r="75%"><stop offset="0" stop-color="'+o.glow+'" stop-opacity=".55"/><stop offset="1" stop-color="'+o.glow+'" stop-opacity="0"/></radialGradient>'+
-    '<linearGradient id="sh'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.shellTop+'"/><stop offset=".55" stop-color="'+o.shellMid+'"/><stop offset="1" stop-color="'+o.shellBot+'"/></linearGradient>'+
-    '<linearGradient id="vi'+i+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+o.visorTop+'"/><stop offset="1" stop-color="'+o.visorBot+'"/></linearGradient>'+
-    '<linearGradient id="sn'+i+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="'+o.sheen+'" stop-opacity="0"/><stop offset=".45" stop-color="'+o.sheen+'" stop-opacity=".75"/><stop offset=".6" stop-color="#ffffff" stop-opacity=".15"/><stop offset="1" stop-color="'+o.sheen+'" stop-opacity="0"/></linearGradient>'+
-    '</defs>'+
-    '<rect width="600" height="600" fill="#0c0d14"/>'+
-    '<rect width="600" height="600" fill="url(#bg'+i+')"/>'+
-    '<path d="M300 96 C212 96 150 168 146 268 C144 322 150 372 168 420 C182 458 210 486 252 498 L348 498 C390 486 418 458 432 420 C450 372 456 322 454 268 C450 168 388 96 300 96 Z" fill="url(#sh'+i+')" stroke="'+o.edge+'" stroke-width="5"/>'+
-    '<path d="M300 112 C236 112 188 156 172 224 C214 196 262 184 300 184 C338 184 386 196 428 224 C412 156 364 112 300 112 Z" fill="#ffffff" opacity=".14"/>'+
-    '<path d="M168 250 C220 224 380 224 432 250 L432 262 C380 238 220 238 168 262 Z" fill="#000" opacity=".22"/>'+
-    '<path d="M176 278 C232 250 368 250 424 278 C420 330 392 366 348 384 L252 384 C208 366 180 330 176 278 Z" fill="url(#vi'+i+')"/>'+
-    '<path d="M192 286 C240 264 360 264 408 286 C402 326 380 354 344 368 L256 368 C220 354 198 326 192 286 Z" fill="'+o.glow+'" opacity=".30"/>'+
-    '<path d="M210 292 C250 274 300 272 300 272 L246 360 C224 352 212 330 210 292 Z" fill="url(#sn'+i+')"/>'+
-    '<path d="M214 430 C214 414 256 408 300 408 C344 408 386 414 386 430 C386 452 360 472 300 472 C240 472 214 452 214 430 Z" fill="url(#sh'+i+')" stroke="'+o.edge+'" stroke-width="4"/>'+
-    '<rect x="276" y="430" width="48" height="13" rx="6" fill="'+o.visorBot+'"/>'+
-    '<path d="M289 110 C295 108 305 108 311 110 L309 246 L291 246 Z" fill="'+o.stripe+'"/>'+
-    '<path d="M196 244 C232 228 280 222 300 222 C320 222 368 228 404 244" fill="none" stroke="'+o.stripe+'" stroke-width="6" stroke-linecap="round" opacity=".9"/>'+
-    '</svg>';
-}
-const PALETTES=[
-  {id:'0',glow:'#bfe9ff',shellTop:'#ffffff',shellMid:'#e9edf5',shellBot:'#b9c0cf',edge:'#8f97a8',visorTop:'#1a2330',visorBot:'#070a12',sheen:'#9fd8ff',stripe:'#aab2c2'}, /* Nacre */
-  {id:'1',glow:'#8fe3ff',shellTop:'#5fd4ff',shellMid:'#2ea6ef',shellBot:'#1573c2',edge:'#0a3a63',visorTop:'#04202f',visorBot:'#02070d',sheen:'#bff0ff',stripe:'#ffffff'}, /* Cyan */
-  {id:'2',glow:'#c8a0ff',shellTop:'#a96bff',shellMid:'#7d3bf0',shellBot:'#561db0',edge:'#280a5c',visorTop:'#160a30',visorBot:'#070314',sheen:'#e6ccff',stripe:'#ffffff'}, /* Violet */
-  {id:'3',glow:'#ffb3f0',shellTop:'#ff66e0',shellMid:'#e021c0',shellBot:'#a01088',edge:'#420338',visorTop:'#26041f',visorBot:'#0d0008',sheen:'#ffd6f6',stripe:'#ffffff'}, /* Magenta */
-  {id:'4',glow:'#ffd79a',shellTop:'#ffb04d',shellMid:'#f47a14',shellBot:'#c2540a',edge:'#5a2c00',visorTop:'#2a1500',visorBot:'#0d0600',sheen:'#ffe6bf',stripe:'#ffffff'}  /* Orange */
+/* ===================== AVATARS (5 casques La League — photo recolorée) =====================
+   Pour remplacer/ajouter une variante : pose le fichier dans /avatars/ et mets
+   son chemin ci-dessous (l'ordre = l'ordre d'affichage du sélecteur). */
+const AVATARS=[
+  '/avatars/blanc.jpg',
+  '/avatars/bleu.jpg',
+  '/avatars/vert.jpg',
+  '/avatars/rouge.jpg',
+  '/avatars/jaune.jpg'
 ];
-const AVATARS=PALETTES.map(helmet);
-function rasterize(svg){return new Promise(function(res){var img=new Image();img.onload=function(){try{var c=document.createElement('canvas');c.width=600;c.height=600;var x=c.getContext('2d');x.clearRect(0,0,600,600);x.drawImage(img,0,0,600,600);res(c.toDataURL('image/png'));}catch(e){res('');}};img.onerror=function(){res('');};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
-function buildAvatars(){var box=$('avatars');box.innerHTML='';AVATARS.forEach(function(svg,i){var b=document.createElement('button');b.type='button';b.className='av'+(i===0?' sel':'');b.innerHTML=svg;b.setAttribute('aria-label','Avatar '+(i+1));b.onclick=function(){selectAvatar(i);};box.appendChild(b);});}
+/* Charge un avatar et le convertit en data URL — même format qu'une photo importée,
+   donc le rendu/upload de la carte fonctionne exactement pareil. */
+function avatarToDataURL(url){
+  return fetch(url).then(function(r){if(!r.ok)throw 0;return r.blob();}).then(function(b){
+    return new Promise(function(res){var fr=new FileReader();fr.onload=function(){res(fr.result);};fr.onerror=function(){res('');};fr.readAsDataURL(b);});
+  }).catch(function(){return '';});
+}
+function buildAvatars(){var box=$('avatars');box.innerHTML='';AVATARS.forEach(function(url,i){var b=document.createElement('button');b.type='button';b.className='av'+(i===0?' sel':'');b.innerHTML='<img src="'+url+'" alt="" loading="lazy">';b.setAttribute('aria-label','Avatar '+(i+1));b.onclick=function(){selectAvatar(i);};box.appendChild(b);});}
 function clearAvatarSel(){document.querySelectorAll('.avatars .av').forEach(function(x){x.classList.remove('sel');});}
-async function selectAvatar(i){clearAvatarSel();var els=document.querySelectorAll('.avatars .av');if(els[i])els[i].classList.add('sel');hidePhotoErr();photoType='avatar';var png=await rasterize(AVATARS[i]);if(png){photoData=png;render();}}
+async function selectAvatar(i){clearAvatarSel();var els=document.querySelectorAll('.avatars .av');if(els[i])els[i].classList.add('sel');hidePhotoErr();photoType='avatar';var png=await avatarToDataURL(AVATARS[i]);if(png){photoData=png;render();}}
 
 /* ===================== TRADUCTIONS ===================== */
 const I18N={
