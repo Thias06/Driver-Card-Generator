@@ -41,7 +41,7 @@
 /* Carte téléchargée : même centrage vertical que l’aperçu, avec seulement la correction horizontale html2canvas. */
 .cardPost.forcanvas .nameband{
   height:156px;
-  padding:18px 34px 0;
+  padding:22px 34px 0;
   box-sizing:border-box;
 }
 
