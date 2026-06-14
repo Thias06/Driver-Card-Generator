@@ -39,7 +39,19 @@
    on redescend donc le ROOKIE via un padding asymétrique appliqué seulement dans ce cas. */
 .cardPost.forcanvas .rookie{padding:32px 38px 16px}
 /* Carte téléchargée : même centrage vertical que l’aperçu, avec seulement la correction horizontale html2canvas. */
-.cardPost.forcanvas .nb-alias{margin-left:-22px;margin-bottom:0}
-.cardPost.forcanvas .nameband{height:156px;padding:0 34px}
+.cardPost.forcanvas .nameband{
+  height:156px;
+  padding:18px 34px 0;
+  box-sizing:border-box;
+}
+
+.cardPost.forcanvas .nb-name{
+  margin-bottom:8px;
+}
+
+.cardPost.forcanvas .nb-alias{
+  margin-left:-22px;
+  margin-bottom:0;
+}
 .cardPost .foot{margin-top:auto;display:flex;justify-content:center;padding-top:22px}
 .cardPost .foot .u{font-family:var(--ft);font-size:22px;letter-spacing:3px;color:#c2c4d4}
