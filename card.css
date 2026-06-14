@@ -46,12 +46,12 @@
 }
 
 .cardPost.forcanvas .nb-name{
-  margin-bottom:16px;
+  margin-bottom:18px;
 }
 
 .cardPost.forcanvas .nb-alias{
   margin-left:-22px;
-  margin-bottom:-10px;
+  margin-bottom:0;
 }
 .cardPost .foot{margin-top:auto;display:flex;justify-content:center;padding-top:22px}
 .cardPost .foot .u{font-family:var(--ft);font-size:22px;letter-spacing:3px;color:#c2c4d4}
