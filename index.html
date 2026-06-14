@@ -412,6 +412,8 @@ async function generateCard(){
   stage.style.cssText='position:fixed;left:-10000px;top:0;width:1080px;height:1350px;z-index:-1';
   const card=document.createElement('div');stage.appendChild(card);document.body.appendChild(stage);
   mountPostCard(card,data(),photoData);
+  card.classList.add('forcanvas');
+  {const _rk=card.querySelector('.rookie');if(_rk){_rk.style.paddingTop='';_rk.style.paddingBottom='';}}
   await (document.fonts&&document.fonts.ready);
   const img=card.querySelector('img');
   if(img&&!img.complete){await new Promise(r=>{img.onload=r;img.onerror=r;});}

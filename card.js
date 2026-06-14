@@ -55,5 +55,30 @@
         size -= 2; a.style.fontSize = size + 'px'; guard++;
       }
     }
+    // Centre verticalement le texte ROOKIE dans sa pastille (rendu DOM live).
+    // Mesuré dans le navigateur -> centrage correct quelles que soient les métriques de police.
+    // Sans effet sur la carte téléchargée : la capture html2canvas efface ce padding inline
+    // et applique la règle .forcanvas .rookie (voir index.html / admin.html).
+    var rk = el.querySelector('.rookie');
+    if (rk) {
+      try {
+        var win = el.ownerDocument.defaultView || window;
+        var cs = win.getComputedStyle(rk);
+        var F = parseFloat(cs.fontSize) || 42;
+        var T = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+        var ctx = el.ownerDocument.createElement('canvas').getContext('2d');
+        ctx.font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+        var m = ctx.measureText(rk.textContent || 'ROOKIE');
+        var A = m.fontBoundingBoxAscent, Dn = m.fontBoundingBoxDescent;
+        var asc = m.actualBoundingBoxAscent, desc = m.actualBoundingBoxDescent;
+        if (isFinite(A) && isFinite(asc) && isFinite(desc) && isFinite(Dn)) {
+          var inkCenterLB = (F + A - Dn) / 2 + (desc - asc) / 2;
+          var pt = (T + F) / 2 - inkCenterLB;
+          pt = Math.max(0, Math.min(T, pt));
+          rk.style.paddingTop = pt + 'px';
+          rk.style.paddingBottom = (T - pt) + 'px';
+        }
+      } catch (e) {}
+    }
   };
 })(window);
