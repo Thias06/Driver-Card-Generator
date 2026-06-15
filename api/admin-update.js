@@ -2,6 +2,8 @@
 const SB = process.env.SUPABASE_URL;
 const KEY = process.env.SUPABASE_SERVICE_KEY;
 const PASS = process.env.ADMIN_PASSWORD;
+const RESEND = process.env.RESEND_API_KEY;
+const FROM = process.env.FROM_EMAIL || 'The Ring <onboarding@resend.dev>';
 
 const ADMIN_WINDOW_MS = 15 * 60 * 1000;
 const ADMIN_MAX_FAILS = 6;
@@ -116,6 +118,62 @@ function validatePatch(patch) {
   return out;
 }
 
+async function sendEmail(to, subject, html) {
+  if (!RESEND || !to) return;
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: FROM, to: [to], subject, html })
+  });
+}
+
+// Mail de félicitations envoyé au pilote au moment de la publication (passage -> published).
+function congratsHtml(row, base) {
+  const en = (row.language === 'en');
+  const first = row.first_name || '';
+  const link = `${base}/drivers/${row.slug}`;
+  const logo = `${base}/ttr-logo.png`;
+  const site = 'https://www.thering-drive.com/';
+  const tx = en ? {
+    hi: `Welcome aboard, ${first}!`,
+    l1: `It's official — you're now part of <b style="color:#fff">The Ring · La League — Season&nbsp;0 · Founders</b>. 🏁`,
+    l2: `Your official Driver Card is live — here's your exclusive, personalized card:`,
+    btn: 'VIEW MY DRIVER CARD',
+    invite: `Spread the word — tell your friends and family about The Ring 👇`
+  } : {
+    hi: `Bienvenue dans l'aventure, ${first} !`,
+    l1: `C'est officiel — tu fais désormais partie de <b style="color:#fff">The Ring · La League — Season&nbsp;0 · Founders</b>. 🏁`,
+    l2: `Ta Driver Card officielle est en ligne — voici ta carte exclusive et personnalisée :`,
+    btn: 'VOIR MA DRIVER CARD',
+    invite: `Fais grandir la communauté : parle de The Ring autour de toi 👇`
+  };
+  return `
+<div style="margin:0;padding:0;background:#050507">
+<table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#050507">
+<tr><td align="center" style="padding:30px 14px">
+<table width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:600px;background:#0b0c12;border-radius:16px;overflow:hidden">
+  <tr><td align="center" style="background:#050507;padding:26px 0 18px">
+    <img src="${logo}" width="160" alt="The Ring" style="display:block;border:0">
+  </td></tr>
+  <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td style="padding:30px 30px 8px">
+    <div style="font-family:Arial,sans-serif;font-weight:800;font-size:30px;color:#ffffff;text-transform:uppercase">${tx.hi}</div>
+  </td></tr>
+  <tr><td style="padding:6px 30px 0">
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l1}</p>
+    <p style="margin:0 0 12px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
+    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
+      <a href="${link}" style="display:inline-block;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">${tx.btn}</a>
+    </td></tr></table>
+    <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
+    <p style="margin:0 0 22px"><a href="${site}" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">${site}</a></p>
+  </td></tr>
+  <tr><td style="height:1px;background:#1d1e28;font-size:0;line-height:0">&nbsp;</td></tr>
+  <tr><td align="center" style="padding:16px;color:#5c5e6e;font-size:12px;font-family:Arial,Helvetica,sans-serif">The Ring · thering-drive.com</td></tr>
+</table>
+</td></tr></table></div>`;
+}
+
 module.exports = async (req, res) => {
   const ip = getIp(req);
 
@@ -138,6 +196,18 @@ module.exports = async (req, res) => {
 
     const patch = validatePatch(body.fields || {});
 
+    // Détecter une transition vers "published" pour féliciter le pilote (1 seul envoi).
+    let wasPublished = null;
+    if (patch.status === 'published') {
+      try {
+        const g = await fetch(`${SB}/rest/v1/drivers?id=eq.${encodeURIComponent(body.id)}&select=status`, {
+          headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }
+        });
+        const gj = await g.json();
+        wasPublished = (Array.isArray(gj) && gj[0]) ? (gj[0].status === 'published') : null;
+      } catch (e) { wasPublished = null; }
+    }
+
     const r = await fetch(`${SB}/rest/v1/drivers?id=eq.${encodeURIComponent(body.id)}`, {
       method: 'PATCH',
       headers: {
@@ -154,6 +224,19 @@ module.exports = async (req, res) => {
     try { json = JSON.parse(text || '{}'); } catch { json = {}; }
 
     if (!r.ok) return res.status(500).json({ error: (json && (json.message || json.error)) || text || 'Erreur Supabase' });
+
+    // Mail de félicitations uniquement au passage non-publié -> publié.
+    if (patch.status === 'published' && wasPublished === false) {
+      const row = Array.isArray(json) ? json[0] : json;
+      if (row && row.email) {
+        const base = `https://${req.headers.host}`;
+        const subject = (row.language === 'en')
+          ? "You're in! The Ring · La League 🏁"
+          : 'Bienvenue dans The Ring · La League 🏁';
+        await sendEmail(row.email, subject, congratsHtml(row, base)).catch(() => {});
+      }
+    }
+
     return res.status(200).json(json);
   } catch (e) {
     return res.status(500).json({ error: String(e && e.message || e) });
