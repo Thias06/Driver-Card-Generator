@@ -58,6 +58,16 @@ a{color:var(--cyan);text-decoration:none}
 .recent .r .m{color:var(--muted);font-size:11.5px}
 .tag{font-family:var(--ft);font-size:8px;letter-spacing:1px;padding:3px 7px;border-radius:5px}
 .tag.a{background:#10233f;color:#7fb0ff}.tag.l{background:#23103a;color:#c79bff}.tag.n{background:#1a1b22;color:#9092a4}
+.limits{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:720px){.limits{grid-template-columns:1fr}}
+.lim .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12.5px;margin-bottom:7px}
+.lim .top .v{font-family:var(--fd);font-style:italic;font-weight:800;font-size:15px;color:#fff;white-space:nowrap}
+.lim .sub2{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4}
+.fill.supa{background:linear-gradient(90deg,#3ecf8e,#1f9d63)}
+.fill.rsd{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
+.fill.warn{background:linear-gradient(90deg,#caa53a,#e0902e)}
+.fill.hot2{background:linear-gradient(90deg,#e2502e,#e22ed0)}
+.foot{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.55;border-top:1px solid #15161d;padding-top:11px}
 </style></head><body>
 
 <div id="gate" class="gate">
@@ -76,6 +86,10 @@ a{color:var(--cyan);text-decoration:none}
   </div>
   <div class="alerts" id="alerts"></div>
   <div class="kpis" id="kpis"></div>
+  <div class="card" style="margin-bottom:18px"><h2>CAPACITÉ — PLAN GRATUIT · ANTICIPER LE RUSH</h2>
+    <div class="limits" id="limits"></div>
+    <div class="foot" id="limitsFoot"></div>
+  </div>
   <div class="grid2">
     <div class="card"><h2>RÉPARTITION FORMULE</h2><div id="formule"></div></div>
     <div class="card"><h2>AVATAR / PHOTO</h2><div id="photos"></div></div>
@@ -111,14 +125,16 @@ function render(rows){
   const today0=startOfDay(now).getTime();
   const yest0=today0-864e5;
   const d7=now.getTime()-7*864e5, d30=now.getTime()-30*864e5;
+  const m0=new Date(now.getFullYear(),now.getMonth(),1).getTime();
 
-  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, achat=0, loc=0, withPhoto=0, avatarN=0, photoN=0, hidden=0, frN=0, enN=0;
+  let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, monthN=0, achat=0, loc=0, withPhoto=0, avatarN=0, photoN=0, hidden=0, frN=0, enN=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
     const t=r.created_at?new Date(r.created_at).getTime():0;
     if(t>=today0)todayN++;
     else if(t>=yest0)yestN++;
     if(t>=d7)n7++; if(t>=d30)n30++;
+    if(t>=m0)monthN++;
     if(r.equipment==='achat')achat++; else if(r.equipment==='location')loc++;
     if(r.photo_url)withPhoto++;
     if(r.photo_type==='photo')photoN++;
@@ -144,6 +160,34 @@ function render(rows){
   $('kpis').innerHTML=[
     ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
   ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+
+  // ---- Capacité plan gratuit (anticipation rush) : Supabase + Resend, note Vercel ----
+  const PILOT_MB=0.5, SUPA_MB=1024, EMAILS_SIGNUP=2, RSD_DAY=100, RSD_MONTH=3000, EGRESS_GB=5, VIEW_MB=0.3;
+  const maxPilots=Math.floor(SUPA_MB/PILOT_MB);
+  const usedMB=total*PILOT_MB;
+  const maxInscDay=Math.floor(RSD_DAY/EMAILS_SIGNUP);
+  const maxInscMonth=Math.floor(RSD_MONTH/EMAILS_SIGNUP);
+  const maxViews=Math.round(EGRESS_GB*1024/VIEW_MB/1000)*1000;
+  const mailsToday=todayN*EMAILS_SIGNUP, mailsMonth=monthN*EMAILS_SIGNUP;
+  const fmt=n=>n.toLocaleString('fr-FR');
+  const gauge=(label,val,pct,sub,base)=>{
+    pct=Math.max(0,Math.min(100,Math.round(pct)));
+    const cls=pct>=90?'hot2':(pct>=70?'warn':base);
+    return `<div class="lim"><div class="top"><span>${label}</span><span class="v">${val}</span></div>`+
+      `<div class="track"><div class="fill ${cls}" style="width:${pct}%"></div></div><div class="sub2">${sub}</div></div>`;
+  };
+  $('limits').innerHTML=[
+    gauge('Supabase · Stockage',`${fmt(Math.round(usedMB))} / ${fmt(SUPA_MB)} Mo`,usedMB/SUPA_MB*100,
+      `≈ ${fmt(maxPilots)} pilotes max · ${fmt(total)} actuels · reste ${fmt(Math.max(0,maxPilots-total))}`,'supa'),
+    gauge('Resend · Aujourd\'hui',`${mailsToday} / ${RSD_DAY} mails`,mailsToday/RSD_DAY*100,
+      `plafond ≈ ${maxInscDay} inscriptions/jour`,'rsd'),
+    gauge('Resend · Ce mois',`${fmt(mailsMonth)} / ${fmt(RSD_MONTH)} mails`,mailsMonth/RSD_MONTH*100,
+      `≈ ${fmt(maxInscMonth)} inscriptions/mois`,'rsd')
+  ].join('');
+  $('limitsFoot').innerHTML=`Estimation : ~0,5 Mo/pilote (photo compressée + carte JPEG) et 2 mails/inscription (confirmation + équipe), +1 mail à la publication. `+
+    `Egress Supabase ~${EGRESS_GB} Go/mois ≈ ~${fmt(maxViews)} vues de carte/mois. `+
+    `Vercel Pro : 1 To · 10 M requêtes · 1 M invocations/mois — non limitant à cette échelle. `+
+    `Les anciennes fiches non compressées pèsent davantage.`;
 
   // Formule (valeurs + %)
   const denom=Math.max(achat+loc,1);
