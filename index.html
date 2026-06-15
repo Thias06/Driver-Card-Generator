@@ -333,8 +333,38 @@ $('i_photo').addEventListener('change',e=>{
   const okSize=f.size<=5*1024*1024;
   if(!okType){showPhotoErr(T('photo_err_type'));e.target.value='';return;}
   if(!okSize){showPhotoErr(T('photo_err_size'));e.target.value='';return;}
-  const r=new FileReader();r.onload=ev=>{photoData=ev.target.result;photoType='photo';clearAvatarSel();hidePhotoErr();render();};r.readAsDataURL(f);
+  processPhotoFile(f,function(durl){
+    if(!durl){var r=new FileReader();r.onload=ev=>{photoData=ev.target.result;photoType='photo';clearAvatarSel();hidePhotoErr();render();};r.readAsDataURL(f);return;}
+    photoData=durl;photoType='photo';clearAvatarSel();hidePhotoErr();render();
+  });
 });
+/* Réduit la photo uploadée AVANT envoi : max 1280px + JPEG ~0.82 → ~10-30x plus léger
+   (stockage & bande passante Supabase). photoData reste un dataURL (contrat inchangé).
+   createImageBitmap gère l'orientation EXIF des photos de smartphone. */
+function processPhotoFile(file, cb){
+  var MAX=1280, Q=0.82;
+  function draw(img){
+    var w=img.naturalWidth||img.width, h=img.naturalHeight||img.height;
+    if(!w||!h){cb('');return;}
+    var s=Math.min(1, MAX/Math.max(w,h));
+    var cw=Math.max(1,Math.round(w*s)), ch=Math.max(1,Math.round(h*s));
+    var c=document.createElement('canvas');c.width=cw;c.height=ch;
+    try{c.getContext('2d').drawImage(img,0,0,cw,ch);}catch(e){cb('');return;}
+    var out='';try{out=c.toDataURL('image/jpeg',Q);}catch(e){out='';}
+    cb(out||'');
+  }
+  if(window.createImageBitmap){
+    createImageBitmap(file,{imageOrientation:'from-image'}).then(function(bmp){draw(bmp);if(bmp.close)bmp.close();}).catch(function(){
+      var url=URL.createObjectURL(file),im=new Image();
+      im.onload=function(){draw(im);URL.revokeObjectURL(url);};
+      im.onerror=function(){URL.revokeObjectURL(url);cb('');};im.src=url;
+    });
+  }else{
+    var url=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){draw(im);URL.revokeObjectURL(url);};
+    im.onerror=function(){URL.revokeObjectURL(url);cb('');};im.src=url;
+  }
+}
 function showPhotoErr(m){const e=$('photoErr');e.textContent=m;e.classList.add('show');}
 function hidePhotoErr(){$('photoErr').classList.remove('show');}
 $('photoRules').addEventListener('click',()=>$('photoHint').classList.toggle('show'));
@@ -433,7 +463,7 @@ $('inscription').onclick=async()=>{
     validationVisible=true;
     if(!validate(true)){btn.textContent=T('btn_submit');delete btn.dataset.busy;checkForm();return;}
     const cv=await generateCard();
-    const cardPng=cv.toDataURL('image/png');
+    const cardPng=cv.toDataURL('image/jpeg',0.85);
     const res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:data(),photo:photoData,card:cardPng,website:$('i_website').value})});
     const text=await res.text();let j={};try{j=JSON.parse(text);}catch{throw new Error(text||T('err_generic'));}
     if(!res.ok){throw new Error(j.error||T('err_generic'));}

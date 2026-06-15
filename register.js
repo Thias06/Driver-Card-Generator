@@ -198,7 +198,8 @@ module.exports = async (req, res) => {
 
     const card = dataUrlToBuffer(body.card);
     if (card) {
-      card_url = await sbUpload(`card/${slug}.png`, 'image/png', card.buf);
+      const cext = card.mime.includes('png') ? 'png' : 'jpg';
+      card_url = await sbUpload(`card/${slug}.${cext}`, card.mime, card.buf);
     }
 
     const row = {
@@ -235,7 +236,7 @@ module.exports = async (req, res) => {
 
     const base = `https://${req.headers.host}`;
     const link = `${base}/drivers/${slug}`;
-    const cardB64 = card ? card.buf.toString('base64') : null;
+    const adminUrl = `${base}/admin.html`;
 
     const teamHtml = `<h2>Nouvelle candidature — Season 0 (à valider)</h2>
       <p><b>Pseudo :</b> ${cleanAlias}<br><b>Nom :</b> ${p.first} ${p.last}<br>
@@ -245,16 +246,12 @@ module.exports = async (req, res) => {
       <b>Nom affiché sur la carte :</b> ${showName ? 'Oui' : 'Non (pseudo seul)'}<br>
       <b>Formule :</b> ${equipmentLabel(p.equipment)}</p>
       <p><b>Motivation :</b><br>${motivation ? motivation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : '-'}</p>
-      <p><b>Carte :</b> <a href="${card_url}">${card_url}</a><br>
-      <b>Lien public (après validation) :</b> <a href="${link}">${link}</a><br>
-      <b>Photo :</b> <a href="${photo_url}">${photo_url}</a></p>
-      <p style="color:#888">⚠ Candidature en attente : à valider dans /admin pour la rendre publique, puis envoyer la carte officielle au pilote.</p>`;
+      <p><b>➡ Valider la candidature dans l'admin :</b><br><a href="${adminUrl}">${adminUrl}</a></p>`;
 
     await sendEmail(
       TEAM,
       `🏁 Candidature Season 0 — ${cleanAlias}`,
-      teamHtml,
-      cardB64 ? [{ filename: `TTR_S0_${slug}.png`, content: cardB64 }] : undefined
+      teamHtml
     ).catch(() => {});
 
     const logo = `${base}/ttr-logo.png`;
