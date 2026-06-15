@@ -108,7 +108,7 @@ function validatePatch(patch) {
     }
 
     if (k === 'driving_style') {
-      const x = cleanText(v, 90);
+      const x = cleanText(v, 34);
       if (/[<>]/.test(x)) throw new Error('Style invalide.');
       out.driving_style = x;
     }
