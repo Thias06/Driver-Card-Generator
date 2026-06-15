@@ -290,7 +290,7 @@ module.exports = async (req, res) => {
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l3}</p>
     <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
-    <p style="margin:0 0 22px"><a href="${base}/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">${base}/</a></p>
+    <p style="margin:0 0 22px"><a href="https://www.thering-drive.com/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">https://www.thering-drive.com/</a></p>
   </td></tr>
   <tr><td style="height:1px;background:#1d1e28;font-size:0;line-height:0">&nbsp;</td></tr>
   <tr><td align="center" style="padding:16px;color:#5c5e6e;font-size:12px;font-family:Arial,Helvetica,sans-serif">The Ring · thering-drive.com</td></tr>
