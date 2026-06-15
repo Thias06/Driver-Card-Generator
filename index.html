@@ -414,6 +414,7 @@ async function generateCard(){
   mountPostCard(card,data(),photoData);
   card.classList.add('forcanvas');
   {const _rk=card.querySelector('.rookie');if(_rk){_rk.style.paddingTop='';_rk.style.paddingBottom='';}}
+  try{await document.fonts.load("italic 900 112px 'Acumin XCond'");}catch(e){}
   await (document.fonts&&document.fonts.ready);
   const img=card.querySelector('img');
   if(img&&!img.complete){await new Promise(r=>{img.onload=r;img.onerror=r;});}

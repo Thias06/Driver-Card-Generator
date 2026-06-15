@@ -14,6 +14,7 @@ h1{font-family:var(--ft);font-size:14px;letter-spacing:3px;margin-bottom:6px}
 .gate input{width:100%;background:#070809;border:1px solid var(--line);color:#fff;border-radius:9px;padding:11px;margin:10px 0}
 .btn{background:var(--brand);border:none;color:#fff;font-family:var(--ft);letter-spacing:1px;font-size:11px;padding:11px 14px;border-radius:9px;cursor:pointer}
 .btn.ghost{background:#0e0f17;border:1px solid var(--violet)}
+.btn.danger{background:#9a1418;border:1px solid #ff5a5f;color:#fff}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
 .toolbar{position:sticky;top:0;z-index:5;background:#0a0b10;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
 .toolbar label{font-size:12px;color:var(--muted);display:flex;gap:7px;align-items:center;cursor:pointer}
@@ -62,6 +63,7 @@ a{color:var(--cyan)}
     <label><input type="checkbox" id="optPhotos">Photos</label>
     <label><input type="checkbox" id="optData">Données (CSV/Excel)</label>
     <button class="btn" id="dlZip" disabled>⬇ TÉLÉCHARGER LA SÉLECTION</button>
+    <button class="btn danger" id="delSel" disabled>🗑 SUPPRIMER LA SÉLECTION</button>
     <span id="zipState" style="color:var(--muted);font-size:11px"></span>
   </div>
   <div id="list"></div>
@@ -88,6 +90,7 @@ async function renderCardCanvas(D, photoUrl){
   mountPostCard(card,D,photoData);
   card.classList.add('forcanvas');
   {const _rk=card.querySelector('.rookie');if(_rk){_rk.style.paddingTop='';_rk.style.paddingBottom='';}}
+  try{await document.fonts.load("italic 900 112px 'Acumin XCond'");}catch(e){}
   await (document.fonts&&document.fonts.ready);
   const img=card.querySelector('img');
   if(img&&!img.complete){await new Promise(r=>{img.onload=r;img.onerror=r;});}
@@ -117,7 +120,7 @@ function render(row){
   const validerBtn=row.status!=='published'?'<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>':'';
   wrap.innerHTML=`
     <div class="sumhead">
-      <input type="checkbox" class="chk sel" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}">
+      <input type="checkbox" class="chk sel" data-id="${esc(String(row.id))}" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}">
       <div class="suminfo">
         <div class="sumtop"><b>${esc(row.alias||'')}</b> ${st}</div>
         <div class="summeta">${esc(full||'—')} · ${esc(row.city||'—')}</div>
@@ -127,6 +130,7 @@ function render(row){
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         <button class="btn ghost" data-act="dl-card">⬇ CARTE</button>
         <button class="btn toggle" data-act="more">Plus d'infos ▾</button>
+        <button class="btn danger" data-act="del">🗑 SUPPRIMER</button>
       </div>
     </div>
     <div class="details">
@@ -171,14 +175,36 @@ function render(row){
   };
   const det=wrap.querySelector('.details');
   wrap.querySelector('[data-act="more"]').onclick=function(){const open=det.classList.toggle('open');this.innerHTML=open?'Moins ▴':'Plus d\'infos ▾';if(open&&!mounted)mountPreview();};
+  const delb=wrap.querySelector('[data-act="del"]');
+  if(delb)delb.onclick=async()=>{
+    if(!confirm('⚠ SUPPRESSION DÉFINITIVE — IRRÉVERSIBLE\n\nSupprimer définitivement le pilote « '+(row.alias||row.slug||'')+' » ?\nLa ligne Supabase ainsi que sa photo et sa carte seront effacées.'))return;
+    delb.disabled=true;delb.textContent='…';
+    const r=await delDrivers([{id:row.id,photo_url:row.photo_url||'',card_url:row.card_url||''}]);
+    if(r&&r.error){alert(r.error);delb.disabled=false;delb.textContent='🗑 SUPPRIMER';return;}
+    load();
+  };
   wrap.querySelector('.sel').addEventListener('change',updateSel);
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
+async function delDrivers(items){const r=await fetch('/api/admin-delete',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({items})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
 function selected(){return [...document.querySelectorAll('.sel:checked')];}
-function updateSel(){const n=selected().length;$('selCount').textContent=n+' sélectionnée(s)';$('dlZip').disabled=n===0;}
+function updateSel(){const n=selected().length;$('selCount').textContent=n+' sélectionnée(s)';$('dlZip').disabled=n===0;$('delSel').disabled=n===0;}
 $('selAll').addEventListener('change',e=>{document.querySelectorAll('.sel').forEach(c=>c.checked=e.target.checked);updateSel();});
+
+$('delSel').onclick=async()=>{
+  const sel=selected();if(!sel.length)return;
+  const items=sel.map(c=>({id:c.dataset.id,photo_url:c.dataset.photo||'',card_url:c.dataset.card||''})).filter(x=>x.id);
+  if(!items.length)return;
+  if(!confirm('⚠ SUPPRESSION DÉFINITIVE — IRRÉVERSIBLE\n\nSupprimer définitivement '+items.length+' pilote(s) sélectionné(s) ?\nLes lignes Supabase ainsi que leurs photos et cartes seront effacées.'))return;
+  $('delSel').disabled=true;$('delSel').textContent='Suppression…';
+  const r=await delDrivers(items);
+  if(r&&r.error){alert(r.error);}
+  else if(r&&Array.isArray(r.errors)&&r.errors.length){alert('Supprimé(s) : '+r.deleted+'/'+r.total+'. Erreur(s) : '+r.errors.length+'\n'+r.errors.slice(0,3).join('\n'));}
+  $('delSel').textContent='🗑 SUPPRIMER LA SÉLECTION';
+  load();
+};
 
 $('dlZip').onclick=async()=>{
   const sel=selected();if(!sel.length)return;
