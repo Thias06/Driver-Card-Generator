@@ -210,7 +210,7 @@ module.exports = async (req, res) => {
       age: p.age ? parseInt(p.age, 10) : null,
       nationality: p.nationality || '',
       city: p.city || '',
-      driving_style: p.style || '',
+      driving_style: String(p.style || '').slice(0, 34),
       email: cleanEmail,
       photo_url,
       card_url,
