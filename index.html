@@ -181,7 +181,7 @@ body.locked{overflow:hidden}
     </div>
     <div class="field"><label><span data-i18n="l_city">Ville</span><span class="req">*</span></label><input id="i_city" placeholder="Ta ville" data-ph="ph_city" maxlength="45" autocomplete="address-level2"><div class="err" id="e_city"></div></div>
     <div class="field"><label><span data-i18n="l_email">Email</span><span class="req">*</span></label><input id="i_email" type="email" maxlength="120" autocomplete="email" placeholder="ton@email.com" data-ph="ph_email"><div class="err" id="e_email"></div></div>
-    <div class="field"><label data-i18n="l_style">Style de conduite</label><input id="i_style" maxlength="60" placeholder="Chacun son style ! (optionnel)" data-ph="ph_style"><div class="err" id="e_style"></div></div>
+    <div class="field"><label data-i18n="l_style">Style de conduite</label><input id="i_style" maxlength="34" placeholder="Chacun son style ! (optionnel)" data-ph="ph_style"><div class="err" id="e_style"></div></div>
     <div class="field"><label data-i18n="l_motivation">Ta motivation pour rejoindre La League ?</label><textarea id="i_motivation" rows="4" maxlength="400" data-ph="ph_motivation" placeholder="Dis-nous en quelques mots pourquoi tu veux rejoindre La League…"></textarea></div>
     <div class="hp" aria-hidden="true"><label>Site web</label><input id="i_website" tabindex="-1" autocomplete="off"></div>
 
@@ -274,7 +274,7 @@ const I18N={
   err_age_req:'Âge obligatoire.',err_age_bad:'Nombre uniquement, entre 16 et 99.',
   err_nat_req:'Choisis un pays.',err_city_req:'Ville obligatoire.',err_city_bad:'Lettres uniquement, 45 caractères maximum.',
   err_email_req:'Email obligatoire.',err_email_bad:'Adresse email invalide. Exemple : nom@email.com',
-  err_style_bad:'60 caractères maximum, sans caractères < ou >.',err_equip:'Choisis une formule.',err_consent:'Tu dois accepter la publication de ta Driver Card.',
+  err_style_bad:'34 caractères maximum, sans caractères < ou >.',err_equip:'Choisis une formule.',err_consent:'Tu dois accepter la publication de ta Driver Card.',
   err_generic:'Inscription impossible.'
  },
  en:{
@@ -303,7 +303,7 @@ const I18N={
   err_age_req:'Age required.',err_age_bad:'Number only, between 16 and 99.',
   err_nat_req:'Choose a country.',err_city_req:'City required.',err_city_bad:'Letters only, 45 characters maximum.',
   err_email_req:'Email required.',err_email_bad:'Invalid email address. Example: name@email.com',
-  err_style_bad:'60 characters maximum, no < or > characters.',err_equip:'Choose a plan.',err_consent:'You must accept the publication of your Driver Card.',
+  err_style_bad:'34 characters maximum, no < or > characters.',err_equip:'Choose a plan.',err_consent:'You must accept the publication of your Driver Card.',
   err_generic:'Registration failed.'
  }
 };
@@ -374,7 +374,7 @@ function validate(show){
   if(!v.nationality) errors.push(['nationality',T('err_nat_req')]);
   if(!v.city) errors.push(['city',T('err_city_req')]); else if(!cityRe.test(v.city)) errors.push(['city',T('err_city_bad')]);
   if(!v.email) errors.push(['email',T('err_email_req')]); else if(!emailRe.test(v.email)) errors.push(['email',T('err_email_bad')]);
-  if(v.style&&(/[<>]/.test(v.style)||v.style.length>60)) errors.push(['style',T('err_style_bad')]);
+  if(v.style&&(/[<>]/.test(v.style)||v.style.length>34)) errors.push(['style',T('err_style_bad')]);
   if(!v.equipment) errors.push(['equip',T('err_equip')]);
   if(!$('i_consent').checked) errors.push(['consent',T('err_consent')]);
   if(show){
