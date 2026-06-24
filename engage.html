@@ -1,0 +1,186 @@
+<!doctype html><html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ring · Engagement — Saison 0</title>
+<link rel="stylesheet" href="/card.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:radial-gradient(900px 600px at 85% -10%,rgba(122,51,240,.16),transparent 60%),radial-gradient(800px 600px at -10% 110%,rgba(46,84,255,.14),transparent 60%),var(--bg);color:var(--txt);font-family:var(--fb);min-height:100vh;padding:28px 16px}
+.wrap{max-width:620px;margin:0 auto;background:#0b0c12;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.logobar{background:#050507;text-align:center;padding:24px 0 18px}
+.logobar img{width:160px;display:block;margin:0 auto}
+.grad{height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0)}
+.pad{padding:26px 26px 6px}
+@media(max-width:520px){.pad{padding:22px 18px 6px}}
+h1{font-family:var(--ft);font-size:19px;letter-spacing:1px;color:#fff;text-transform:uppercase;line-height:1.25;margin-bottom:14px}
+p{color:#c9cbd8;font-size:15px;line-height:1.55;margin-bottom:14px}
+.hl{color:#fff;font-weight:700}
+.rules{background:#0a0b10;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:4px 0 18px}
+.rules h2{font-family:var(--ft);font-size:11px;letter-spacing:2px;color:var(--cyan);margin-bottom:10px}
+.rules .two{display:flex;gap:14px;flex-wrap:wrap}
+.rules .col{flex:1 1 220px;min-width:0}
+.rules .lbl{font-family:var(--ft);font-size:9px;letter-spacing:1px;color:var(--muted);margin-bottom:4px}
+.rules .txt{font-size:13px;color:#c9cbd8;line-height:1.5}
+.rules table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px;color:#c9cbd8}
+.rules td{padding:3px 0}
+.rules td:last-child{text-align:right;color:#fff;font-weight:700}
+.track{display:block;width:100%;border-radius:12px;margin:6px 0 18px;border:1px solid var(--line)}
+.opt{display:flex;gap:12px;align-items:flex-start;background:#0a0b10;border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--violet)}
+.opt.on{border-color:#34b8ff;background:#0d1422}
+.opt .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);flex:0 0 22px;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.opt.on .box{background:linear-gradient(105deg,#2e54ff,#7a33f0);border-color:transparent}
+.opt .ti{font-family:var(--ft);font-size:12px;letter-spacing:1px;color:#fff;margin-bottom:4px}
+.opt .de{font-size:13px;color:#aeb1c2;line-height:1.45}
+.choice-h,.eng-h{font-family:var(--ft);font-size:10px;letter-spacing:2px;color:var(--muted);margin:18px 0 10px}
+.tarifs{display:inline-block;color:#34b8ff;font-size:13px;margin:2px 0 6px}
+.btn{width:100%;background:var(--brand);border:none;color:#fff;font-family:var(--ft);letter-spacing:1px;font-size:13px;padding:15px;border-radius:11px;cursor:pointer;margin-top:8px}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.note{color:var(--muted);font-size:11px;text-align:center;margin:10px 0 0}
+.foot{border-top:1px solid var(--line);text-align:center;color:#5c5e6e;font-size:12px;padding:16px;margin-top:18px}
+.foot a{color:#34b8ff}
+.state{padding:40px 26px;text-align:center}
+.state h1{justify-content:center}
+.err{color:#ff6b6b;font-size:13px;text-align:center;margin-top:10px}
+.hidden{display:none}
+</style></head><body>
+<div class="wrap">
+  <div class="logobar"><img src="/ttr-logo.png" alt="The Ring"></div>
+  <div class="grad"></div>
+
+  <!-- Chargement -->
+  <div id="loading" class="state"><p style="margin:0">Chargement…</p></div>
+
+  <!-- Lien invalide -->
+  <div id="invalid" class="state hidden">
+    <h1>Lien invalide</h1>
+    <p style="margin:0">Ce lien d'engagement n'est plus valide. Contacte l'équipe The Ring si besoin.</p>
+    <div class="foot"><a href="https://www.thering-drive.com/">thering-drive.com</a></div>
+  </div>
+
+  <!-- Formulaire -->
+  <div id="form" class="hidden">
+    <div class="pad">
+      <h1 id="hello">Bienvenue chez les Founders</h1>
+      <p>Tu candidates à <span class="hl">La League — Saison&nbsp;0 · Founders</span>. Aucune pression : c'est juste l'occasion d'être parmi les <span class="hl">tout premiers pilotes</span>, avec un <span class="hl">accès exclusif</span> aux sessions de promo, d'entraînement et de compétition sur les nouveaux circuits à venir. 🏁</p>
+
+      <div class="rules">
+        <h2>LES RÈGLES, EN 30 SECONDES</h2>
+        <div class="two">
+          <div class="col">
+            <div class="lbl">CHAMPIONNAT — LE CHAMPION</div>
+            <div class="txt">Récompense les résultats en course : stratégie, départs, dépassements, sang-froid.<br>🥇 10 · 🥈 7 · 🥉 5 · 4ᵉ 3 pts</div>
+          </div>
+          <div class="col">
+            <div class="lbl">INDICE THE RING™</div>
+            <div class="txt">Mesure ton vrai niveau de pilotage. Tout le monde démarre à <b style="color:#fff">50,0 / 100</b>.</div>
+            <table>
+              <tr><td>Chrono pur</td><td>35 %</td></tr>
+              <tr><td>Régularité</td><td>25 %</td></tr>
+              <tr><td>Résultats en course</td><td>15 %</td></tr>
+              <tr><td>Propreté de pilotage</td><td>15 %</td></tr>
+              <tr><td>Fiabilité</td><td>10 %</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="txt" style="margin-top:10px">On peut gagner le championnat sans avoir le meilleur Indice The Ring — et inversement. <b style="color:#fff">Rythme :</b> ~1 évènement tous les 3 mois, pas toujours en compétition. Chaque session alimente les données des deux classements.</div>
+      </div>
+
+      <img class="track" src="/new_track.jpg" alt="Nouveau circuit à venir"
+           onerror="this.style.display='none'">
+
+      <!-- Engagement (obligatoire) -->
+      <div class="eng-h">TON ENGAGEMENT</div>
+      <div class="opt" id="engOpt">
+        <div class="box" id="engBox"></div>
+        <div>
+          <div class="ti">JE M'ENGAGE</div>
+          <div class="de">Je m'engage à participer à au minimum <b style="color:#fff">4 évènements d'une journée par an</b> sur les circuits de Marseille (saison Bêta jusqu'en octobre — nouveau circuit à venir).</div>
+        </div>
+      </div>
+
+      <!-- Choix de formule (un seul) -->
+      <div class="choice-h">MA FORMULE (UN SEUL CHOIX)</div>
+      <a class="tarifs" href="/tarifs_TR.pdf" target="_blank">📄 Voir les tarifs &amp; formules (tarifs_TR.pdf)</a>
+      <div class="opt" data-choice="location" id="optLoc">
+        <div class="box"></div>
+        <div>
+          <div class="ti">LOCATION · CLÉ EN MAIN</div>
+          <div class="de">Tout est prêt : machine pré-équipée et réglée, zéro contrainte de matériel. Tu arrives, tu pilotes. Idéal pour débuter sans investir.</div>
+        </div>
+      </div>
+      <div class="opt" data-choice="achat" id="optBuy">
+        <div class="box"></div>
+        <div>
+          <div class="ti">ACHAT · TA MACHINE À TOI</div>
+          <div class="de">La performance entre tes mains : réglages persos, optimisation des chronos et <b style="color:#fff">déco personnalisée</b>. Ta machine, ton style, ton avantage sur la durée.</div>
+        </div>
+      </div>
+
+      <button class="btn" id="submit" disabled>JE VALIDE MON ENGAGEMENT →</button>
+      <div class="err hidden" id="err"></div>
+      <p class="note">En validant, tu confirmes ton engagement pour la Saison 0. Ton équipe te recontacte très vite.</p>
+    </div>
+    <div class="foot">The Ring · <a href="https://www.thering-drive.com/">thering-drive.com</a></div>
+  </div>
+
+  <!-- Confirmation -->
+  <div id="done" class="state hidden">
+    <h1>C'est noté <span id="doneName"></span> ! 🏁</h1>
+    <p style="margin:0 0 8px">Bienvenue chez les <span class="hl">Founders</span>. Ton engagement est enregistré — l'équipe finalise ton inscription et t'envoie ta Driver Card officielle très vite.</p>
+    <p style="margin:0"><a href="https://www.thering-drive.com/" style="color:#34b8ff">Retour au site officiel →</a></p>
+    <div class="foot">The Ring · thering-drive.com</div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const TOKEN=new URLSearchParams(location.search).get('t')||'';
+let engaged=false, choice='';
+
+function show(id){['loading','invalid','form','done'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
+function refresh(){
+  $('engOpt').classList.toggle('on',engaged);
+  $('engBox').textContent=engaged?'✓':'';
+  $('optLoc').classList.toggle('on',choice==='location');
+  $('optBuy').classList.toggle('on',choice==='achat');
+  $('optLoc').querySelector('.box').textContent=choice==='location'?'✓':'';
+  $('optBuy').querySelector('.box').textContent=choice==='achat'?'✓':'';
+  $('submit').disabled=!(engaged && (choice==='location'||choice==='achat'));
+}
+
+$('engOpt').onclick=()=>{engaged=!engaged;refresh();};
+$('optLoc').onclick=()=>{choice='location';refresh();};
+$('optBuy').onclick=()=>{choice='achat';refresh();};
+
+$('submit').onclick=async()=>{
+  if($('submit').disabled)return;
+  $('submit').disabled=true;$('submit').textContent='Envoi…';$('err').classList.add('hidden');
+  try{
+    const r=await fetch('/api/engage-submit',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({t:TOKEN,engaged:true,choice})});
+    const j=await r.json();
+    if(!r.ok||j.error){throw new Error(j.error||'Erreur serveur');}
+    show('done');
+  }catch(e){
+    $('err').textContent=e.message||'Une erreur est survenue.';$('err').classList.remove('hidden');
+    $('submit').disabled=false;$('submit').textContent='JE VALIDE MON ENGAGEMENT →';
+  }
+};
+
+(async function init(){
+  if(!TOKEN){show('invalid');return;}
+  try{
+    const r=await fetch('/api/engage-get?t='+encodeURIComponent(TOKEN));
+    const j=await r.json();
+    if(!r.ok||j.error){show('invalid');return;}
+    if(j.published){ $('doneName').textContent=j.first_name||''; show('done'); return; }
+    if(j.first_name){$('hello').textContent='Prêt à embarquer, '+j.first_name+' ?';$('doneName').textContent=j.first_name;}
+    // pré-sélection éventuelle de la formule (choix d'inscription ou engagement précédent)
+    if(j.choice==='location'||j.choice==='achat'){choice=j.choice;}
+    if(j.engagement_status==='engaged'){engaged=true;}
+    refresh();
+    show('form');
+  }catch(e){show('invalid');}
+})();
+</script>
+</body></html>

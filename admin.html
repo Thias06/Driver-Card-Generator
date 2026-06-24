@@ -42,6 +42,7 @@ h1{font-family:var(--ft);font-size:14px;letter-spacing:3px;margin-bottom:6px}
 .bar a,.bar .email{word-break:break-all;overflow-wrap:anywhere}
 .tag{font-family:var(--ft);font-size:9px;letter-spacing:1px;padding:5px 9px;border-radius:6px}
 .tag.pub{background:#0c3;color:#031}.tag.hid{background:#a22;color:#fff}.tag.pend{background:#555;color:#fff}
+.tag.eng{background:#0c3;color:#031;font-family:var(--ft);font-size:9px;letter-spacing:1px;padding:5px 9px;border-radius:6px}
 .tag.eq{background:#15203a;color:#7fb0ff}
 a{color:var(--cyan)}
 </style></head><body>
@@ -117,7 +118,18 @@ function render(row){
   const D={first:row.first_name,last:row.last_name,alias:row.alias,city:row.city,nationality:row.nationality,style:row.driving_style,overall:row.overall,level:row.level,showName:row.show_name!==false};
   const st=row.hidden?'<span class="tag hid">MASQUÉE</span>':(row.status==='published'?'<span class="tag pub">PUBLIÉE</span>':'<span class="tag pend">'+esc((row.status||'').toUpperCase())+'</span>');
   const full=((row.first_name||'')+' '+(row.last_name||'')).trim();
-  const validerBtn=row.status!=='published'?'<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>':'';
+  const eng=row.engagement_status||'none';
+  let engageBtn='', validerBtn='';
+  if(row.status!=='published'){
+    if(eng==='engaged'){
+      engageBtn='<span class="tag eng">✓ ENGAGÉ'+(row.engagement_choice?(' · '+eqLabel(row.engagement_choice)):'')+'</span>';
+      validerBtn='<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>';
+    } else if(eng==='sent'){
+      engageBtn='<button class="btn ghost" data-act="engage" title="Renvoyer le formulaire d\'engagement">✉ FORMULAIRE ENVOYÉ · RENVOYER</button>';
+    } else {
+      engageBtn='<button class="btn" data-act="engage" style="background:#15203a;border:1px solid var(--violet)">📩 ENVOYER LE FORMULAIRE</button>';
+    }
+  }
   wrap.innerHTML=`
     <div class="sumhead">
       <input type="checkbox" class="chk sel" data-id="${esc(String(row.id))}" data-slug="${esc(row.slug)}" data-card="${esc(row.card_url||'')}" data-photo="${esc(row.photo_url||'')}">
@@ -126,6 +138,7 @@ function render(row){
         <div class="summeta">${esc(full||'—')} · ${esc(row.city||'—')}</div>
       </div>
       <div class="sumbtns">
+        ${engageBtn}
         ${validerBtn}
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         <button class="btn ghost" data-act="dl-card">⬇ CARTE</button>
@@ -145,7 +158,7 @@ function render(row){
           <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
         </div>
         <div class="bar">
-          <span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
+          <span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">ENGAGEMENT : ${eng==='engaged'?'OUI'+(row.engagement_choice?(' ('+eqLabel(row.engagement_choice)+')'):''):(eng==='sent'?'FORMULAIRE ENVOYÉ':'—')}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
           <button class="btn" data-act="save">ENREGISTRER LES MODIFS</button>
           ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
           <span class="email" style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
@@ -162,6 +175,14 @@ function render(row){
   wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Modifications enregistrées.');};
   wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
   const vb=wrap.querySelector('[data-act="valider"]');if(vb)vb.onclick=async()=>{const r=await upd(row.id,{status:'published'});if(r&&r.error){alert(r.error);return;}load();};
+  const eb=wrap.querySelector('[data-act="engage"]');if(eb)eb.onclick=async()=>{
+    if(eng==='sent'&&!confirm('Renvoyer le formulaire d\'engagement à « '+(row.alias||'')+' » ?\n(Un nouveau lien sera généré.)'))return;
+    const old=eb.textContent;eb.disabled=true;eb.textContent='Envoi…';
+    const r=await engageSend(row.id);
+    if(r&&r.error){alert(r.error);eb.disabled=false;eb.textContent=old;return;}
+    alert('📩 Formulaire d\'engagement envoyé à « '+(row.alias||'')+' ».'+(r.attached?'':'\n\n(Note : tarifs_TR.pdf pas encore présent dans le repo — il sera joint automatiquement une fois ajouté.)'));
+    load();
+  };
   const dlc=wrap.querySelector('[data-act="dl-card"]');
   if(dlc)dlc.onclick=async()=>{
     const old=dlc.textContent;dlc.disabled=true;dlc.textContent='…';
@@ -186,6 +207,7 @@ function render(row){
   wrap.querySelector('.sel').addEventListener('change',updateSel);
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
+async function engageSend(id){const r=await fetch('/api/admin-engage',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 async function delDrivers(items){const r=await fetch('/api/admin-delete',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({items})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 

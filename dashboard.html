@@ -23,11 +23,19 @@ a{color:var(--cyan);text-decoration:none}
 .chip b{color:#fff}
 .chip.hot{border-color:#e22ed0;background:#1a0c18}
 .chip.mod{border-color:#caa53a;background:#1a160a}
+.chip.eng{border-color:#3ecf8e;background:#0a1a12}
+.chip.pend{border-color:#34b8ff;background:#0a1622}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
 @media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}}
 .kpi{background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:16px}
 .kpi .l{font-family:var(--ft);font-size:8.5px;letter-spacing:1.5px;color:var(--muted)}
 .kpi .v{font-family:var(--fd);font-style:italic;font-weight:800;font-size:38px;line-height:1;margin-top:8px;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+.kpi .s{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.35}
+.kpi.act .v{background:linear-gradient(90deg,#caa53a,#e0902e);-webkit-background-clip:text;background-clip:text;color:transparent}
+.funnel .split .row b{color:#fff}
+.fill.insc{background:linear-gradient(90deg,#34b8ff,#2e54ff)}
+.fill.eng{background:linear-gradient(90deg,#2e54ff,#7a33f0)}
+.fill.val{background:linear-gradient(90deg,#3ecf8e,#1f9d63)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
 @media(max-width:720px){.grid2{grid-template-columns:1fr}}
 .card{background:#0c0d13;border:1px solid var(--line);border-radius:14px;padding:18px}
@@ -86,6 +94,10 @@ a{color:var(--cyan);text-decoration:none}
   </div>
   <div class="alerts" id="alerts"></div>
   <div class="kpis" id="kpis"></div>
+  <div class="card funnel" style="margin-bottom:18px"><h2>ENTONNOIR — INSCRITS · ENGAGÉS · VALIDÉS</h2>
+    <div id="funnel"></div>
+    <div class="foot" id="funnelFoot"></div>
+  </div>
   <div class="card" style="margin-bottom:18px"><h2>PLAN GRATUIT</h2>
     <div class="limits" id="limits"></div>
     <div class="foot" id="limitsFoot"></div>
@@ -128,8 +140,16 @@ function render(rows){
   const m0=new Date(now.getFullYear(),now.getMonth(),1).getTime();
 
   let total=rows.length, todayN=0, yestN=0, n7=0, n30=0, monthN=0, achat=0, loc=0, withPhoto=0, avatarN=0, photoN=0, hidden=0, frN=0, enN=0;
+  // Entonnoir : inscrits -> engagés -> validés
+  let publishedN=0, engagedReady=0, sentN=0, notSentN=0;
   const cityMap={}, dayMap={};
   rows.forEach(r=>{
+    const isPub=r.status==='published';
+    const eng=r.engagement_status||'none';
+    if(isPub)publishedN++;
+    else if(eng==='engaged')engagedReady++;
+    else if(eng==='sent')sentN++;
+    else notSentN++;
     const t=r.created_at?new Date(r.created_at).getTime():0;
     if(t>=today0)todayN++;
     else if(t>=yest0)yestN++;
@@ -152,14 +172,30 @@ function render(rows){
   const al=[];
   al.push(`<div class="chip hot">🔥 <span><b>${todayN}</b> inscription(s) aujourd'hui</span></div>`);
   al.push(`<div class="chip"><span>Hier : <b>${yestN}</b> · 7 jours : <b>${n7}</b></span></div>`);
+  if(engagedReady>0)al.push(`<div class="chip eng">✅ <span><b>${engagedReady}</b> engagé(s) à publier</span></div>`);
+  if(sentN>0)al.push(`<div class="chip pend">✉ <span><b>${sentN}</b> formulaire(s) en attente</span></div>`);
   al.push(`<div class="chip lng">🌐 <span>FR <b>${total?Math.round(frN/total*100):0}%</b> · EN <b>${total?Math.round(enN/total*100):0}%</b></span></div>`);
   if(hidden>0)al.push(`<div class="chip mod">⚠ <span><b>${hidden}</b> carte(s) masquée(s)</span></div>`);
   $('alerts').innerHTML=al.join('');
 
-  // KPIs
+  // KPIs — entonnoir inscrits / engagés / validés (cumulatif : validé ⊂ engagé ⊂ inscrit)
+  const engagedCum=engagedReady+publishedN;            // ont franchi l'étape engagement
+  const pct=(a,b)=>b?Math.round(a/b*100):0;
+  const toPublish=engagedReady;                         // engagés pas encore publiés = à traiter
   $('kpis').innerHTML=[
-    ['TOTAL INSCRITS',total],['AUJOURD\'HUI',todayN],['7 DERNIERS JOURS',n7],['30 DERNIERS JOURS',n30]
-  ].map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div></div>`).join('');
+    ['INSCRITS', total, 'candidatures reçues'],
+    ['ENGAGÉS', engagedCum, total?(pct(engagedCum,total)+'% des inscrits'):'—'],
+    ['VALIDÉS', publishedN, total?(pct(publishedN,total)+'% des inscrits'):'—'],
+    ['À PUBLIER', toPublish, sentN?(sentN+' formulaire(s) en attente'):'engagés, prêts à publier', 'act']
+  ].map(k=>`<div class="kpi ${k[3]||''}"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+
+  // Entonnoir visuel
+  const fbar=(label,n,base)=>`<div class="split"><div class="row"><span>${label}</span><b>${n} (${pct(n,total)}%)</b></div><div class="track"><div class="fill ${base}" style="width:${pct(n,total)}%"></div></div></div>`;
+  $('funnel').innerHTML=fbar('Inscrits',total,'insc')+fbar('Engagés',engagedCum,'eng')+fbar('Validés (publiés)',publishedN,'val');
+  $('funnelFoot').innerHTML=`Détail des étapes : `+
+    `<b>${notSentN}</b> sans formulaire envoyé · <b>${sentN}</b> formulaire envoyé (en attente) · `+
+    `<b>${engagedReady}</b> engagé(s) à publier · <b>${publishedN}</b> publié(s). `+
+    `Conversion engagement → validation : <b>${pct(publishedN,engagedCum)}%</b>.`;
 
   // ---- Capacité plan gratuit (anticipation rush) : Supabase + Resend, note Vercel ----
   const PILOT_MB=0.5, SUPA_MB=1024, EMAILS_SIGNUP=2, RSD_DAY=100, RSD_MONTH=3000, EGRESS_GB=5, VIEW_MB=0.3;
