@@ -41,6 +41,27 @@ body.locked{overflow:hidden}
 .equip .opt.sel::after{border-color:var(--violet);background:var(--violet)}
 .equip .opt.sel::before{background:#fff}
 
+/* ---- Rubriques / engagement / conditions ---- */
+.formsect{display:flex;align-items:center;gap:9px;margin:22px 0 12px;font-family:var(--ft);font-size:9.5px;letter-spacing:2.5px;color:#cdd0de;text-transform:uppercase}
+.formsect::before{content:"";width:16px;height:3px;border-radius:3px;background:var(--brand)}
+.concept{background:#0a0b12;border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:12px}
+.concept .ct{color:#fff;font-family:var(--fb);font-weight:800;font-size:13px;margin-bottom:5px}
+.concept p{color:var(--muted);font-size:11.5px;line-height:1.5;margin:0}
+.concept .two{display:flex;gap:9px;margin-top:10px}
+.concept .two .c{flex:1;background:#070809;border:1px solid var(--line);border-radius:9px;padding:9px 10px}
+.concept .two .c b{color:#fff;font-size:10.5px;display:block;margin-bottom:3px;letter-spacing:.3px}
+.concept .two .c span{color:#c4c6d4;font-size:10.5px;line-height:1.35}
+.engage{display:flex;gap:11px;align-items:flex-start;background:#0c0a16;border:1px solid var(--violet);border-radius:12px;padding:13px 14px;margin-bottom:13px;cursor:pointer}
+.engage input{margin-top:2px;accent-color:#7a33f0;width:18px;height:18px;flex:0 0 auto}
+.engage .t{display:block;color:#fff;font-weight:800;font-size:12.5px;line-height:1.4}
+.engage .h{display:block;color:var(--muted);font-size:10.5px;line-height:1.4;margin-top:4px}
+.checkerr{display:none;margin:-7px 0 12px;color:#ff5c5c;font-size:11px;font-weight:700}
+.checkerr.show{display:block}
+.cond{display:none;margin-top:9px;background:#070809;border:1px solid var(--line);border-left:3px solid var(--violet);border-radius:0 10px 10px 0;padding:11px 13px}
+.cond.show{display:block}
+.cond .ct{color:#fff;font-weight:800;font-size:11.5px;margin-bottom:6px;letter-spacing:.3px}
+.cond ul{margin:0;padding-left:16px;color:#c4c6d4;font-size:11px;line-height:1.55}
+.cond a{display:inline-block;margin-top:9px;color:var(--cyan);font-size:11px;text-decoration:none;font-weight:700}
 /* ---- Photo + avatars ---- */
 .photo-field{text-align:center}
 .photolabel{color:#eef0f7!important;text-align:center;font-size:11px!important;letter-spacing:2.5px!important;margin-bottom:9px!important}
@@ -166,6 +187,7 @@ body.locked{overflow:hidden}
   <div class="controls">
     <div class="bh"><img src="/ttr-logo.png" alt="The Ring"><h1><span data-i18n="h1">DEVIENS PILOTE OFFICIEL</span><small>LA&nbsp;LEAGUE&nbsp;·&nbsp;SEASON&nbsp;0</small></h1></div>
     <p class="intro" data-i18n="intro">Rejoins la première ligue officielle The Ring. <b>Obtiens ta Driver Card</b> et entre dans le classement.</p>
+    <div class="formsect"><span data-i18n="sect_profil">1 · Ton profil pilote</span></div>
     <div class="row2">
       <div class="field"><label><span data-i18n="l_first">Prénom</span><span class="req">*</span></label><input id="i_first" placeholder="Prénom" data-ph="ph_first" maxlength="30" autocomplete="given-name"><div class="err" id="e_first"></div></div>
       <div class="field"><label><span data-i18n="l_last">Nom</span><span class="req">*</span></label><input id="i_last" placeholder="Nom" data-ph="ph_last" maxlength="30" autocomplete="family-name"><div class="err" id="e_last"></div></div>
@@ -185,18 +207,7 @@ body.locked{overflow:hidden}
     <div class="field"><label data-i18n="l_motivation">Ta motivation pour rejoindre La League ?</label><textarea id="i_motivation" rows="4" maxlength="400" data-ph="ph_motivation" placeholder="Dis-nous en quelques mots pourquoi tu veux rejoindre La League…"></textarea></div>
     <div class="hp" aria-hidden="true"><label>Site web</label><input id="i_website" tabindex="-1" autocomplete="off"></div>
 
-    <div class="field"><label><span data-i18n="l_formule">Formule</span><span class="req">*</span></label>
-      <p class="hintinfo" data-i18n="hint_formule">PUREMENT INFORMATIF, sans engagement : ça permet juste à The Ring de te recontacter au sujet de ton futur équipement.</p>
-      <div class="equip" id="equip">
-        <label class="opt"><input type="radio" name="equip" value="achat">
-          <span class="t" data-i18n="opt_achat_t">J'achète mon équipement The Ring</span>
-          <span class="d" data-i18n="opt_achat_d">Ma voiture, mes options, mes réglages.</span></label>
-        <label class="opt"><input type="radio" name="equip" value="location">
-          <span class="t" data-i18n="opt_loc_t">Je loue l'équipement The Ring (pré-équipé)</span>
-          <span class="d" data-i18n="opt_loc_d">Véhicule RC prêt à rouler fourni. Idéal pour débuter et découvrir l'immersion intense The Ring.</span></label>
-      </div><div class="equipErr" id="e_equip"></div>
-    </div>
-
+    <div class="formsect"><span data-i18n="sect_photo">2 · Ta photo / ton avatar</span></div>
     <div class="field photo-field" style="margin-top:12px">
       <label class="photolabel"><span data-i18n="l_photo">Photo du pilote</span><span class="req">*</span></label>
       <div class="photowrap">
@@ -208,6 +219,44 @@ body.locked{overflow:hidden}
       <input id="i_photo" type="file" accept="image/jpeg,image/png,image/webp" style="display:none">
       <div class="avatarlabel"><span data-i18n="avatar_label">ou choisis un avatar</span><span class="req">*</span></div>
       <div class="avatars" id="avatars"></div>
+    </div>
+
+    <div class="formsect"><span data-i18n="sect_league">3 · La League &amp; ton engagement</span></div>
+    <div class="concept">
+      <div class="ct" data-i18n="concept_t">C'est quoi La League ?</div>
+      <p data-i18n="concept_p">Un championnat de karting RC téléopéré, à Marseille. Tu progresses manche après manche.</p>
+      <div class="two">
+        <div class="c"><b data-i18n="concept_c1_t">Le Championnat</b><span data-i18n="concept_c1_d">Tes résultats en course.</span></div>
+        <div class="c"><b data-i18n="concept_c2_t">L'Indice The Ring</b><span data-i18n="concept_c2_d">Ton vrai niveau, sur 100.</span></div>
+      </div>
+    </div>
+
+    <label class="engage">
+      <input type="checkbox" id="i_engage">
+      <span><span class="t" data-i18n="engage_t">Je m'engage à participer à au moins 4 évènements d'une journée par an, sur les circuits de Marseille.</span><span class="h" data-i18n="engage_h">Saison Bêta jusqu'en octobre · nouveau circuit à venir. C'est ce qui fait vivre La League.</span></span>
+    </label>
+    <div class="checkerr" id="e_engage"></div>
+
+    <div class="field"><label><span data-i18n="l_formule">Ta formule</span><span class="req">*</span></label>
+      <p class="hintinfo" data-i18n="hint_formule">Indique ta préférence — tu pourras tout préciser plus tard, sans surcharge.</p>
+      <div class="equip" id="equip">
+        <label class="opt"><input type="radio" name="equip" value="achat">
+          <span class="t" data-i18n="opt_achat_t">J'achète mon équipement</span>
+          <span class="d" data-i18n="opt_achat_d">Ma machine, mes réglages, ma déco.</span></label>
+        <label class="opt"><input type="radio" name="equip" value="location">
+          <span class="t" data-i18n="opt_loc_t">Je loue sur place (pré-équipé)</span>
+          <span class="d" data-i18n="opt_loc_d">Tout est prêt : tu arrives et tu pilotes.</span></label>
+      </div><div class="equipErr" id="e_equip"></div>
+      <div class="cond" id="cond_achat">
+        <div class="ct" data-i18n="cond_achat_t">Formule Achat</div>
+        <ul><li data-i18n="cond_achat_1">Ta machine évolutive et entièrement réglable.</li><li data-i18n="cond_achat_2">Déco personnalisée à tes couleurs.</li><li data-i18n="cond_achat_3">−30 % sur tes sessions supplémentaires.</li></ul>
+        <a href="/tarifs_TR.pdf" target="_blank" rel="noopener" data-i18n="cond_link">Voir les tarifs &amp; formules →</a>
+      </div>
+      <div class="cond" id="cond_location">
+        <div class="ct" data-i18n="cond_loc_t">Formule Location</div>
+        <ul><li data-i18n="cond_loc_1">Aucun matériel à prévoir : machine fournie et calibrée.</li><li data-i18n="cond_loc_2">Idéal pour débuter sans investir.</li><li data-i18n="cond_loc_3">Tarif selon le barème sessions en vigueur.</li></ul>
+        <a href="/tarifs_TR.pdf" target="_blank" rel="noopener" data-i18n="cond_link">Voir les tarifs &amp; formules →</a>
+      </div>
     </div>
 
     <div class="fixed">
@@ -253,9 +302,18 @@ const I18N={
   intro:'Rejoins la première ligue officielle The Ring. <b>Obtiens ta Driver Card</b> et entre dans le classement.',
   l_first:'Prénom',l_last:'Nom',l_alias:'Pseudo',l_age:'Âge',l_country:'Pays',l_city:'Ville',l_email:'Email',l_style:'Style de conduite',
   ph_first:'Prénom',ph_last:'Nom',ph_alias:'Ton pseudo de pilote',ph_city:'Ta ville',ph_email:'ton@email.com',ph_style:'Chacun son style ! (optionnel)',
-  l_formule:'Formule',hint_formule:'PUREMENT INFORMATIF, sans engagement : ça permet juste à The Ring de te recontacter au sujet de ton futur équipement.',
-  opt_achat_t:"J'achète mon équipement The Ring",opt_achat_d:'Ma voiture, mes options, mes réglages.',
-  opt_loc_t:"Je loue l'équipement The Ring (pré-équipé)",opt_loc_d:"Véhicule RC prêt à rouler fourni. Idéal pour débuter et découvrir l'immersion intense The Ring.",
+  sect_profil:'1 · Ton profil pilote',sect_photo:'2 · Ta photo / ton avatar',sect_league:'3 · La League &amp; ton engagement',
+  concept_t:"C'est quoi La League ?",concept_p:'Un championnat de karting RC téléopéré, à Marseille. Tu progresses manche après manche.',
+  concept_c1_t:'Le Championnat',concept_c1_d:'Tes résultats en course.',concept_c2_t:"L'Indice The Ring",concept_c2_d:'Ton vrai niveau, sur 100.',
+  engage_t:"Je m'engage à participer à au moins 4 évènements d'une journée par an, sur les circuits de Marseille.",
+  engage_h:'Saison Bêta jusqu\'en octobre · nouveau circuit à venir. C\'est ce qui fait vivre La League.',
+  err_engage:'Coche ton engagement pour continuer.',
+  l_formule:'Ta formule',hint_formule:'Indique ta préférence — tu pourras tout préciser plus tard, sans surcharge.',
+  opt_achat_t:"J'achète mon équipement",opt_achat_d:'Ma machine, mes réglages, ma déco.',
+  opt_loc_t:'Je loue sur place (pré-équipé)',opt_loc_d:'Tout est prêt : tu arrives et tu pilotes.',
+  cond_achat_t:'Formule Achat',cond_achat_1:'Ta machine évolutive et entièrement réglable.',cond_achat_2:'Déco personnalisée à tes couleurs.',cond_achat_3:'−30 % sur tes sessions supplémentaires.',
+  cond_loc_t:'Formule Location',cond_loc_1:'Aucun matériel à prévoir : machine fournie et calibrée.',cond_loc_2:'Idéal pour débuter sans investir.',cond_loc_3:'Tarif selon le barème sessions en vigueur.',
+  cond_link:'Voir les tarifs &amp; formules →',
   l_photo:'Photo du pilote',btn_photo:'⇪ IMPORTER UNE PHOTO',
   l_motivation:'Ta motivation pour rejoindre La League ?',ph_motivation:"Dis-nous en quelques mots pourquoi tu veux rejoindre La League…",
   showname_q:'Afficher mon nom et prénom sur ma Card',showname_help:'Décoché : seulement ton pseudo sera visible. Ta carte est publique.',
@@ -282,9 +340,18 @@ const I18N={
   intro:'Join the first official La League. <b>Get your Driver Card</b> and enter the ranking.',
   l_first:'First name',l_last:'Last name',l_alias:'Nickname',l_age:'Age',l_country:'Country',l_city:'City',l_email:'Email',l_style:'Driving style',
   ph_first:'First name',ph_last:'Last name',ph_alias:'Your driver nickname',ph_city:'Your city',ph_email:'you@email.com',ph_style:'Everyone has their own style! (optional)',
-  l_formule:'Plan',hint_formule:'FOR INFORMATION ONLY, no commitment: it just lets The Ring contact you about your future equipment.',
-  opt_achat_t:'I buy my The Ring equipment',opt_achat_d:'My car, my options, my settings.',
-  opt_loc_t:'I rent The Ring equipment (pre-equipped)',opt_loc_d:'Ready-to-drive RC vehicle provided. Perfect to start and discover the intense The Ring immersion.',
+  sect_profil:'1 · Your driver profile',sect_photo:'2 · Your photo / avatar',sect_league:'3 · La League &amp; your commitment',
+  concept_t:'What is La League?',concept_p:'A tele-operated RC karting championship, in Marseille. You progress race after race.',
+  concept_c1_t:'The Championship',concept_c1_d:'Your race results.',concept_c2_t:'The Ring Index',concept_c2_d:'Your real level, out of 100.',
+  engage_t:'I commit to taking part in at least 4 one-day events per year, on the Marseille tracks.',
+  engage_h:'Beta season until October · new track coming. This is what makes La League come alive.',
+  err_engage:'Tick your commitment to continue.',
+  l_formule:'Your plan',hint_formule:'Just your preference — you can refine everything later, no overload.',
+  opt_achat_t:'I buy my equipment',opt_achat_d:'My machine, my settings, my livery.',
+  opt_loc_t:'I rent on site (pre-equipped)',opt_loc_d:'Everything is ready: you arrive and drive.',
+  cond_achat_t:'Purchase plan',cond_achat_1:'Your upgradable, fully adjustable machine.',cond_achat_2:'Custom livery in your colours.',cond_achat_3:'−30% on your extra sessions.',
+  cond_loc_t:'Rental plan',cond_loc_1:'Nothing to bring: machine provided and calibrated.',cond_loc_2:'Perfect to start without investing.',cond_loc_3:'Price based on the current session rates.',
+  cond_link:'See pricing &amp; plans →',
   l_photo:'Driver photo',btn_photo:'⇪ UPLOAD A PHOTO',
   l_motivation:'Your motivation to join La League?',ph_motivation:'Tell us in a few words why you want to join La League…',
   showname_q:'Show my first and last name on my Card',showname_help:'Unchecked: only your nickname will be visible. Your card is public.',
@@ -322,7 +389,7 @@ function applyLang(lang){
 /* ===================== FORMULAIRE ===================== */
 function eq(){const e=document.querySelector('input[name=equip]:checked');return e?e.value:'';}
 function val(id){return ($(id).value||'').replace(/\s+/g,' ').trim();}
-function data(){return{first:val('i_first'),last:val('i_last'),alias:val('i_alias'),age:val('i_age'),nationality:val('i_nat')||'France',city:val('i_city'),style:val('i_style'),motivation:val('i_motivation'),showName:$('i_showname').checked,photoType:photoType,email:val('i_email').toLowerCase(),equipment:eq(),language:LANG,overall:50,level:'ROOKIE',season:'S0'};}
+function data(){return{first:val('i_first'),last:val('i_last'),alias:val('i_alias'),age:val('i_age'),nationality:val('i_nat')||'France',city:val('i_city'),style:val('i_style'),motivation:val('i_motivation'),showName:$('i_showname').checked,photoType:photoType,email:val('i_email').toLowerCase(),equipment:eq(),engaged:$('i_engage').checked,language:LANG,overall:50,level:'ROOKIE',season:'S0'};}
 $('i_showname').addEventListener('change',()=>{render();});
 function render(){mountPostCard($('card'),data(),photoData);fit();}
 ['i_first','i_last','i_alias','i_age','i_city','i_style'].forEach(id=>$(id).addEventListener('input',()=>{render();checkForm();}));
@@ -370,8 +437,12 @@ function hidePhotoErr(){$('photoErr').classList.remove('show');}
 $('photoRules').addEventListener('click',()=>$('photoHint').classList.toggle('show'));
 document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('change',()=>{
   document.querySelectorAll('.equip .opt').forEach(o=>o.classList.remove('sel'));
-  r.closest('.opt').classList.add('sel');if(validationVisible) validate(true);checkForm();
+  r.closest('.opt').classList.add('sel');
+  $('cond_achat').classList.toggle('show',r.value==='achat');
+  $('cond_location').classList.toggle('show',r.value==='location');
+  if(validationVisible) validate(true);checkForm();
 }));
+$('i_engage').addEventListener('change',()=>{$('e_engage').classList.remove('show');validationVisible=true;validate(true);checkForm();});
 
 function fit(){const w=document.querySelector('.previewWrap'),el=$('card');const s=Math.min(1,w.clientWidth/1080);el.style.transform=`scale(${s})`;w.style.height=(1350*s)+'px';}
 window.addEventListener('resize',fit);
@@ -383,6 +454,7 @@ function clearFieldErrors(){
   document.querySelectorAll('.field .err').forEach(e=>e.textContent='');
   const equip=$('equip');if(equip) equip.classList.remove('error');
   if($('e_equip')) $('e_equip').textContent='';
+  if($('e_engage')) $('e_engage').classList.remove('show');
 }
 function setFieldError(key,msg){
   const id=fieldMap[key];const input=id?$(id):null;
@@ -391,6 +463,7 @@ function setFieldError(key,msg){
   if(err) err.textContent=msg;
 }
 function setEquipError(msg){$('equip').classList.add('error');if($('e_equip')) $('e_equip').textContent=msg;}
+function setEngageError(msg){if($('e_engage')){$('e_engage').textContent=msg;$('e_engage').classList.add('show');}}
 function validate(show){
   const v=data();const errors=[];
   const nameRe=/^[A-Za-zÀ-ÖØ-öø-ÿ' -]{1,30}$/;
@@ -406,11 +479,13 @@ function validate(show){
   if(!v.email) errors.push(['email',T('err_email_req')]); else if(!emailRe.test(v.email)) errors.push(['email',T('err_email_bad')]);
   if(v.style&&(/[<>]/.test(v.style)||v.style.length>34)) errors.push(['style',T('err_style_bad')]);
   if(!v.equipment) errors.push(['equip',T('err_equip')]);
+  if(!$('i_engage').checked) errors.push(['engage',T('err_engage')]);
   if(!$('i_consent').checked) errors.push(['consent',T('err_consent')]);
   if(show){
     clearFieldErrors();
     for(const [key,msg] of errors){
       if(key==='equip') setEquipError(msg);
+      else if(key==='engage') setEngageError(msg);
       else if(key==='consent') showError(msg,false);
       else setFieldError(key,msg);
     }

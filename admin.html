@@ -123,12 +123,8 @@ function render(row){
   if(row.status!=='published'){
     if(eng==='engaged'){
       engageBtn='<span class="tag eng">✓ ENGAGÉ'+(row.engagement_choice?(' · '+eqLabel(row.engagement_choice)):'')+'</span>';
-      validerBtn='<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>';
-    } else if(eng==='sent'){
-      engageBtn='<button class="btn ghost" data-act="engage" title="Renvoyer le formulaire d\'engagement">✉ FORMULAIRE ENVOYÉ · RENVOYER</button>';
-    } else {
-      engageBtn='<button class="btn" data-act="engage" style="background:#15203a;border:1px solid var(--violet)">📩 ENVOYER LE FORMULAIRE</button>';
     }
+    validerBtn='<button class="btn" data-act="valider" style="background:#0c3;color:#031">✓ PUBLIER</button>';
   }
   wrap.innerHTML=`
     <div class="sumhead">

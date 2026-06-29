@@ -217,6 +217,9 @@ module.exports = async (req, res) => {
       card_url,
       slug,
       equipment: p.equipment || '',
+      engagement_status: 'engaged',
+      engagement_choice: p.equipment || null,
+      engaged_at: new Date().toISOString(),
       language: lang,
       motivation: motivation,
       show_name: showName,
@@ -244,7 +247,8 @@ module.exports = async (req, res) => {
       <b>Style :</b> ${p.style || '-'}<br><b>Email :</b> ${cleanEmail}<br>
       <b>Langue :</b> ${en ? 'EN' : 'FR'}<br>
       <b>Nom affiché sur la carte :</b> ${showName ? 'Oui' : 'Non (pseudo seul)'}<br>
-      <b>Formule :</b> ${equipmentLabel(p.equipment)}</p>
+      <b>Formule :</b> ${equipmentLabel(p.equipment)}<br>
+      <b>Engagement 4 events :</b> ${p.engaged ? 'Oui ✓ (engagé dès l\'inscription)' : '—'}</p>
       <p><b>Motivation :</b><br>${motivation ? motivation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : '-'}</p>
       <p><b>➡ Valider la candidature dans l'admin :</b><br><a href="${adminUrl}">${adminUrl}</a></p>`;
 
@@ -254,18 +258,29 @@ module.exports = async (req, res) => {
       teamHtml
     ).catch(() => {});
 
-    const logo = `${base}/ttr-logo.png`;
+    const logo = `${base}/ttr-logo-2x.png`;
+
+    const eqShort = p.equipment === 'achat' ? (en ? 'Purchase' : 'Achat')
+      : p.equipment === 'location' ? (en ? 'Rental' : 'Location')
+      : (en ? 'to be confirmed' : 'à préciser');
+    const tarifsUrl = `${base}/tarifs_TR.pdf`;
 
     const tx = en ? {
       hi:`Thank you, ${p.first}!`,
       l1:`We've received your application to <b style="color:#fff">La League — Season&nbsp;0 · Founders</b>. 🏁`,
       l2:`Our team will <b style="color:#fff">review and validate your application</b>. Once approved, you'll receive your <b style="color:#fff">official Driver Card</b> by email.`,
+      eng:`You've committed to take part in at least <b style="color:#fff">4 events</b> per year, on the <b style="color:#fff">${eqShort}</b> plan. 💪`,
+      tarifs:`Pricing &amp; plans:`,
+      tarifsLink:`See pricing &amp; plans →`,
       l3:`No action needed on your side for now — we'll get back to you soon.`,
       invite:`In the meantime, feel free to tell your friends and family about The Ring 👇`
     } : {
       hi:`Merci, ${p.first} !`,
       l1:`Nous avons bien reçu ta candidature à <b style="color:#fff">La League — Season&nbsp;0 · Founders</b>. 🏁`,
       l2:`Notre équipe va <b style="color:#fff">examiner et valider ta candidature</b>. Une fois validée, tu recevras ta <b style="color:#fff">Driver Card officielle</b> par email.`,
+      eng:`Tu t'es engagé·e à participer à au moins <b style="color:#fff">4 évènements</b> par an, en formule <b style="color:#fff">${eqShort}</b>. 💪`,
+      tarifs:`Tarifs &amp; formules :`,
+      tarifsLink:`Voir les tarifs &amp; formules →`,
       l3:`Rien à faire de ton côté pour l'instant — on revient vers toi très vite.`,
       invite:`En attendant, n'hésite pas à parler de The Ring autour de toi 👇`
     };
@@ -276,7 +291,7 @@ module.exports = async (req, res) => {
 <tr><td align="center" style="padding:30px 14px">
 <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:600px;background:#0b0c12;border-radius:16px;overflow:hidden">
   <tr><td align="center" style="background:#050507;padding:26px 0 18px">
-    <img src="${logo}" width="160" alt="The Ring" style="display:block;border:0">
+    <img src="${logo}" width="150" alt="The Ring" style="display:block;border:0;width:150px;max-width:150px;height:auto">
   </td></tr>
   <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>
   <tr><td style="padding:30px 30px 8px">
@@ -285,6 +300,8 @@ module.exports = async (req, res) => {
   <tr><td style="padding:6px 30px 0">
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l1}</p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
+    <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.eng}</p>
+    <p style="margin:0 0 18px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.tarifs} <a href="${tarifsUrl}" style="color:#34b8ff;font-weight:bold;text-decoration:none">${tx.tarifsLink}</a></p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l3}</p>
     <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
     <p style="margin:0 0 22px"><a href="https://www.thering-drive.com/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">https://www.thering-drive.com/</a></p>
