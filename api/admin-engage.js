@@ -71,7 +71,7 @@ async function tryAttachTarifs(base) {
 function engageHtml(row, base, token) {
   const en = (row.language === 'en');
   const first = row.first_name || '';
-  const logo = `${base}/ttr-logo.png`;
+  const logo = `${base}/ttr-logo-2x.png`;
   const track = `${base}/new_track.jpg`;
   const tarifs = `${base}/tarifs_TR.pdf`;
   const link = `${base}/engage.html?t=${encodeURIComponent(token)}`;
@@ -84,7 +84,7 @@ function engageHtml(row, base, token) {
 <tr><td align="center" style="padding:30px 14px">
 <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:600px;background:#0b0c12;border-radius:16px;overflow:hidden">
   <tr><td align="center" style="background:#050507;padding:26px 0 18px">
-    <img src="${logo}" width="160" alt="The Ring" style="display:block;border:0">
+    <img src="${logo}" width="150" alt="The Ring" style="display:block;border:0;width:150px;max-width:150px;height:auto">
   </td></tr>
   <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>`;
 
@@ -106,8 +106,8 @@ function engageHtml(row, base, token) {
     ${P(`You applied to <b style="color:#fff">La League — Season&nbsp;0 · Founders</b>, and we'd love to have you on the grid. 🏁 No pressure — just the chance to be one of the very first drivers, with <b style="color:#fff">exclusive access to promo, training and competition sessions</b> on the new tracks to come.`)}
     ${P(`<b style="color:#fff">Two rankings, two rewards.</b> The <b style="color:#fff">Championship</b> rewards race results (🥇 10 · 🥈 7 · 🥉 5 · 4th 3 pts). The <b style="color:#fff">The Ring™ Index</b> measures your real driving level — everyone starts at <b style="color:#fff">50.0 / 100</b>: Pace 35% · Consistency 25% · Race results 15% · Cleanliness 15% · Reliability 10%.`)}
     ${P(`<b style="color:#fff">How it runs:</b> about <b style="color:#fff">one event every 3 months</b> — not always full competition. Every session feeds the data that builds both rankings.`)}
-    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
-      <a href="${link}" style="display:inline-block;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">I'M IN FOR SEASON 0 →</a>
+    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td align="center" bgcolor="#7a33f0" style="border-radius:11px;background-color:#7a33f0;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0);border:1px solid #c08bff">
+      <a href="${link}" style="display:inline-block;border-radius:11px;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">I'M IN FOR SEASON 0 →</a>
     </td></tr></table>
     ${P(`Pricing & packages are in the attached <b style="color:#fff">tarifs_TR.pdf</b> · <a href="${tarifs}" style="color:#34b8ff">open</a>`, 13, 8)}
     ${P(`<a href="${site}" style="color:#34b8ff">${site}</a>`, 14, 22)}
@@ -124,8 +124,8 @@ function engageHtml(row, base, token) {
     ${P(`<b style="color:#fff">Deux classements, deux récompenses.</b> Le <b style="color:#fff">Championnat</b> récompense les résultats en course (🥇 10 · 🥈 7 · 🥉 5 · 4ᵉ 3 pts). L'<b style="color:#fff">Indice The Ring™</b> mesure ton vrai niveau de pilotage — tout le monde démarre à <b style="color:#fff">50,0 / 100</b> : Chrono 35% · Régularité 25% · Résultats 15% · Propreté 15% · Fiabilité 10%.`)}
     ${P(`<b style="color:#fff">Comment ça se joue :</b> environ <b style="color:#fff">1 évènement tous les 3 mois</b> — pas systématiquement en compétition. Chaque session alimente les données qui construisent les deux classements.`)}
     ${P(`Il te reste une chose à faire : nous dire que <b style="color:#fff">tu embarques</b>, et choisir ta formule (Location ou Achat). 👇`)}
-    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 18px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
-      <a href="${link}" style="display:inline-block;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">JE M'ENGAGE POUR LA SAISON 0 →</a>
+    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 18px"><tr><td align="center" bgcolor="#7a33f0" style="border-radius:11px;background-color:#7a33f0;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0);border:1px solid #c08bff">
+      <a href="${link}" style="display:inline-block;border-radius:11px;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">JE M'ENGAGE POUR LA SAISON 0 →</a>
     </td></tr></table>
     ${P(`Les <b style="color:#fff">tarifs et formules</b> sont dans la pièce jointe <b style="color:#fff">tarifs_TR.pdf</b> · <a href="${tarifs}" style="color:#34b8ff">ouvrir</a>`, 13, 8)}
     ${P(`<a href="${site}" style="color:#34b8ff">${site}</a>`, 14, 22)}

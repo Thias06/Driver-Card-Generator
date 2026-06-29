@@ -132,7 +132,7 @@ function congratsHtml(row, base) {
   const en = (row.language === 'en');
   const first = row.first_name || '';
   const link = `${base}/drivers/${row.slug}`;
-  const logo = `${base}/ttr-logo.png`;
+  const logo = `${base}/ttr-logo-2x.png`;
   const site = 'https://www.thering-drive.com/';
   const tx = en ? {
     hi: `Welcome aboard, ${first}!`,
@@ -153,7 +153,7 @@ function congratsHtml(row, base) {
 <tr><td align="center" style="padding:30px 14px">
 <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:600px;background:#0b0c12;border-radius:16px;overflow:hidden">
   <tr><td align="center" style="background:#050507;padding:26px 0 18px">
-    <img src="${logo}" width="160" alt="The Ring" style="display:block;border:0">
+    <img src="${logo}" width="150" alt="The Ring" style="display:block;border:0;width:150px;max-width:150px;height:auto">
   </td></tr>
   <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>
   <tr><td style="padding:30px 30px 8px">
@@ -162,8 +162,8 @@ function congratsHtml(row, base) {
   <tr><td style="padding:6px 30px 0">
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l1}</p>
     <p style="margin:0 0 12px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
-    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td style="border-radius:10px;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0)">
-      <a href="${link}" style="display:inline-block;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">${tx.btn}</a>
+    <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td align="center" bgcolor="#7a33f0" style="border-radius:11px;background-color:#7a33f0;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0);border:1px solid #c08bff">
+      <a href="${link}" style="display:inline-block;border-radius:11px;padding:15px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">${tx.btn}</a>
     </td></tr></table>
     <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
     <p style="margin:0 0 22px"><a href="${site}" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">${site}</a></p>

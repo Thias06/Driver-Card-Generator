@@ -254,7 +254,7 @@ module.exports = async (req, res) => {
       teamHtml
     ).catch(() => {});
 
-    const logo = `${base}/ttr-logo.png`;
+    const logo = `${base}/ttr-logo-2x.png`;
 
     const tx = en ? {
       hi:`Thank you, ${p.first}!`,
@@ -276,7 +276,7 @@ module.exports = async (req, res) => {
 <tr><td align="center" style="padding:30px 14px">
 <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;max-width:600px;background:#0b0c12;border-radius:16px;overflow:hidden">
   <tr><td align="center" style="background:#050507;padding:26px 0 18px">
-    <img src="${logo}" width="160" alt="The Ring" style="display:block;border:0">
+    <img src="${logo}" width="150" alt="The Ring" style="display:block;border:0;width:150px;max-width:150px;height:auto">
   </td></tr>
   <tr><td style="height:5px;background:linear-gradient(90deg,#34b8ff,#2e54ff,#7a33f0,#e22ed0);font-size:0;line-height:0">&nbsp;</td></tr>
   <tr><td style="padding:30px 30px 8px">
