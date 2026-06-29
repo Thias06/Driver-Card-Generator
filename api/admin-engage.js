@@ -109,7 +109,7 @@ function engageHtml(row, base, token) {
     <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 22px"><tr><td align="center" bgcolor="#7a33f0" style="border-radius:11px;background-color:#7a33f0;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0);border:1px solid #c08bff">
       <a href="${link}" style="display:inline-block;border-radius:11px;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">I'M IN FOR SEASON 0 →</a>
     </td></tr></table>
-    ${P(`Pricing & packages are in the attached <b style="color:#fff">tarifs_TR.pdf</b> · <a href="${tarifs}" style="color:#34b8ff">open</a>`, 13, 8)}
+    ${P(`Pricing & packages are in the attached <b style="color:#fff"></b> · <a href="${tarifs}" style="color:#34b8ff">open</a>`, 13, 8)}
     ${P(`<a href="${site}" style="color:#34b8ff">${site}</a>`, 14, 22)}
   </td></tr>` + foot;
   }
@@ -127,7 +127,7 @@ function engageHtml(row, base, token) {
     <table cellpadding="0" cellspacing="0" role="presentation" align="center" style="margin:6px auto 18px"><tr><td align="center" bgcolor="#7a33f0" style="border-radius:11px;background-color:#7a33f0;background-image:linear-gradient(90deg,#2e54ff,#7a33f0,#e22ed0);border:1px solid #c08bff">
       <a href="${link}" style="display:inline-block;border-radius:11px;padding:16px 30px;font-family:Arial,Helvetica,sans-serif;font-weight:bold;font-size:14px;letter-spacing:1px;color:#ffffff;text-decoration:none">JE M'ENGAGE POUR LA SAISON 0 →</a>
     </td></tr></table>
-    ${P(`Les <b style="color:#fff">tarifs et formules</b> sont dans la pièce jointe <b style="color:#fff">tarifs_TR.pdf</b> · <a href="${tarifs}" style="color:#34b8ff">ouvrir</a>`, 13, 8)}
+    ${P(`Les <b style="color:#fff">tarifs et formules</b> sont dans la pièce jointe <b style="color:#fff"></b> · <a href="${tarifs}" style="color:#34b8ff">ouvrir</a>`, 13, 8)}
     ${P(`<a href="${site}" style="color:#34b8ff">${site}</a>`, 14, 22)}
   </td></tr>` + foot;
 }
