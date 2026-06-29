@@ -224,21 +224,21 @@ body.locked{overflow:hidden}
     <div class="formsect"><span data-i18n="sect_league">3 · La League &amp; ton engagement</span></div>
     <div class="concept">
       <div class="ct" data-i18n="concept_t">C'est quoi La League ?</div>
-      <p data-i18n="concept_p">Un championnat de karting RC téléopéré, à Marseille. Tu progresses manche après manche.</p>
+      <p data-i18n="concept_p">Un championnat de voiture RC téléopéré, à Marseille. Tu progresses manche après manche dans deux classements!</p>
       <div class="two">
-        <div class="c"><b data-i18n="concept_c1_t">Le Championnat</b><span data-i18n="concept_c1_d">Tes résultats en course.</span></div>
-        <div class="c"><b data-i18n="concept_c2_t">L'Indice The Ring</b><span data-i18n="concept_c2_d">Ton vrai niveau, sur 100.</span></div>
+        <div class="c"><b data-i18n="concept_c1_t">Le Championnat</b><span data-i18n="concept_c1_d">Tes résultats en course, classement selon points cumulés.</span></div>
+        <div class="c"><b data-i18n="concept_c2_t">L'Indice The Ring</b><span data-i18n="concept_c2_d">Ton vrai niveau, calculé sur 100 après analyse de tes stats.</span></div>
       </div>
     </div>
 
     <label class="engage">
       <input type="checkbox" id="i_engage">
-      <span><span class="t" data-i18n="engage_t">Je m'engage à participer à au moins 4 évènements d'une journée par an, sur les circuits de Marseille.</span><span class="h" data-i18n="engage_h">Saison Bêta jusqu'en octobre · nouveau circuit à venir. C'est ce qui fait vivre La League.</span></span>
+      <span><span class="t" data-i18n="engage_t">Je m'engage à participer à au moins 4 évènements d'une journée par an, sur les circuits de Marseille.</span><span class="h" data-i18n="engage_h">Saison Bêta jusqu'en octobre · Nouveau circuit à venir. .</span></span>
     </label>
     <div class="checkerr" id="e_engage"></div>
 
     <div class="field"><label><span data-i18n="l_formule">Ta formule</span><span class="req">*</span></label>
-      <p class="hintinfo" data-i18n="hint_formule">Indique ta préférence — tu pourras tout préciser plus tard, sans surcharge.</p>
+      <p class="hintinfo" data-i18n="hint_formule">Indique ta préférence — tu pourras tout préciser plus tard, aucune pression.</p>
       <div class="equip" id="equip">
         <label class="opt"><input type="radio" name="equip" value="achat">
           <span class="t" data-i18n="opt_achat_t">J'achète mon équipement</span>
@@ -303,12 +303,12 @@ const I18N={
   l_first:'Prénom',l_last:'Nom',l_alias:'Pseudo',l_age:'Âge',l_country:'Pays',l_city:'Ville',l_email:'Email',l_style:'Style de conduite',
   ph_first:'Prénom',ph_last:'Nom',ph_alias:'Ton pseudo de pilote',ph_city:'Ta ville',ph_email:'ton@email.com',ph_style:'Chacun son style ! (optionnel)',
   sect_profil:'1 · Ton profil pilote',sect_photo:'2 · Ta photo / ton avatar',sect_league:'3 · La League &amp; ton engagement',
-  concept_t:"C'est quoi La League ?",concept_p:'Un championnat de karting RC téléopéré, à Marseille. Tu progresses manche après manche.',
-  concept_c1_t:'Le Championnat',concept_c1_d:'Tes résultats en course.',concept_c2_t:"L'Indice The Ring",concept_c2_d:'Ton vrai niveau, sur 100.',
+  concept_t:"C'est quoi La League ?",concept_p:'Un championnat de voiture RC téléopéré, à Marseille. Tu progresses manche après manche dans deux classements!',
+  concept_c1_t:'Le Championnat',concept_c1_d:'Tes résultats en course, classement selon points cumulés.',concept_c2_t:"L'Indice The Ring",concept_c2_d:'Ton vrai niveau, calculé sur 100 après analyse de tes stats.',
   engage_t:"Je m'engage à participer à au moins 4 évènements d'une journée par an, sur les circuits de Marseille.",
-  engage_h:'Saison Bêta jusqu\'en octobre · nouveau circuit à venir. C\'est ce qui fait vivre La League.',
+  engage_h:'Saison Bêta jusqu\'en octobre · Nouveau circuit à venir.',
   err_engage:'Coche ton engagement pour continuer.',
-  l_formule:'Ta formule',hint_formule:'Indique ta préférence — tu pourras tout préciser plus tard, sans surcharge.',
+  l_formule:'Ta formule',hint_formule:'Indique ta préférence — tu pourras tout préciser plus tard, aucune pression.',
   opt_achat_t:"J'achète mon équipement",opt_achat_d:'Ma machine, mes réglages, ma déco.',
   opt_loc_t:'Je loue sur place (pré-équipé)',opt_loc_d:'Tout est prêt : tu arrives et tu pilotes.',
   cond_achat_t:'Formule Achat',cond_achat_1:'Ta machine évolutive et entièrement réglable.',cond_achat_2:'Déco personnalisée à tes couleurs.',cond_achat_3:'−30 % sur tes sessions supplémentaires.',
@@ -341,12 +341,12 @@ const I18N={
   l_first:'First name',l_last:'Last name',l_alias:'Nickname',l_age:'Age',l_country:'Country',l_city:'City',l_email:'Email',l_style:'Driving style',
   ph_first:'First name',ph_last:'Last name',ph_alias:'Your driver nickname',ph_city:'Your city',ph_email:'you@email.com',ph_style:'Everyone has their own style! (optional)',
   sect_profil:'1 · Your driver profile',sect_photo:'2 · Your photo / avatar',sect_league:'3 · La League &amp; your commitment',
-  concept_t:'What is La League?',concept_p:'A tele-operated RC karting championship, in Marseille. You progress race after race.',
-  concept_c1_t:'The Championship',concept_c1_d:'Your race results.',concept_c2_t:'The Ring Index',concept_c2_d:'Your real level, out of 100.',
+  concept_t:'What is La League?',concept_p:'A tele-operated RC car championship, in Marseille. You progress race after race in two rankings!',
+  concept_c1_t:'The Championship',concept_c1_d:'Your race results, ranking by cumulated points.',concept_c2_t:'The Ring Index',concept_c2_d:'Your real level, calculated out of 100 after analyzing your stats. ',
   engage_t:'I commit to taking part in at least 4 one-day events per year, on the Marseille tracks.',
-  engage_h:'Beta season until October · new track coming. This is what makes La League come alive.',
+  engage_h:'Beta season until October · New track coming.',
   err_engage:'Tick your commitment to continue.',
-  l_formule:'Your plan',hint_formule:'Just your preference — you can refine everything later, no overload.',
+  l_formule:'Your plan',hint_formule:'Just your preference — you can refine everything later, no pressure.',
   opt_achat_t:'I buy my equipment',opt_achat_d:'My machine, my settings, my livery.',
   opt_loc_t:'I rent on site (pre-equipped)',opt_loc_d:'Everything is ready: you arrive and drive.',
   cond_achat_t:'Purchase plan',cond_achat_1:'Your upgradable, fully adjustable machine.',cond_achat_2:'Custom livery in your colours.',cond_achat_3:'−30% on your extra sessions.',
