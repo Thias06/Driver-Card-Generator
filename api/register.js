@@ -150,6 +150,7 @@ module.exports = async (req, res) => {
     const en = lang === 'en';
     const motivation = String(p.motivation || '').replace(/\s+\n/g, '\n').slice(0, 600).trim();
     const showName = p.showName !== false; // défaut : afficher le nom
+    const cfg = (p.config && typeof p.config === 'object') ? p.config : null;
 
     const cleanEmail = String(p.email || '').trim().toLowerCase();
     const cleanAlias = String(p.alias || '').trim();
@@ -217,6 +218,13 @@ module.exports = async (req, res) => {
       card_url,
       slug,
       equipment: p.equipment || '',
+      config_brand: cfg ? String(cfg.brand || '') : null,
+      config_model: cfg ? String(cfg.model || '') : null,
+      config_type: cfg ? String(cfg.type || '') : null,
+      config_kit: cfg ? String(cfg.kit || '') : null,
+      config_paint: cfg ? !!cfg.peinture : null,
+      config_home: cfg ? !!cfg.kitmaison : null,
+      config_total: (cfg && cfg.total) ? parseInt(cfg.total, 10) : null,
       engagement_status: 'engaged',
       engagement_choice: p.equipment || null,
       engaged_at: new Date().toISOString(),
@@ -241,6 +249,18 @@ module.exports = async (req, res) => {
     const link = `${base}/drivers/${slug}`;
     const adminUrl = `${base}/admin.html`;
 
+    const E = (v) => String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const kitLabel = cfg && cfg.kit === 'monte' ? 'Monté (435 €)' : (cfg && cfg.kit === 'amonter' ? 'À monter (365 €)' : '—');
+    const configHtml = (cfg && p.equipment === 'achat') ? `
+      <p style="background:#f6f4ff;border-left:3px solid #7a33f0;padding:10px 12px"><b>— Configuration choisie (pour devis) —</b><br>
+      <b>Marque / Modèle :</b> ${E(cfg.brand)} — ${E(cfg.model)}<br>
+      <b>Type :</b> ${E(cfg.type)}<br>
+      <b>Kit châssis :</b> ${kitLabel}<br>
+      <b>Carrosserie :</b> ${E(cfg.model)} (prête à peindre, 45 €)<br>
+      <b>Forfait Peinture + Stickage :</b> ${cfg.peinture ? 'Oui (+100 €)' : 'Non'}<br>
+      <b>Kit Pilotage Maison :</b> ${cfg.kitmaison ? 'Oui (+185 €)' : 'Non'}<br>
+      <b>Total estimé :</b> ${cfg.total ? cfg.total + ' €' : '—'}</p>` : '';
+
     const teamHtml = `<h2>Nouvelle candidature — Season 0 (à valider)</h2>
       <p><b>Pseudo :</b> ${cleanAlias}<br><b>Nom :</b> ${p.first} ${p.last}<br>
       <b>Âge :</b> ${p.age || '-'}<br><b>Ville :</b> ${p.city || '-'} · ${p.nationality || '-'}<br>
@@ -249,6 +269,7 @@ module.exports = async (req, res) => {
       <b>Nom affiché sur la carte :</b> ${showName ? 'Oui' : 'Non (pseudo seul)'}<br>
       <b>Formule :</b> ${equipmentLabel(p.equipment)}<br>
       <b>Engagement 4 events :</b> ${p.engaged ? 'Oui ✓ (engagé dès l\'inscription)' : '—'}</p>
+${configHtml}
       <p><b>Motivation :</b><br>${motivation ? motivation.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') : '-'}</p>
       <p><b>➡ Valider la candidature dans l'admin :</b><br><a href="${adminUrl}">${adminUrl}</a></p>`;
 
@@ -263,7 +284,6 @@ module.exports = async (req, res) => {
     const eqShort = p.equipment === 'achat' ? (en ? 'Purchase' : 'Achat')
       : p.equipment === 'location' ? (en ? 'Rental' : 'Location')
       : (en ? 'to be confirmed' : 'à préciser');
-    const tarifsUrl = `${base}/tarifs_TR.pdf`;
 
     const tx = en ? {
       hi:`Thank you, ${p.first}!`,
@@ -301,7 +321,6 @@ module.exports = async (req, res) => {
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:16px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l1}</p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l2}</p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.eng}</p>
-    <p style="margin:0 0 18px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.tarifs} <a href="${tarifsUrl}" style="color:#34b8ff;font-weight:bold;text-decoration:none">${tx.tarifsLink}</a></p>
     <p style="margin:0 0 16px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.l3}</p>
     <p style="margin:0 0 6px;color:#c9cbd8;font-size:15px;line-height:1.55;font-family:Arial,Helvetica,sans-serif">${tx.invite}</p>
     <p style="margin:0 0 22px"><a href="https://www.thering-drive.com/" style="color:#34b8ff;font-family:Arial,Helvetica,sans-serif;font-size:15px">https://www.thering-drive.com/</a></p>
