@@ -138,6 +138,7 @@ function render(row){
         ${validerBtn}
         <button class="btn ghost" data-act="hide">${row.hidden?'RÉAFFICHER':'MASQUER'}</button>
         <button class="btn ghost" data-act="dl-card">⬇ CARTE</button>
+        <button class="btn ghost" data-act="thanks">📩 REMERCIEMENT + TARIFS</button>
         <button class="btn toggle" data-act="more">Plus d'infos ▾</button>
         <button class="btn danger" data-act="del">🗑 SUPPRIMER</button>
       </div>
@@ -154,7 +155,7 @@ function render(row){
           <div><label>PAYS</label><input data-f="nationality" value="${esc(row.nationality||'')}"></div>
         </div>
         <div class="bar">
-          <span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span><span class="tag eq">ENGAGEMENT : ${eng==='engaged'?'OUI'+(row.engagement_choice?(' ('+eqLabel(row.engagement_choice)+')'):''):(eng==='sent'?'FORMULAIRE ENVOYÉ':'—')}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
+          <span class="tag eq">FORMULE : ${eqLabel(row.equipment)}</span>${row.config_model?'<span class=\"tag eq\">CONFIG : '+esc((row.config_brand||'')+' '+(row.config_model||''))+' · '+esc(row.config_type||'')+' · '+(row.config_kit==='monte'?'Monté':'À monter')+(row.config_paint?' · Peinture':'')+(row.config_home?' · Kit Maison':'')+' · '+(row.config_total||'?')+' €</span>':''}<span class="tag eq">ENGAGEMENT : ${eng==='engaged'?'OUI'+(row.engagement_choice?(' ('+eqLabel(row.engagement_choice)+')'):''):(eng==='sent'?'FORMULAIRE ENVOYÉ':'—')}</span><span class="tag eq">${(row.language||'fr').toUpperCase()}</span><span class="tag eq">NOM : ${row.show_name!==false?'OUI':'PSEUDO'}</span><span class="tag eq">${row.photo_type==='photo'?'PHOTO':'AVATAR'}</span>
           <button class="btn" data-act="save">ENREGISTRER LES MODIFS</button>
           ${row.slug?`<a href="/drivers/${row.slug}" target="_blank">/drivers/${row.slug}</a>`:''}
           <span class="email" style="color:var(--muted);font-size:11px">${esc(row.email||'')}</span>
@@ -170,6 +171,14 @@ function render(row){
   inputs.forEach(inp=>inp.addEventListener('input',()=>{if(mounted)mountPostCard($('prev-'+row.id),{first:get('first_name'),last:get('last_name'),alias:get('alias'),city:get('city'),nationality:get('nationality'),style:get('driving_style'),overall:row.overall,level:row.level,showName:row.show_name!==false},row.photo_url||'');}));
   wrap.querySelector('[data-act="save"]').onclick=async()=>{const fields={};inputs.forEach(i=>fields[i.dataset.f]=i.value);const r=await upd(row.id,fields);if(r&&r.error){alert(r.error);return;}alert('Modifications enregistrées.');};
   wrap.querySelector('[data-act="hide"]').onclick=async()=>{await upd(row.id,{hidden:!row.hidden});load();};
+  const tb=wrap.querySelector('[data-act="thanks"]');if(tb)tb.onclick=async()=>{
+    if(!confirm('Envoyer le mail remerciement + tarifs (PJ) à « '+(row.alias||'')+' » ?'))return;
+    const old=tb.textContent;tb.disabled=true;tb.textContent='Envoi…';
+    const r=await thanksSend(row.id);
+    if(r&&r.error){alert(r.error);tb.disabled=false;tb.textContent=old;return;}
+    alert('📩 Mail envoyé à « '+(row.alias||'')+' ».'+(r.attached?' (tarifs joint)':'\n\n(tarifs_TR.pdf absent du repo — non joint)'));
+    tb.disabled=false;tb.textContent=old;
+  };
   const vb=wrap.querySelector('[data-act="valider"]');if(vb)vb.onclick=async()=>{const r=await upd(row.id,{status:'published'});if(r&&r.error){alert(r.error);return;}load();};
   const eb=wrap.querySelector('[data-act="engage"]');if(eb)eb.onclick=async()=>{
     if(eng==='sent'&&!confirm('Renvoyer le formulaire d\'engagement à « '+(row.alias||'')+' » ?\n(Un nouveau lien sera généré.)'))return;
@@ -204,6 +213,7 @@ function render(row){
 }
 async function upd(id,fields){const r=await fetch('/api/admin-update',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id,fields})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 async function engageSend(id){const r=await fetch('/api/admin-engage',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
+async function thanksSend(id){const r=await fetch('/api/admin-thanks',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({id})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 async function delDrivers(items){const r=await fetch('/api/admin-delete',{method:'POST',headers:{'x-admin-pass':PASS,'Content-Type':'application/json'},body:JSON.stringify({items})});try{return await r.json();}catch(e){return {error:'Erreur serveur'};}}
 function esc(s){return (s==null?'':String(s)).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 

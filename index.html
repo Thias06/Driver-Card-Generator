@@ -163,6 +163,52 @@ body.locked{overflow:hidden}
 .lang2{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .lang2 button{background:#0c0d13;border:none;color:var(--muted);font-family:var(--ft);font-size:10px;letter-spacing:1px;padding:7px 11px;cursor:pointer}
 .lang2 button.on{background:var(--brand);color:#fff}
+
+/* ===================== CONFIGURATEUR ACHAT ===================== */
+#configurateur{display:none;margin-top:12px}
+#configurateur.show{display:block}
+.cfg{background:#0c0a16;border:1px solid var(--violet);border-radius:13px;padding:15px}
+.cfg h4{font-family:var(--fb);font-size:13px;color:#fff;font-weight:800;margin-bottom:3px}
+.cfg .cfghint{font-size:11px;color:var(--muted);line-height:1.4;margin-bottom:4px}
+.cfg .cl{font-family:var(--ft);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin:14px 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+.cfg .cl .count{font-family:var(--fb);color:var(--cyan);letter-spacing:0;text-transform:none;font-size:10px}
+.cfg .bchips{display:flex;flex-wrap:wrap;gap:6px}
+.cfg .bchip{font-size:12px;color:#cdd0de;background:#070809;border:1px solid var(--line);border-radius:20px;padding:7px 12px;cursor:pointer}
+.cfg .bchip.sel{color:#fff;border-color:var(--violet);background:#140e20;font-weight:700}
+.cfg .modelsel{width:100%;background:#070809;border:1px solid var(--violet);border-radius:10px;padding:12px 34px 12px 13px;color:#fff;font-size:14px;font-family:var(--fb);font-weight:700;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239092a4' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.cfg .preview{margin-top:12px;background:#070809;border:1px solid var(--line);border-radius:11px;padding:12px;display:flex;align-items:center;gap:12px}
+.cfg .preview .pv{width:120px;height:70px;flex:0 0 120px;border-radius:9px;overflow:hidden;background:#050507}
+.cfg .preview .pv img{width:100%;height:100%;object-fit:cover;display:block}
+.cfg .preview .meta .t{font-size:13px;font-weight:800;color:#fff;line-height:1.25}
+.cfg .preview .meta .d{font-size:10.5px;color:var(--muted);margin-top:4px}
+.cfg .preview .meta .d b{color:#cbb3ff}
+.cfg .pills{display:flex;gap:8px}
+.cfg .pill{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;background:#070809;cursor:pointer}
+.cfg .pill.on{border-color:var(--violet);background:#140e20}
+.cfg .pill .pt{font-size:12px;font-weight:800;color:#fff}
+.cfg .pill .pp{font-size:11px;color:var(--muted);margin-top:2px}
+.cfg .opt2{display:flex;align-items:center;gap:10px;background:#070809;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-top:8px;cursor:pointer}
+.cfg .opt2.on{border-color:var(--violet)}
+.cfg .opt2 .box{width:18px;height:18px;border-radius:5px;border:2px solid #3a3c4a;flex:0 0 auto;position:relative}
+.cfg .opt2.on .box{background:var(--violet);border-color:transparent}
+.cfg .opt2.on .box::after{content:"\2713";position:absolute;inset:0;color:#fff;font-size:12px;text-align:center;line-height:15px;font-weight:900}
+.cfg .opt2 .ot{flex:1;font-size:12px;color:#fff;font-weight:700}
+.cfg .opt2 .ot small{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:2px}
+.cfg .opt2 .op{font-size:12px;font-weight:800;color:#cbb3ff}
+.cfg .ctotal{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.cfg .ctotal .l{font-family:var(--ft);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.cfg .ctotal .v{font-size:15px;font-weight:800;color:#fff;text-align:right}
+.cfg .ctotal .v small{font-size:9px;color:var(--cyan);font-weight:700;display:block}
+
+/* En savoir plus (infos formules/classements) */
+.infos{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:#0b0c12;overflow:hidden}
+.infos>summary{list-style:none;cursor:pointer;padding:12px 14px;font-family:var(--ft);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#cdd0de;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.infos>summary::-webkit-details-marker{display:none}
+.infos>summary::after{content:"\25be";color:var(--muted);font-size:12px;transition:transform .2s}
+.infos[open]>summary::after{transform:rotate(180deg)}
+.infos-body{padding:2px 14px 14px;border-top:1px solid var(--line)}
+.infos-body .ib-t{font-family:var(--fb);font-weight:800;color:#fff;font-size:12px;margin:12px 0 4px}
+.infos-body p{color:var(--muted);font-size:11.5px;line-height:1.5;margin:0}
 </style></head>
 <body class="locked">
 
@@ -250,15 +296,47 @@ body.locked{overflow:hidden}
       <div class="cond" id="cond_achat">
         <div class="ct" data-i18n="cond_achat_t">Formule Achat</div>
         <ul><li data-i18n="cond_achat_1">Ta machine évolutive et entièrement réglable.</li><li data-i18n="cond_achat_2">Déco personnalisée à tes couleurs.</li><li data-i18n="cond_achat_3">−30 % sur tes sessions supplémentaires.</li></ul>
-        <a href="/tarifs_TR.pdf" target="_blank" rel="noopener" data-i18n="cond_link">Voir les tarifs &amp; formules →</a>
       </div>
       <div class="cond" id="cond_location">
         <div class="ct" data-i18n="cond_loc_t">Formule Location</div>
         <ul><li data-i18n="cond_loc_1">Aucun matériel à prévoir : machine fournie et calibrée.</li><li data-i18n="cond_loc_2">Idéal pour débuter sans investir.</li><li data-i18n="cond_loc_3">Tarif selon le barème sessions en vigueur.</li></ul>
-        <a href="/tarifs_TR.pdf" target="_blank" rel="noopener" data-i18n="cond_link">Voir les tarifs &amp; formules →</a>
+      </div>
+      <div id="configurateur">
+        <div class="cfg">
+          <h4>⚙ <span data-i18n="cfg_title">Configure ta machine</span></h4>
+          <div class="cfghint" data-i18n="cfg_hint">Choisis ta carrosserie et tes options. Le prix s'ajuste en direct.</div>
+          <div class="cl"><span data-i18n="cfg_brand">Marque</span></div>
+          <div class="bchips" id="cfg_brands"></div>
+          <div class="cl"><span data-i18n="cfg_model">Modèle</span><span class="count" id="cfg_count" data-i18n="cfg_count">24 carrosseries au catalogue</span></div>
+          <select class="modelsel" id="cfg_model"></select>
+          <div class="preview">
+            <div class="pv"><img src="/carrosserie-teaser.jpg" alt="Carrosserie" loading="lazy"></div>
+            <div class="meta"><div class="t" id="cfg_pvname">—</div><div class="d"><b id="cfg_pvtype">Type</b> · <span data-i18n="cfg_incl">carrosserie 45 € incluse · révélée à la livraison</span></div></div>
+          </div>
+          <div class="cl"><span data-i18n="cfg_kit">Ton kit châssis</span></div>
+          <div class="pills">
+            <div class="pill" data-kit="amonter"><div class="pt" data-i18n="cfg_kit_a">À monter</div><div class="pp">365 €</div></div>
+            <div class="pill on" data-kit="monte"><div class="pt" data-i18n="cfg_kit_m">Monté pour toi</div><div class="pp">435 €</div></div>
+          </div>
+          <div class="cl"><span data-i18n="cfg_options">Options</span></div>
+          <div class="opt2" data-opt="peinture"><div class="box"></div><div class="ot"><span data-i18n="cfg_paint">Forfait Peinture + Stickage</span><small data-i18n="cfg_paint_d">Uni ou bicolore · stickers League · couleurs vues ensemble</small></div><div class="op">+100 €</div></div>
+          <div class="opt2" data-opt="kitmaison"><div class="box"></div><div class="ot"><span data-i18n="cfg_home">Kit Pilotage Maison</span><small data-i18n="cfg_home_d">Radio télémétrie + batterie + chargeur</small></div><div class="op">+185 €</div></div>
+          <div class="ctotal"><span class="l" data-i18n="cfg_total">Estimation de ton kit</span><span class="v"><span id="cfg_totalv">480 €</span><small data-i18n="cfg_total_sub">devis détaillé reçu par email</small></span></div>
+        </div>
       </div>
     </div>
 
+    <details class="infos">
+      <summary data-i18n="infos_sum">En savoir plus sur les formules et classements</summary>
+      <div class="infos-body">
+        <div class="ib-t" data-i18n="infos_stat_t">Deux statuts, une seule grille</div>
+        <p data-i18n="infos_stat_d">Machine officielle (Location) : fournie et entretenue par The Ring. Machine personnelle (Achat) : la tienne, réglée à ta main.</p>
+        <div class="ib-t" data-i18n="infos_disc_t">Avantages Founders</div>
+        <p data-i18n="infos_disc_d">−10 % sur toutes tes sessions (tous les pilotes). −30 % sur tes sessions supplémentaires (pilotes propriétaires — Achat).</p>
+        <div class="ib-t" data-i18n="infos_rank_t">Deux classements</div>
+        <p data-i18n="infos_rank_d">Le Championnat récompense tes résultats en course (points). L'Indice The Ring mesure ton vrai niveau, sur 100.</p>
+      </div>
+    </details>
     <div class="fixed">
       <div><span data-i18n="f_overall">OVERALL</span><b>50</b></div><div class="r"><span data-i18n="f_level">NIVEAU</span><b>ROOKIE</b></div><div><span data-i18n="f_season">SAISON</span><b style="font-size:15px">S - 0</b></div>
     </div>
@@ -311,6 +389,11 @@ const I18N={
   l_formule:'Ta formule',hint_formule:'Indique ta préférence — tu pourras tout préciser plus tard, aucune pression.',
   opt_achat_t:"J'achète mon équipement",opt_achat_d:'Ma machine, mes réglages, ma déco.',
   opt_loc_t:'Je loue sur place (pré-équipé)',opt_loc_d:'Tout est prêt : tu arrives et tu pilotes.',
+  infos_sum:'En savoir plus sur les formules et classements',
+  infos_stat_t:'Deux statuts, une seule grille',infos_stat_d:'Machine officielle (Location) : fournie et entretenue par The Ring. Machine personnelle (Achat) : la tienne, réglée à ta main.',
+  infos_disc_t:'Avantages Founders',infos_disc_d:'−10 % sur toutes tes sessions (tous les pilotes). −30 % sur tes sessions supplémentaires (pilotes propriétaires — Achat).',
+  infos_rank_t:'Deux classements',infos_rank_d:"Le Championnat récompense tes résultats en course (points). L'Indice The Ring mesure ton vrai niveau, sur 100.",
+  cfg_title:'Configure ta machine',cfg_hint:"Choisis ta carrosserie et tes options. Le prix s'ajuste en direct.",cfg_brand:'Marque',cfg_model:'Modèle',cfg_count:'24 carrosseries au catalogue',cfg_incl:'carrosserie 45 € incluse · révélée à la livraison',cfg_kit:'Ton kit châssis',cfg_kit_a:'À monter',cfg_kit_m:'Monté pour toi',cfg_options:'Options',cfg_paint:'Forfait Peinture + Stickage',cfg_paint_d:'Uni ou bicolore · stickers League · couleurs vues ensemble',cfg_home:'Kit Pilotage Maison',cfg_home_d:'Radio télémétrie + batterie + chargeur',cfg_total:'Estimation de ton kit',cfg_total_sub:'devis détaillé reçu par email',
   cond_achat_t:'Formule Achat',cond_achat_1:'Ta machine évolutive et entièrement réglable.',cond_achat_2:'Déco personnalisée à tes couleurs.',cond_achat_3:'−30 % sur tes sessions supplémentaires.',
   cond_loc_t:'Formule Location',cond_loc_1:'Aucun matériel à prévoir : machine fournie et calibrée.',cond_loc_2:'Idéal pour débuter sans investir.',cond_loc_3:'Tarif selon le barème sessions en vigueur.',
   cond_link:'Voir les tarifs &amp; formules →',
@@ -349,6 +432,11 @@ const I18N={
   l_formule:'Your plan',hint_formule:'Just your preference — you can refine everything later, no pressure.',
   opt_achat_t:'I buy my equipment',opt_achat_d:'My machine, my settings, my livery.',
   opt_loc_t:'I rent on site (pre-equipped)',opt_loc_d:'Everything is ready: you arrive and drive.',
+  infos_sum:'More about plans and rankings',
+  infos_stat_t:'Two statuses, one grid',infos_stat_d:'Official machine (Rental): provided and maintained by The Ring. Personal machine (Purchase): yours, tuned your way.',
+  infos_disc_t:'Founders perks',infos_disc_d:'−10% on all your sessions (all drivers). −30% on your extra sessions (owners — Purchase).',
+  infos_rank_t:'Two rankings',infos_rank_d:'The Championship rewards your race results (points). The The Ring Index measures your real level, out of 100.',
+  cfg_title:'Build your machine',cfg_hint:'Pick your body and options. The price updates live.',cfg_brand:'Brand',cfg_model:'Model',cfg_count:'24 bodies in the catalogue',cfg_incl:'body 45 € included · revealed on delivery',cfg_kit:'Your chassis kit',cfg_kit_a:'Kit form',cfg_kit_m:'Built for you',cfg_options:'Options',cfg_paint:'Paint + Stickers pack',cfg_paint_d:'Solid or two-tone · League stickers · colours agreed together',cfg_home:'Home Practice Kit',cfg_home_d:'Telemetry radio + battery + charger',cfg_total:'Your kit estimate',cfg_total_sub:'detailed quote sent by email',
   cond_achat_t:'Purchase plan',cond_achat_1:'Your upgradable, fully adjustable machine.',cond_achat_2:'Custom livery in your colours.',cond_achat_3:'−30% on your extra sessions.',
   cond_loc_t:'Rental plan',cond_loc_1:'Nothing to bring: machine provided and calibrated.',cond_loc_2:'Perfect to start without investing.',cond_loc_3:'Price based on the current session rates.',
   cond_link:'See pricing &amp; plans →',
@@ -389,7 +477,7 @@ function applyLang(lang){
 /* ===================== FORMULAIRE ===================== */
 function eq(){const e=document.querySelector('input[name=equip]:checked');return e?e.value:'';}
 function val(id){return ($(id).value||'').replace(/\s+/g,' ').trim();}
-function data(){return{first:val('i_first'),last:val('i_last'),alias:val('i_alias'),age:val('i_age'),nationality:val('i_nat')||'France',city:val('i_city'),style:val('i_style'),motivation:val('i_motivation'),showName:$('i_showname').checked,photoType:photoType,email:val('i_email').toLowerCase(),equipment:eq(),engaged:$('i_engage').checked,language:LANG,overall:50,level:'ROOKIE',season:'S0'};}
+function data(){return{first:val('i_first'),last:val('i_last'),alias:val('i_alias'),age:val('i_age'),nationality:val('i_nat')||'France',city:val('i_city'),style:val('i_style'),motivation:val('i_motivation'),showName:$('i_showname').checked,photoType:photoType,email:val('i_email').toLowerCase(),equipment:eq(),config:(eq()==='achat'?{brand:CFG.brand,model:CFG.model,type:CFG.type,kit:CFG.kit,peinture:CFG.peinture,kitmaison:CFG.kitmaison,total:cfgTotal()}:null),engaged:$('i_engage').checked,language:LANG,overall:50,level:'ROOKIE',season:'S0'};}
 $('i_showname').addEventListener('change',()=>{render();});
 function render(){mountPostCard($('card'),data(),photoData);fit();}
 ['i_first','i_last','i_alias','i_age','i_city','i_style'].forEach(id=>$(id).addEventListener('input',()=>{render();checkForm();}));
@@ -435,11 +523,36 @@ function processPhotoFile(file, cb){
 function showPhotoErr(m){const e=$('photoErr');e.textContent=m;e.classList.add('show');}
 function hidePhotoErr(){$('photoErr').classList.remove('show');}
 $('photoRules').addEventListener('click',()=>$('photoHint').classList.toggle('show'));
+/* ===================== CONFIGURATEUR ===================== */
+const CATALOGUE=[
+ {b:'Nissan',models:[['Skyline GT-R R34','GT'],['Silvia','GT'],['Skyline GT-R R35','GT'],['Skyline GT-R R32','GT'],['GT-R GT500','Supercar'],['Fairlady Z','Supercar']]},
+ {b:'Toyota',models:[['GR86','GT'],['GR Supra','GT'],['GR Yaris','Rallye'],['Celica GT-Four ST165','Rallye'],['Celica GT-Four ST185','Rallye'],['Celica GT-Four ST205','Rallye']]},
+ {b:'Subaru',models:[['Impreza WRX','Rallye'],['BRZ (Fuji)','GT'],['BRZ (ZD8)','GT']]},
+ {b:'Mitsubishi',models:[['Lancer Evo X','Rallye']]},
+ {b:'Ford',models:[['Mustang GT4','Supercar'],['GT Mk.II 2020','Supercar'],['Focus RS 2003','Rallye']]},
+ {b:'Audi',models:[['V8 quattro (DTM)','GT'],['90 quattro','Supercar'],['R8 LMS 2008','Supercar']]},
+ {b:'Porsche',models:[['911 GT3 R (992)','Supercar']]},
+ {b:'Peugeot',models:[['306 Maxi','Rallye']]}
+];
+const KITPRICE={amonter:365,monte:435},PRIX_CARR=45,PRIX_PEINTURE=100,PRIX_MAISON=185;
+let CFG={brand:'Nissan',model:'Skyline GT-R R34',type:'GT',kit:'monte',peinture:false,kitmaison:false};
+function cfgTotal(){return KITPRICE[CFG.kit]+PRIX_CARR+(CFG.peinture?PRIX_PEINTURE:0)+(CFG.kitmaison?PRIX_MAISON:0);}
+function cfgModels(b){var g=CATALOGUE.find(function(x){return x.b===b;});return g?g.models:[];}
+function cfgBuildBrands(){var box=$('cfg_brands');if(!box)return;box.innerHTML='';CATALOGUE.forEach(function(g){var el=document.createElement('div');el.className='bchip'+(g.b===CFG.brand?' sel':'');el.textContent=g.b;el.onclick=function(){CFG.brand=g.b;var m=cfgModels(g.b);CFG.model=m[0][0];CFG.type=m[0][1];cfgBuildBrands();cfgBuildModels();cfgRefresh();};box.appendChild(el);});}
+function cfgBuildModels(){var s=$('cfg_model');if(!s)return;s.innerHTML='';cfgModels(CFG.brand).forEach(function(m){var o=document.createElement('option');o.value=m[0];o.textContent=m[0];o.setAttribute('data-type',m[1]);if(m[0]===CFG.model)o.selected=true;s.appendChild(o);});}
+function cfgRefresh(){var n=$('cfg_pvname'),t=$('cfg_pvtype'),v=$('cfg_totalv');if(n)n.textContent=CFG.model+' \u00b7 pr\u00eate \u00e0 peindre';if(t)t.textContent='Type '+CFG.type;if(v)v.textContent=cfgTotal()+' \u20ac';if(typeof checkForm==='function')checkForm();}
+function cfgInit(){
+  cfgBuildBrands();cfgBuildModels();cfgRefresh();
+  var sel=$('cfg_model');if(sel)sel.addEventListener('change',function(){CFG.model=this.value;var o=this.options[this.selectedIndex];CFG.type=o.getAttribute('data-type')||CFG.type;cfgRefresh();});
+  document.querySelectorAll('#configurateur .pill').forEach(function(p){p.addEventListener('click',function(){document.querySelectorAll('#configurateur .pill').forEach(function(x){x.classList.remove('on');});p.classList.add('on');CFG.kit=p.getAttribute('data-kit');cfgRefresh();});});
+  document.querySelectorAll('#configurateur .opt2').forEach(function(o){o.addEventListener('click',function(){var k=o.getAttribute('data-opt');CFG[k]=!CFG[k];o.classList.toggle('on',CFG[k]);cfgRefresh();});});
+}
 document.querySelectorAll('input[name=equip]').forEach(r=>r.addEventListener('change',()=>{
   document.querySelectorAll('.equip .opt').forEach(o=>o.classList.remove('sel'));
   r.closest('.opt').classList.add('sel');
   $('cond_achat').classList.toggle('show',r.value==='achat');
   $('cond_location').classList.toggle('show',r.value==='location');
+  $('configurateur').classList.toggle('show',r.value==='achat');
   if(validationVisible) validate(true);checkForm();
 }));
 $('i_engage').addEventListener('change',()=>{$('e_engage').classList.remove('show');validationVisible=true;validate(true);checkForm();});
@@ -562,6 +675,7 @@ document.querySelectorAll('[data-setlang]').forEach(b=>b.addEventListener('click
 /* init */
 buildAvatars();
 applyLang('fr');
+cfgInit();
 selectAvatar(0);
 render();checkForm();window.addEventListener('load',fit);setTimeout(fit,300);
 </script>
